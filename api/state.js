@@ -29,7 +29,7 @@ async function readState(path) {
   if (typeof Blob.get === 'function') {
     for (const target of [path, h.url]) {
       try {
-        const r = await Blob.get(target, { token: TOKEN });
+        const r = await Blob.get(target, { token: TOKEN, access: 'private' });
         if (r && r.stream) {
           const text = await new Response(r.stream).text();
           if (text) return { data: JSON.parse(text), etag, via: 'sdk-get', errs };
