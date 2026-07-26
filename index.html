@@ -87,6 +87,8 @@ label.chk input{width:18px;height:18px;margin:0;accent-color:var(--red)}
 .links a,.links button{font-family:var(--body);font-size:12.5px;font-weight:500;padding:7px 11px;box-shadow:inset 0 0 0 1px rgba(7,26,18,.2);color:rgba(7,26,18,.72);text-decoration:none;display:inline-block}
 .links a:active{background:rgba(7,26,18,.07)}
 .links button{opacity:.55}
+.links.dk a{box-shadow:inset 0 0 0 1px var(--line);color:var(--sage)}
+.links.dk a:active{background:rgba(233,237,231,.06)}
 .portal{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;text-decoration:none;gap:12px}
 .portal:last-child{border-bottom:none}
 .portal span:last-child{font-family:var(--mono);font-size:10.5px;color:var(--sage)}
@@ -174,7 +176,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='008';
+const BUILD='009';
 
 const mem={};
 const disk={
@@ -195,17 +197,17 @@ let YG='KG1';
 
 /* One kind of thing. A date is optional. A group is optional. */
 const SEED=[
- {id:'mt-register',src:'welcome',title:'Register for mother tongue',links:[{t:'resources',u:'https://www.diadubai.com/resources-dia-eh'},{t:'email Ruchika',u:'mailto:ruchikas@diadubai.com?subject=Mother%20tongue%20registration%20KG1'},{t:'Hindi',u:'mailto:mthindi@diadubai.com'}],
+ {id:'mt-register',src:'welcome',title:'Register for mother tongue',links:[{t:'register here',u:'https://forms.cloud.microsoft/r/fVcUs3eJ3K'},{t:'language booklet',u:'https://innoventureseducation-my.sharepoint.com/:b:/g/personal/arlindag_diadubai_com/IQBVFUctZvxcRKZMQvJKZ9-lATTooAxvdclC1bVTZhJY5lo?e=jnG9Mv'},{t:'Hindi',u:'mailto:mthindi@diadubai.com'}],
   note:()=>'Optional, extra fee. Hindi sits in the timetable — mthindi@diadubai.com'},
- {id:'bus-register',src:'welcome',title:'Register for the school bus',links:[{t:'transport page',u:'https://www.diadubai.com/transport-dia-eh'},{t:'email Arab Falcon',u:'mailto:csr.diaeh@arabfalcondubai.ae'}],
+ {id:'bus-register',src:'welcome',title:'Register for the school bus',links:[{t:'register here',u:'https://www.diadubai.com/admissions/transport'},{t:'Arab Falcon',u:'mailto:csr.diaeh@arabfalcondubai.ae'}],
   note:()=>'Arab Falcon, through the school website'},
- {id:'kalo-app',src:'welcome',title:'Set up the Kalo canteen app',links:[{t:'iOS',u:'https://apps.apple.com/ae/app/kalo-hospitality/id6461117251'},{t:'Android',u:'https://play.google.com/store/apps/details?id=munch.kalo.delivery'}],
+ {id:'kalo-app',src:'welcome',title:'Set up the Kalo canteen app',links:[{t:'iOS app',u:'https://apps.apple.com/ae/app/kalo-hospitality/id6461117251'},{t:'Android app',u:'https://play.google.com/store/apps/details?id=munch.kalo.delivery'},{t:'how it works',u:'https://innoventureseducation-my.sharepoint.com/:b:/g/personal/arlindag_diadubai_com/EUsDFqWzC_JKuQ1Z3etP47kBIPQvN3Rr5tijq0NjWu_Pjg?e=hGDGfw'}],
   note:()=>'Register her student ID, top up, pre-order meal boxes'},
- {id:'uniform-buy',src:'welcome',title:'Buy uniform at Zaks',links:[{t:'Zaks DIA store',u:'https://www.zaksstore.com/shop/dia/en/5254-school-dubai-international-academy-emirates-hill'},{t:'uniform list',u:'https://www.diadubai.com/admissions/uniform'}],
+ {id:'uniform-buy',src:'welcome',title:'Buy uniform at Zaks',links:[{t:'Zaks DIA store',u:'https://www.zaksstore.com/shop/dia/en/'},{t:'uniform list',u:'https://www.diadubai.com/admissions/uniform'}],
   note:()=>'Uniform, black leather shoes, PE kit with non-marking trainers'},
- {id:'pickup-form',src:'welcome',title:'Nanny or driver collection form',links:[{t:'resources',u:'https://www.diadubai.com/resources-dia-eh'},{t:'ask the office',u:'mailto:pssecretary@diadubai.com?subject=Collection%20form%20for%20nanny%20or%20driver'}],
+ {id:'pickup-form',src:'welcome',title:'Nanny or driver collection form',links:[{t:'the form',u:'https://forms.cloud.microsoft/r/qnN5FkbHA9'},{t:'office',u:'mailto:pssecretary@diadubai.com'}],
   note:()=>'Only if someone other than you collects her'},
- {id:'absence-link',src:'welcome',title:'Bookmark the absence form',links:[{t:'resources',u:'https://www.diadubai.com/resources-dia-eh'},{t:'office',u:'tel:+97148713530'}],
+ {id:'absence-link',src:'welcome',title:'Bookmark the absence form',links:[{t:'the form',u:'https://tinyurl.com/y33w6rke'},{t:'call the office',u:'tel:+97148713530'}],
   note:()=>'Has to be in before 08:00 on the day'},
  {id:'khda-contract',src:'khda',title:'Sign the KHDA parent contract',links:[{t:'KHDA portal',u:'https://www.khda.gov.ae/khdaparentportal/#/login'}],blocking:true,waiting:true,
   note:()=>'School publishes it first, then you sign in the KHDA app with an OTP'},
@@ -226,11 +228,11 @@ const SEED=[
  {id:'p14',src:'khda',group:'paperwork',title:'Toilet training undertaking',note:()=>'KG only'},
  {id:'p15',src:'khda',group:'paperwork',title:'Language option form'},
 
- {id:'rep-form',src:'welcome',title:'Class rep form opens',due:'2026-08-24',note:()=>'4pm, only if you want the role'},
+ {id:'rep-form',src:'welcome',title:'Class rep form opens',links:[{t:'the form',u:'https://forms.office.com/Pages/ResponsePage.aspx?id=AMmUbCCnXEKuE9AmGtoJtH2IBVpVwkFKkV6gmfx6qc1UQ1hJME1YRDhISU9ISUdWRzJGSDlOQVRJWC4u'}],due:'2026-08-24',note:()=>'4pm, only if you want the role'},
  {id:'prophet',src:'calendar',title:'Prophet Mohammad birthday',due:'2026-08-25',note:()=>'No school. Moves with the lunar calendar'},
  {id:'hd-info',src:'welcome',title:'Homeroom teacher makes contact',due:'2026-08-26',waiting:true,
   note:()=>'Hopes and dreams slot, stationery list, specialist timetable'},
- {id:'fee-t1',src:'fees',title:'Term 1 fees',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'},{t:'accounts',u:'mailto:accounts@diadubai.com'}],due:'2026-08-28',blocking:true,
+ {id:'fee-t1',src:'fees',title:'Term 1 fees',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'},{t:'how to pay',u:'https://innoventureseducation-my.sharepoint.com/:b:/g/personal/accounts_diadubai_com/EcT8-APAZydAoePbK1cyYlkBhTatH7Fg5hUJ-vh1l6b3WA?e=oFgajh'},{t:'accounts',u:'mailto:accounts@diadubai.com'}],due:'2026-08-28',blocking:true,
   note:()=>'AED '+FEES[YG].t1.toLocaleString()+" · unpaid means she can't start"},
  {id:'cca-info',src:'welcome',title:'CCA list published',due:'2026-08-28',waiting:true},
  {id:'cca-signup',src:'welcome',title:'CCA sign-up opens',links:[{t:'parent portal',u:'https://www.diadubai.com/parent-portal-dia-eh'}],due:'2026-08-29',note:()=>'Through SOCS. Closes 1 Sep'},
@@ -269,7 +271,7 @@ const SEED=[
  {id:'ptc3',src:'calendar',title:'Parent teacher consultations',due:'2027-05-24'},
  {id:'hijri',src:'calendar',title:'Hijri new year',due:'2027-06-06'},
  {id:'endyear',src:'calendar',title:'End of year',due:'2027-07-02'},
- {id:'pe-switch',src:'welcome',title:'New PE kit compulsory',links:[{t:'Zaks DIA store',u:'https://www.zaksstore.com/shop/dia/en/5254-school-dubai-international-academy-emirates-hill'}],due:'2027-08-01',
+ {id:'pe-switch',src:'welcome',title:'New PE kit compulsory',links:[{t:'Zaks DIA store',u:'https://www.zaksstore.com/shop/dia/en/'}],due:'2027-08-01',
   note:()=>'Transition ends. G Force kit from Zaks, same price'}
 ];
 
@@ -281,7 +283,8 @@ const SOURCES=[
         'Smartphones and smartwatches are banned on campus for all primary years',
         'Rucksacks preferred over roller bags',
         'Head of Primary sends a newsletter every Friday',
-        'Late collection is logged and repeated lateness gets followed up']},
+        'Late collection is logged and repeated lateness gets followed up'],
+  links:[{t:'collection form',u:'https://forms.cloud.microsoft/r/qnN5FkbHA9'},{t:'absence form',u:'https://tinyurl.com/y33w6rke'},{t:'mother tongue form',u:'https://forms.cloud.microsoft/r/fVcUs3eJ3K'},{t:'bus',u:'https://www.diadubai.com/admissions/transport'},{t:'Zaks',u:'https://www.zaksstore.com/shop/dia/en/'},{t:'class rep form',u:'https://forms.office.com/Pages/ResponsePage.aspx?id=AMmUbCCnXEKuE9AmGtoJtH2IBVpVwkFKkV6gmfx6qc1UQ1hJME1YRDhISU9ISUdWRzJGSDlOQVRJWC4u'},{t:'curriculum guides',u:'https://innoventureseducation-my.sharepoint.com/:f:/g/personal/stephaniet_diadubai_com/ErMr43EeG0RIvYxXqU4CxGAB6C3tvftiIwvTLpR_tJUbTQ?e=k7ZNux'}]},
  {id:'calendar',title:'Term calendar outline',kind:'PDF · 2026-27',
   summary:'Every term date, break, public holiday, PD day and consultation for the year. Anything tied to the lunar calendar can still move.',
   also:['PD days are early dismissal, not days off',
@@ -293,20 +296,23 @@ const SOURCES=[
         'EAL is AED 4,500 a year if the school assesses her as needing it, and it is a condition of admission',
         'Sibling discount only starts at the fourth child',
         'Uniform, meals, stationery, trips and transport are all extra',
-        'Books, uniform and EAL fees are non-refundable']},
+        'Books, uniform and EAL fees are non-refundable'],
+  links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'}]},
  {id:'khda',title:'KHDA registration and payment',kind:'PDF · 2026-27',
   summary:'What documents the school needs, how KHDA registration runs, and how to pay. It is a sequence: you submit, the school files, you verify in the app, then you sign.',
   also:['The contract is signed in the KHDA app with an OTP, so your UAE mobile must be on record',
         'Emirates ID copies are required before her joining date',
         'Zenda app, bank transfer, card or cash at the accounts office',
         'Accounts office is open Monday to Friday, 08:00 to 15:30',
-        'Incomplete registration can stop her attending']},
+        'Incomplete registration can stop her attending'],
+  links:[{t:'KHDA parent portal',u:'https://www.khda.gov.ae/khdaparentportal/#/login'},{t:'how to pay fees',u:'https://innoventureseducation-my.sharepoint.com/:b:/g/personal/accounts_diadubai_com/EcT8-APAZydAoePbK1cyYlkBhTatH7Fg5hUJ-vh1l6b3WA?e=oFgajh'}]},
  {id:'kg',title:'KG curriculum handbook',kind:'PDF · 2026-27',
   summary:'How early years works here: the IB primary years programme over an EYFS spine, seven areas of learning, seventeen goals assessed at the end of KG2. Guidance for home rather than anything to action.',
   also:['Read Write Inc phonics — pure sounds at home, not letter names',
         'No capital letters yet, lower case only',
         'They ask for 10 to 12 hours of sleep a night',
-        'An hour of physical activity a day']}
+        'An hour of physical activity a day'],
+  links:[{t:'pure sounds video',u:'https://www.youtube.com/watch?v=TkXcabDUg7Q'},{t:'reading tips video',u:'https://www.youtube.com/watch?v=1-wud5ndvuE'},{t:'number songs',u:'https://www.youtube.com/results?sp=mAEB&search_query=number+songs+to+10'}]}
 ];
 
 const RULES=[
@@ -337,15 +343,18 @@ const CONTACTS=[
 ];
 
 const PORTALS=[
- {n:'DIA parent portal',u:'https://www.diadubai.com/parent-portal-dia-eh'},
- {n:'Forms and resources',u:'https://www.diadubai.com/resources-dia-eh'},
- {n:'Transport and bus form',u:'https://www.diadubai.com/transport-dia-eh'},
- {n:'Uniform list',u:'https://www.diadubai.com/admissions/uniform'},
- {n:'Zaks — DIA store',u:'https://www.zaksstore.com/shop/dia/en/5254-school-dubai-international-academy-emirates-hill'},
+ {n:'Mother tongue registration',u:'https://forms.cloud.microsoft/r/fVcUs3eJ3K'},
+ {n:'Nanny or driver collection form',u:'https://forms.cloud.microsoft/r/qnN5FkbHA9'},
+ {n:'Absence notification form',u:'https://tinyurl.com/y33w6rke'},
+ {n:'Bus registration',u:'https://www.diadubai.com/admissions/transport'},
+ {n:'Class rep interest form',u:'https://forms.office.com/Pages/ResponsePage.aspx?id=AMmUbCCnXEKuE9AmGtoJtH2IBVpVwkFKkV6gmfx6qc1UQ1hJME1YRDhISU9ISUdWRzJGSDlOQVRJWC4u'},
+ {n:'Zaks — DIA uniform store',u:'https://www.zaksstore.com/shop/dia/en/'},
  {n:'Zenda — pay fees',u:'https://innoventureseducation.zenda.com/'},
  {n:'KHDA parent portal',u:'https://www.khda.gov.ae/khdaparentportal/#/login'},
  {n:'Kalo canteen — iOS',u:'https://apps.apple.com/ae/app/kalo-hospitality/id6461117251'},
- {n:'Kalo canteen — Android',u:'https://play.google.com/store/apps/details?id=munch.kalo.delivery'}
+ {n:'Kalo canteen — Android',u:'https://play.google.com/store/apps/details?id=munch.kalo.delivery'},
+ {n:'Curriculum guides',u:'https://innoventureseducation-my.sharepoint.com/:f:/g/personal/stephaniet_diadubai_com/ErMr43EeG0RIvYxXqU4CxGAB6C3tvftiIwvTLpR_tJUbTQ?e=k7ZNux'},
+ {n:'DIA parent portal',u:'https://www.diadubai.com/parent-portal-dia-eh'}
 ];
 
 const CLASH={id:'s1',src:'calendar',field:'First day',
@@ -590,6 +599,7 @@ function papers(){
         '<span class="kind">'+esc(s.kind||'added')+' · '+fs.length+' item'+(fs.length===1?'':'s')+
           (st.length?' · '+st.length+' waiting':'')+'</span>'+
         '<p class="sum">'+esc(s.summary)+'</p>'+
+        ((s.links&&s.links.length)?'<div class="links dk">'+s.links.map(l=>'<a href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>').join('')+'</div>':'')+
         '<button class="fold" data-open="'+esc(isOpen?'':s.id)+'">'+(isOpen?'hide detail':'what it gave us')+'</button>'+
         (isOpen?(fs.length?'<div class="derived">'+fs.map(x=>'<div><span class="dt">'+
             (x.due?fmt(D(x.due)):'no date')+'</span>'+esc(x.title)+'</div>').join('')+'</div>':'')+
