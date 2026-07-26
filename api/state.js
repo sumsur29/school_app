@@ -16,24 +16,32 @@ const pathFor = fam => `runway/${fam}.json`;
 const MAX_TRIES = 4;
 
 async function readState(path) {
+  let h = null;
+  try {
+    h = await Blob.head(path);
+  } catch (e) {
+    return { data: {}, etag: null, via: 'absent' };
+  }
+  const etag = h.etag || null;
+
   if (typeof Blob.get === 'function') {
-    try {
-      const r = await Blob.get(path);
-      if (!r) return { data: {}, etag: null };
-      const text = await new Response(r.stream).text();
-      return { data: JSON.parse(text || '{}'), etag: (r.blob && r.blob.etag) || null };
-    } catch (e) {
-      if (e && /not.?found/i.test(String(e.name || e.message))) return { data: {}, etag: null };
+    for (const target of [h.url, path]) {
+      try {
+        const r = await Blob.get(target);
+        if (r && r.stream) {
+          const text = await new Response(r.stream).text();
+          if (text) return { data: JSON.parse(text), etag: etag, via: 'sdk-get' };
+        }
+      } catch (e) {}
     }
   }
+
   try {
-    const h = await Blob.head(path);
-    const res = await fetch(h.url, { cache: 'no-store' });
-    if (!res.ok) return { data: {}, etag: h.etag || null };
-    return { data: await res.json(), etag: h.etag || null };
-  } catch (e) {
-    return { data: {}, etag: null };
-  }
+    const res = await fetch(h.downloadUrl || h.url, { cache: 'no-store' });
+    if (res.ok) return { data: await res.json(), etag: etag, via: 'fetch' };
+  } catch (e) {}
+
+  return { data: {}, etag: etag, via: 'unreadable' };
 }
 
 function writeState(path, data, etag, access) {
@@ -74,8 +82,9 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const { data } = await readState(path);
-      return res.json(data);
+      const st = await readState(path);
+      if (req.query.debug) return res.json({ via: st.via, etag: st.etag, keys: Object.keys(st.data) });
+      return res.json(st.data);
     }
 
     if (req.method === 'POST') {
