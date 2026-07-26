@@ -26,7 +26,11 @@ html,body{margin:0;padding:0}
 body{background:var(--ink);color:var(--chalk);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 #app{max-width:460px;margin:0 auto;min-height:100vh;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
 button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;text-align:left}
-input{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line);color:var(--chalk);padding:11px 13px;width:100%;border-radius:0}
+input,textarea,select{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line);color:var(--chalk);padding:11px 13px;width:100%;border-radius:0;margin-top:8px}
+textarea{min-height:96px;resize:vertical;line-height:1.45}
+input[type=file]{padding:9px;font-size:13px}
+label.chk{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14.5px;color:var(--sage)}
+label.chk input{width:18px;height:18px;margin:0;accent-color:var(--red)}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;opacity:.55}
 
@@ -65,6 +69,8 @@ input{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line)
 
 .paper{background:var(--chalk);color:var(--ink);padding:22px}
 .paper .eyebrow{opacity:.5}
+.phead{display:flex;justify-content:space-between;align-items:center}
+.plus{font-family:var(--mono);font-size:11px;letter-spacing:.1em;opacity:.55;padding:4px 0 4px 12px}
 .row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--pline);width:100%}
 .row:last-child{border-bottom:none}
 .row .d{font-family:var(--mono);font-size:12.5px;opacity:.45;width:36px;flex-shrink:0;padding-top:3px;font-variant-numeric:tabular-nums}
@@ -79,6 +85,7 @@ input{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line)
 .by{font-family:var(--mono);font-size:11px;opacity:.5;margin-top:5px;display:block}
 .flag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;background:var(--red);color:#fff;padding:2px 6px;margin-left:7px;vertical-align:2px}
 .flag.wait{background:rgba(7,26,18,.1);color:rgba(7,26,18,.6)}
+.flag.own{background:rgba(7,26,18,.1);color:rgba(7,26,18,.6)}
 
 .blk{padding:22px}
 .blk h3{font-family:var(--disp);font-weight:500;font-size:21px;letter-spacing:-.015em;margin:0 0 4px}
@@ -91,6 +98,7 @@ input{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line)
 .st.todo{background:rgba(233,237,231,.1);color:var(--sage)}
 .st.sent{background:var(--sage);color:var(--pine)}
 .st.ok{background:var(--chalk);color:var(--pine)}
+.st.del{background:rgba(220,59,43,.16);color:var(--red)}
 
 .pipe{display:flex;align-items:center;margin:18px 0 8px}
 .pipe .n{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--sage);flex-shrink:0}
@@ -110,10 +118,18 @@ input{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line)
 .btn.ghost{background:none;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(7,26,18,.25)}
 .btn.dark{background:var(--chalk);color:var(--ink)}
 .btn.dghost{background:none;color:var(--chalk);box-shadow:inset 0 0 0 1px var(--line)}
-.stg{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);width:100%}
-.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;padding:2px 6px;flex-shrink:0}
+.btn.busy{opacity:.5}
+.half{display:flex;gap:9px}
+.half .btn{flex:1}
+.stg{display:flex;gap:11px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line);width:100%}
+.stg .b{flex:1;min-width:0}
+.tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;padding:2px 6px;flex-shrink:0;margin-top:3px}
 .tag.new{background:var(--sage);color:var(--pine)}
 .tag.edit{background:rgba(233,237,231,.14);color:var(--chalk)}
+.tag.clash{background:var(--red);color:#fff}
+.mini{display:flex;gap:8px;margin-top:9px}
+.mini button{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;padding:6px 11px;box-shadow:inset 0 0 0 1px var(--line);color:var(--sage)}
+.mini button.yes{background:var(--chalk);color:var(--ink);box-shadow:none}
 
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);border-top:1px solid var(--line);display:flex;max-width:460px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom);z-index:10}
 .nav button{flex:1;padding:13px 4px 15px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--sage);opacity:.6;position:relative;text-align:center}
@@ -130,6 +146,8 @@ input{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line)
 .sync{font-family:var(--mono);font-size:10.5px;color:var(--sage);display:flex;align-items:center;gap:6px}
 .sync i{width:6px;height:6px;border-radius:50%;background:var(--sage);display:inline-block}
 .sync.off i{background:var(--red)}
+.back{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--sage);display:inline-block;margin-bottom:14px}
+.note{font-size:13px;color:var(--sage);line-height:1.5;margin-top:12px}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--red);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.cell.in{animation:none;opacity:1}}
@@ -139,7 +157,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='003';
+const BUILD='004';
 
 const mem={};
 const disk={
@@ -152,18 +170,18 @@ let FAM=qs.get('f')||disk.get('fam')||null;
 if(FAM){FAM=String(FAM).replace(/[^a-z0-9-]/gi,'').slice(0,40);disk.set('fam',FAM)}
 let ME=disk.get('me')||null;
 const newFam=()=>'f-'+Math.random().toString(36).slice(2,8)+Math.random().toString(36).slice(2,6);
-const newMember=()=>'m'+Math.random().toString(36).slice(2,8);
+const newId=p=>p+Math.random().toString(36).slice(2,9);
 
 const FEES={KG1:{t1:13491,t2:13494,t3:13494},KG2:{t1:15215,t2:15218,t3:15218}};
 let YG='KG1';
 
-const FACTS=[
+const SEED=[
  {id:'fee-t1',title:'Term 1 fees',due:'2026-08-28',blocking:true,note:()=>'AED '+FEES[YG].t1.toLocaleString()+" · unpaid means she can't start"},
  {id:'rep-form',title:'Class rep form opens',due:'2026-08-24',note:()=>'4pm, only if you want the role'},
  {id:'hd-info',title:'Homeroom teacher makes contact',due:'2026-08-26',waiting:true,note:()=>'Hopes and dreams slot, stationery list'},
  {id:'cca-info',title:'CCA list published',due:'2026-08-28'},
  {id:'cca-signup',title:'CCA sign-up',due:'2026-08-29',note:()=>'Window shuts 1 Sep'},
- {id:'hopes',title:'Hopes and dreams',due:'2026-08-31',note:()=>'Meet the teacher. Uniform sale in the foyer 07:30–12:00'},
+ {id:'hopes',title:'Hopes and dreams',due:'2026-08-31',note:()=>'Meet the teacher. Uniform sale in the foyer 07:30-12:00'},
  {id:'firstday',title:'First day',due:'2026-08-31',anchor:true,contested:true,note:()=>'Settling-in week to 4 Sep · no school bus for KG'},
  {id:'ccas',title:'CCAs begin',due:'2026-09-07'},
  {id:'infosess',title:'Parent info sessions',due:'2026-09-14',note:()=>'Runs to 17 Sep'},
@@ -225,21 +243,17 @@ const CONTACTS=[
  {n:'Canteen - Kalo',d:'hello@kalohospitality.com'}
 ];
 
-const STAGED=[
- {id:'s1',kind:'conflict',field:'First day',
+const FIRSTDAY_CONFLICT={id:'s1',field:'First day',
   a:{v:'1 Sep',src:'Welcome pack calendar'},
   b:{v:'31 Aug',src:'Calendar outline, KG1 row'},
-  why:'The incoming source names KG1 on its own line. The stored one lumps KG1 in with KG2, which is how this error usually happens. Leaning 31 Aug, but the office should confirm.'},
- {id:'s2',kind:'new',t:'CCA sign-up opens',m:'29 Aug · task'},
- {id:'s3',kind:'edit',t:'KG pick-up to 13:20',m:'was 13:00 · rule'},
- {id:'s4',kind:'new',t:'Toilet training undertaking',m:'form · KG only'},
- {id:'s5',kind:'new',t:'No bus for KG in week 1',m:'rule · expires 7 Sep'}
-];
+  why:'The incoming source names KG1 on its own line. The stored one lumps KG1 in with KG2, which is how this error usually happens. Leaning 31 Aug, but the office should confirm.'};
 
 let L=(FAM&&disk.get('runway:'+FAM))||{};
 let pending=new Set();
 let online=true;
 let view='runway';
+let busy='';
+let flash='';
 
 const saveLocal=()=>{if(FAM)disk.set('runway:'+FAM,L)};
 const get=(k,d)=>L[k]||d;
@@ -299,14 +313,26 @@ const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','De
 const fmt=d=>d.getDate()+' '+MON[d.getMonth()];
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const val=x=>typeof x==='function'?x():x;
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ago=t=>{const m=Math.round((Date.now()-t)/6e4);
   return m<1?'just now':m<60?m+'m ago':m<1440?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
 
+const isHidden=id=>!!get('hide:'+id);
+const customFacts=()=>Object.keys(L).filter(k=>k.indexOf('cf:')===0)
+  .map(k=>Object.assign({},L[k],{id:k.slice(3),custom:true}))
+  .filter(f=>!f.deleted&&f.title&&f.due);
+const allFacts=()=>SEED.filter(f=>!isHidden(f.id)).concat(customFacts());
+
 const fstate=id=>get('fact:'+id,{status:'open'});
-const upcoming=()=>FACTS.filter(f=>D(f.due)>=today()).sort((a,b)=>D(a.due)-D(b.due));
+const upcoming=()=>allFacts().filter(f=>D(f.due)>=today()).sort((a,b)=>D(a.due)-D(b.due));
 const anchorFact=()=>upcoming().find(f=>f.anchor)||upcoming()[0];
 const nextBlocking=()=>upcoming().find(f=>f.blocking&&fstate(f.id).status!=='done');
+
+const stagedItems=()=>Object.keys(L).filter(k=>k.indexOf('st:')===0)
+  .map(k=>Object.assign({},L[k],{sid:k.slice(3)}))
+  .filter(s=>!s.settled&&s.title);
+const conflictOpen=()=>!get('conf:'+FIRSTDAY_CONFLICT.id);
+const inboxCount=()=>stagedItems().length+(conflictOpen()?1:0);
 
 function attention(){
   const out=[];
@@ -343,16 +369,33 @@ function setup(){
     '<p class="eyebrow" style="margin:26px 0 8px">'+(list.length?'not one of them?':'add yourself')+'</p>'+
     '<input id="myname" placeholder="your first name" autocapitalize="words">'+
     '<button class="btn dark" data-addme="1">that is me</button>'+
-    (list.length?'':'<p style="font-size:13px;color:var(--sage);margin-top:14px;line-height:1.5">The other parent adds their own name when they open the link.</p>')+
+    (list.length?'':'<p class="note">The other parent adds their own name when they open the link.</p>')+
     '</div>';
 }
 
+function factRow(f){
+  const s=fstate(f.id);
+  return '<button class="row '+s.status+'" data-tog="'+esc(f.id)+'">'+
+    '<span class="d">'+fmt(D(f.due))+'</span><span class="b">'+
+    '<h4>'+esc(f.title)+(f.contested?'<span class="flag">contested</span>':'')+
+    (f.waiting?'<span class="flag wait">school</span>':'')+
+    (f.custom?'<span class="flag own">added</span>':'')+'</h4>'+
+    (val(f.note)?'<p>'+esc(val(f.note))+'</p>':'')+
+    ((s.status!=='open'&&s.by)?'<span class="by">'+(s.status==='done'?'done':'taken')+' by '+
+      esc(s.by===ME?'you':nameOf(s.by))+' · '+ago(s.at)+'</span>':'')+
+    '</span><span class="claim">'+(s.by?esc(initialOf(s.by)):'✓')+'</span></button>';
+}
+
 function runway(){
-  const a=anchorFact(), n=days(today(),D(a.due)), u=nextBlocking();
+  const a=anchorFact();
+  if(!a) return '<div class="blk" style="padding-top:60px"><h3>Nothing on the calendar.</h3>'+
+    '<p class="note">Add something or drop in a school PDF.</p>'+
+    '<button class="btn dark" data-view="add">add something</button></div>';
+  const n=days(today(),D(a.due)), u=nextBlocking();
   const cells=[];
   for(let i=0;i<=n;i++){
     const d=new Date(today().getTime()+i*864e5), k=iso(d);
-    const on=FACTS.filter(f=>f.due===k);
+    const on=allFacts().filter(f=>f.due===k);
     const hot=on.some(f=>f.blocking&&fstate(f.id).status==='open');
     const held=on.some(f=>fstate(f.id).status==='taken');
     const cls=hot?'hot':held?'held':on.length?'ev':'gone';
@@ -370,47 +413,44 @@ function runway(){
     '<span class="eyebrow" style="opacity:.7">'+YG.toLowerCase()+' · dia eh</span></span>'+
     '<span class="sync '+(online?'':'off')+'"><i></i>'+(online?'synced':'offline')+'</span></div>'+
     '<div class="count"><b>'+n+'</b>'+(a.contested?'<span class="ish">ish</span>':'')+'</div>'+
-    '<div class="lede">sleeps until her first day</div>'+
+    '<div class="lede">sleeps until '+(a.anchor?'her first day':esc(a.title.toLowerCase()))+'</div>'+
     '<div class="sub">'+(a.contested?'Two calendars disagree - 31 Aug or 1 Sep.':fmt(D(a.due)))+'</div>'+
     '<div class="reg">'+cells.join('')+'</div>'+
     '<div class="legend"><span><i style="background:var(--red)"></i>nobody has it</span>'+
     '<span><i style="background:var(--sage)"></i>claimed or coming</span>'+
     '<span><i style="box-shadow:inset 0 0 0 2px var(--chalk)"></i>today</span></div></div>'+
 
-    '<div class="tally"><span><b>'+mine+'</b> with you</span>'+
-    theirTally+
+    '<div class="tally"><span><b>'+mine+'</b> with you</span>'+theirTally+
     '<span><b>'+free+'</b> unclaimed</span></div>'+
 
     (u?'<button class="urgent" data-view="year"><span class="l">'+
-      '<span class="k">first hard deadline</span>'+
-      '<span class="t">'+esc(u.title)+'</span>'+
+      '<span class="k">first hard deadline</span><span class="t">'+esc(u.title)+'</span>'+
       '<span class="m">'+esc(val(u.note)||'')+'</span></span>'+
       '<span class="n">'+days(today(),D(u.due))+'</span></button>':'')+
 
-    '<div class="paper"><div class="eyebrow">what is next</div>'+
-    upcoming().slice(0,7).map(function(f){
-      const s=fstate(f.id);
-      return '<button class="row '+s.status+'" data-tog="'+f.id+'">'+
-        '<span class="d">'+fmt(D(f.due))+'</span><span class="b">'+
-        '<h4>'+esc(f.title)+(f.contested?'<span class="flag">contested</span>':'')+
-        (f.waiting?'<span class="flag wait">school</span>':'')+'</h4>'+
-        (val(f.note)?'<p>'+esc(val(f.note))+'</p>':'')+
-        ((s.status!=='open'&&s.by)?'<span class="by">'+(s.status==='done'?'done':'taken')+' by '+esc(s.by===ME?'you':nameOf(s.by))+' · '+ago(s.at)+'</span>':'')+
-        '</span><span class="claim">'+(s.by?esc(initialOf(s.by)):'✓')+'</span></button>';
-    }).join('')+'</div>'+
+    '<div class="paper"><div class="phead"><span class="eyebrow">what is next</span>'+
+    '<button class="plus" data-view="add">+ add</button></div>'+
+    upcoming().slice(0,7).map(factRow).join('')+'</div>'+
 
     (attention().length?'<div class="blk" style="background:var(--deep)"><div class="eyebrow">worth a look</div>'+
       attention().map(t=>'<div class="drow"><div class="b"><h4 style="font-weight:400">'+esc(t)+'</h4></div></div>').join('')+'</div>':'');
 }
 
 function inbox(){
-  const c=STAGED.filter(s=>s.kind==='conflict'&&!get('conf:'+s.id))[0];
-  const rest=STAGED.filter(s=>s.kind!=='conflict'&&!get('drop:'+s.id));
+  const items=stagedItems();
+  const c=conflictOpen()?FIRSTDAY_CONFLICT:null;
   const pick=get('pick',{}).v;
-  return '<div class="blk"><div style="display:flex;justify-content:space-between">'+
-    '<span class="eyebrow">inbox</span><span class="eyebrow">'+(rest.length+(c?1:0))+' staged</span></div>'+
+  return '<div class="blk">'+
+    '<div style="display:flex;justify-content:space-between"><span class="eyebrow">inbox</span>'+
+    '<span class="eyebrow">'+inboxCount()+' waiting</span></div>'+
     '<h3 style="margin-top:16px">Nothing is saved until one of you accepts it.</h3>'+
-    '<p style="font-size:13.5px;color:var(--sage);margin:6px 0 0">Pulled from the welcome pack and the calendar outline.</p></div>'+
+    '<p class="note">Paste a newsletter or WhatsApp message, or attach a school PDF. Whatever comes back lands here for approval, not in the calendar.</p>'+
+    '<textarea id="paste" placeholder="paste a message from the school"></textarea>'+
+    '<input type="file" id="pdf" accept="application/pdf">'+
+    '<button class="btn dark '+(busy==='read'?'busy':'')+'" data-read="1">'+(busy==='read'?'reading…':'read it')+'</button>'+
+    (flash?'<p class="note">'+esc(flash)+'</p>':'')+
+    '</div>'+
+
     (c?'<div class="conf"><div class="k">conflict</div><h3 style="margin-top:9px">'+esc(c.field)+'</h3>'+
       '<button class="opt '+(pick==='a'?'pick':'')+'" data-pick="a"><span><span class="v">'+esc(c.a.v)+'</span>'+
       '<span class="src" style="display:block">'+esc(c.a.src)+'</span></span><span class="src">in store</span></button>'+
@@ -419,27 +459,61 @@ function inbox(){
       '<p class="reason">'+esc(c.why)+'</p>'+
       '<button class="btn" data-resolve="'+c.id+'">keep the one i picked</button>'+
       '<button class="btn ghost" data-mail="1">ask the office</button></div>':'')+
-    '<div class="blk">'+(rest.map(s=>'<button class="stg" data-drop="'+s.id+'">'+
-      '<span class="tag '+s.kind+'">'+s.kind+'</span><span class="b">'+
-      '<h4 style="margin:0;font-size:15px;font-weight:500">'+esc(s.t)+'</h4>'+
-      '<p class="mono" style="margin:3px 0 0;font-size:12px;color:var(--sage)">'+esc(s.m)+'</p></span>'+
-      '<span style="color:var(--sage)">✓</span></button>').join('')
-      ||'<p style="color:var(--sage);font-size:14px">Inbox clear.</p>')+'</div>';
+
+    (items.length?'<div class="blk"><div class="eyebrow" style="margin-bottom:6px">staged</div>'+
+      items.map(function(s){
+        const tag=s.conflict?'clash':(s.match?'edit':'new');
+        return '<div class="stg"><span class="tag '+tag+'">'+tag+'</span><span class="b">'+
+          '<h4 style="margin:0;font-size:15.5px;font-weight:500">'+esc(s.title)+'</h4>'+
+          '<p class="mono" style="margin:4px 0 0;font-size:12px;color:var(--sage)">'+
+            esc(s.due||'no date')+(s.blocking?' · blocking':'')+(s.src?' · '+s.src:'')+'</p>'+
+          (s.note?'<p style="margin:5px 0 0;font-size:13px;color:var(--sage);line-height:1.45">'+esc(s.note)+'</p>':'')+
+          '<span class="mini"><button class="yes" data-accept="'+esc(s.sid)+'">keep</button>'+
+          '<button data-reject="'+esc(s.sid)+'">discard</button></span>'+
+        '</span></div>'}).join('')+'</div>'
+     :'<div class="blk"><p class="note">Nothing staged.</p></div>');
+}
+
+function addview(){
+  const custom=customFacts().sort((a,b)=>D(a.due)-D(b.due));
+  const hiddenSeeds=SEED.filter(f=>isHidden(f.id));
+  return '<div class="blk">'+
+    '<button class="back" data-view="runway">← back</button>'+
+    '<h3>Add something</h3>'+
+    '<p class="note">Goes straight in, no approval needed. Both phones see it.</p>'+
+    '<input id="ntitle" placeholder="what is it" autocapitalize="sentences">'+
+    '<input id="ndue" type="date">'+
+    '<input id="nnote" placeholder="detail, amount, where — optional">'+
+    '<label class="chk"><input type="checkbox" id="nblock"> she cannot start without it</label>'+
+    '<button class="btn dark" data-save="1">add it</button>'+
+    '</div>'+
+
+    (custom.length?'<div class="paper"><div class="eyebrow">things you added</div>'+
+      custom.map(f=>'<div class="row"><span class="d">'+fmt(D(f.due))+'</span>'+
+        '<span class="b"><h4>'+esc(f.title)+'</h4>'+
+        (f.note?'<p>'+esc(f.note)+'</p>':'')+'</span>'+
+        '<button class="st del" data-del="'+esc(f.id)+'">remove</button></div>').join('')+'</div>':'')+
+
+    '<div class="blk"><div class="eyebrow" style="margin-bottom:6px">from the school packs</div>'+
+    '<p class="note" style="margin-top:0">Hide anything that does not apply to you.</p>'+
+    SEED.slice().sort((a,b)=>D(a.due)-D(b.due)).map(f=>{
+      const h=isHidden(f.id);
+      return '<button class="drow" data-hide="'+esc(f.id)+'"><span class="b">'+
+        '<h4 style="'+(h?'opacity:.4;text-decoration:line-through':'')+'">'+esc(f.title)+'</h4>'+
+        '<p>'+fmt(D(f.due))+'</p></span>'+
+        '<span class="st '+(h?'del':'todo')+'">'+(h?'hidden':'shown')+'</span></button>'}).join('')+
+    (hiddenSeeds.length?'<p class="note">'+hiddenSeeds.length+' hidden. Tap to bring back.</p>':'')+
+    '</div>';
 }
 
 function year(){
   const by={};
   upcoming().forEach(f=>{const d=D(f.due),k=MON[d.getMonth()]+' '+d.getFullYear();if(!by[k])by[k]=[];by[k].push(f)});
-  return '<div class="blk"><span class="eyebrow">the year</span>'+
+  return '<div class="blk"><div class="phead"><span class="eyebrow">the year</span>'+
+    '<button class="plus" style="opacity:.7" data-view="add">+ add</button></div>'+
     '<h3 style="margin-top:14px">'+YG+' · 2026-27</h3></div><div class="paper">'+
     Object.keys(by).map(m=>'<div class="eyebrow" style="margin:18px 0 2px">'+m.toLowerCase()+'</div>'+
-      by[m].map(function(f){const s=fstate(f.id);
-        return '<button class="row '+s.status+'" data-tog="'+f.id+'">'+
-        '<span class="d">'+D(f.due).getDate()+'</span><span class="b"><h4>'+esc(f.title)+
-        (f.blocking?'<span class="flag">fees</span>':'')+'</h4>'+
-        (val(f.note)?'<p>'+esc(val(f.note))+'</p>':'')+
-        ((s.status!=='open'&&s.by)?'<span class="by">'+s.status+' · '+esc(s.by===ME?'you':nameOf(s.by))+'</span>':'')+
-        '</span><span class="claim">'+(s.by?esc(initialOf(s.by)):'✓')+'</span></button>'}).join('')).join('')+'</div>';
+      by[m].map(factRow).join('')).join('')+'</div>';
 }
 
 function docs(){
@@ -450,7 +524,7 @@ function docs(){
     '<h3 style="margin-top:14px">'+inn+' of '+DOCS.length+' in</h3><div class="pipe">'+
     KHDA.map((_,i)=>'<span class="n '+(i<step?'on':'')+' '+(i===step?'now':'')+'"></span>'+(i<3?'<span class="s"></span>':'')).join('')+
     '</div><div class="pipelab">'+KHDA.map(k=>'<span>'+k.split(' ')[0]+'</span>').join('')+'</div>'+
-    '<p style="font-size:13px;color:var(--sage);margin-top:10px">'+(step===1?'Step 2 is the school move, not yours.':'Tap to advance when the school confirms.')+'</p>'+
+    '<p class="note">'+(step===1?'Step 2 is the school move, not yours.':'Tap to advance when the school confirms.')+'</p>'+
     '<button class="btn dghost" data-khda="1">advance a step</button></div>'+
     Object.keys(g).map(grp=>'<div class="blk" style="padding-top:0">'+
       '<div class="eyebrow" style="margin-bottom:4px">'+grp.toLowerCase()+'</div>'+
@@ -482,7 +556,7 @@ function day(){
     '<button class="btn dghost" data-switch="1">not '+esc(nameOf(ME))+'? switch this phone</button></div>';
 }
 
-const VIEWS={runway:runway,inbox:inbox,year:year,docs:docs,day:day};
+const VIEWS={runway:runway,inbox:inbox,year:year,docs:docs,day:day,add:addview};
 const TABS=[['runway','runway'],['inbox','inbox'],['year','year'],['docs','docs'],['day','daily']];
 
 function paintSync(){
@@ -495,15 +569,58 @@ function render(){
   const app=document.getElementById('app'), nav=document.getElementById('nav');
   if(!FAM||!ME){app.innerHTML=setup();nav.style.display='none';return}
   nav.style.display='flex';
-  app.innerHTML=VIEWS[view]();
-  const badge=STAGED.filter(s=>!get('drop:'+s.id)&&!get('conf:'+s.id)).length;
+  app.innerHTML=(VIEWS[view]||runway)();
+  const badge=inboxCount();
   nav.innerHTML=TABS.map(t=>'<button data-view="'+t[0]+'" class="'+(view===t[0]?'on':'')+'">'+t[1]+
     ((t[0]==='inbox'&&badge)?'<span class="dot"></span>':'')+'</button>').join('');
   requestAnimationFrame(()=>{document.querySelectorAll('.cell').forEach(c=>c.classList.add('in'))});
 }
 
+function b64(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(String(r.result).split(',')[1]);
+    r.onerror=()=>rej(new Error('could not read that file'));
+    r.readAsDataURL(file);
+  });
+}
+
+async function readSource(){
+  const ta=document.getElementById('paste');
+  const fi=document.getElementById('pdf');
+  const text=(ta&&ta.value||'').trim();
+  const file=fi&&fi.files&&fi.files[0];
+  if(!text&&!file){flash='Paste something or pick a PDF first.';render();return}
+  if(file&&file.size>4000000){
+    flash='That PDF is '+Math.round(file.size/1e6)+'MB. The limit is about 4MB — split it or paste the relevant pages as text.';
+    render();return;
+  }
+  busy='read';flash='';render();
+  try{
+    const payload={existing:allFacts().map(f=>({id:f.id,title:f.title,due:f.due}))};
+    if(file){payload.pdf=await b64(file);payload.filename=file.name}
+    else payload.text=text;
+    const r=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await r.json();
+    if(!r.ok){flash=data.error?('Could not read it: '+data.error):'Could not read it.';busy='';render();return}
+    const props=data.proposals||[];
+    if(!props.length){flash='Nothing worth adding in that one.';busy='';render();return}
+    props.forEach(p=>{
+      const sid=newId('s');
+      L['st:'+sid]=Object.assign({},p,{src:data.source,at:Date.now(),who:ME});
+      pending.add('st:'+sid);
+    });
+    saveLocal();
+    flash=props.length+' found. Keep the ones you want.';
+    busy='';render();queuePush();
+  }catch(e){
+    flash='That did not go through. '+String(e.message||e);
+    busy='';render();
+  }
+}
+
 document.addEventListener('click',async function(e){
-  const t=e.target.closest('[data-view],[data-tog],[data-doc],[data-pick],[data-resolve],[data-drop],[data-yg],[data-mail],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-khda]');
+  const t=e.target.closest('[data-view],[data-tog],[data-doc],[data-pick],[data-resolve],[data-yg],[data-mail],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-khda],[data-save],[data-del],[data-hide],[data-read],[data-accept],[data-reject]');
   if(!t)return;
   const d=t.dataset;
 
@@ -521,7 +638,7 @@ document.addEventListener('click',async function(e){
     const el=document.getElementById('myname');
     const nm=(el&&el.value||'').trim().slice(0,24);
     if(!nm){if(el)el.focus();return}
-    ME=newMember();disk.set('me',ME);
+    ME=newMemberId();disk.set('me',ME);
     write('member:'+ME,{name:nm});return;
   }
   if(d.switch){ME=null;disk.set('me',null);render();return}
@@ -530,7 +647,29 @@ document.addEventListener('click',async function(e){
     catch(err){t.textContent=d.share}
     setTimeout(render,1400);return;
   }
-  if(d.view){view=d.view;render();return}
+  if(d.read){readSource();return}
+  if(d.save){
+    const ti=document.getElementById('ntitle'), du=document.getElementById('ndue'),
+          no=document.getElementById('nnote'), bl=document.getElementById('nblock');
+    const title=(ti&&ti.value||'').trim().slice(0,80);
+    const due=(du&&du.value||'').trim();
+    if(!title){if(ti)ti.focus();return}
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(due)){if(du)du.focus();return}
+    write('cf:'+newId('c'),{title:title,due:due,note:(no&&no.value||'').trim().slice(0,160)||null,blocking:!!(bl&&bl.checked)});
+    view='runway';render();return;
+  }
+  if(d.del){write('cf:'+d.del,{deleted:true});return}
+  if(d.hide){write('hide:'+d.hide, isHidden(d.hide)?{v:false}:{v:true});return}
+  if(d.accept){
+    const s=L['st:'+d.accept];if(!s)return;
+    if(s.due) write('cf:'+newId('c'),{title:s.title,due:s.due,note:s.note||null,blocking:!!s.blocking,waiting:!!s.waiting});
+    write('st:'+d.accept,Object.assign({},s,{settled:true}));return;
+  }
+  if(d.reject){
+    const s=L['st:'+d.reject];if(!s)return;
+    write('st:'+d.reject,Object.assign({},s,{settled:true}));return;
+  }
+  if(d.view){view=d.view;flash='';render();return}
   if(d.tog){
     const s=fstate(d.tog);
     const next=s.status==='open'?{status:'taken',by:ME}:s.status==='taken'?{status:'done',by:ME}:{status:'open',by:null};
@@ -544,10 +683,11 @@ document.addEventListener('click',async function(e){
   if(d.khda){write('khda',{v:Math.min(get('khda',{v:1}).v+1,4)});return}
   if(d.pick){write('pick',{v:d.pick});return}
   if(d.resolve){const p=get('pick',{}).v;if(!p)return;write('conf:'+d.resolve,{v:p});return}
-  if(d.drop){write('drop:'+d.drop,{v:true});return}
   if(d.yg){write('yg',{v:d.yg});return}
   if(d.mail){location.href='mailto:pssecretary@diadubai.com?subject=KG1%20start%20date%202026-27&body=Hello%2C%0A%0AThe%20welcome%20pack%20calendar%20and%20the%20calendar%20outline%20give%20different%20first%20days%20for%20KG1%20-%201%20September%20versus%2031%20August.%20Could%20you%20confirm%20which%20is%20correct%3F%0A%0AThank%20you.';return}
 });
+
+function newMemberId(){return 'm'+Math.random().toString(36).slice(2,8)}
 
 document.addEventListener('visibilitychange',function(){if(!document.hidden){pull();push()}});
 window.addEventListener('online',function(){online=true;pull();push()});
