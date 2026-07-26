@@ -16,32 +16,48 @@ const pathFor = fam => `runway/${fam}.json`;
 const MAX_TRIES = 4;
 
 async function readState(path) {
+  const errs = [];
+  const TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
   let h = null;
   try {
-    h = await Blob.head(path);
+    h = await Blob.head(path, { token: TOKEN });
   } catch (e) {
-    return { data: {}, etag: null, via: 'absent' };
+    return { data: {}, etag: null, via: 'absent', errs: [String((e && e.message) || e)] };
   }
   const etag = h.etag || null;
 
   if (typeof Blob.get === 'function') {
-    for (const target of [h.url, path]) {
+    for (const target of [path, h.url]) {
       try {
-        const r = await Blob.get(target);
+        const r = await Blob.get(target, { token: TOKEN });
         if (r && r.stream) {
           const text = await new Response(r.stream).text();
-          if (text) return { data: JSON.parse(text), etag: etag, via: 'sdk-get' };
+          if (text) return { data: JSON.parse(text), etag, via: 'sdk-get', errs };
+          errs.push('get:' + target.slice(0, 24) + ':empty');
+        } else {
+          errs.push('get:' + target.slice(0, 24) + ':null');
         }
-      } catch (e) {}
+      } catch (e) { errs.push('get:' + String((e && e.message) || e).slice(0, 80)); }
     }
+  } else {
+    errs.push('sdk has no get()');
   }
 
-  try {
-    const res = await fetch(h.downloadUrl || h.url, { cache: 'no-store' });
-    if (res.ok) return { data: await res.json(), etag: etag, via: 'fetch' };
-  } catch (e) {}
+  for (const [label, url, auth] of [
+    ['plain', h.downloadUrl || h.url, false],
+    ['bearer', h.downloadUrl || h.url, true]
+  ]) {
+    try {
+      const res = await fetch(url, {
+        cache: 'no-store',
+        headers: auth ? { Authorization: 'Bearer ' + TOKEN } : {}
+      });
+      if (res.ok) return { data: await res.json(), etag, via: 'fetch-' + label, errs };
+      errs.push(label + ':' + res.status);
+    } catch (e) { errs.push(label + ':' + String((e && e.message) || e).slice(0, 60)); }
+  }
 
-  return { data: {}, etag: etag, via: 'unreadable' };
+  return { data: {}, etag, via: 'unreadable', errs };
 }
 
 function writeState(path, data, etag, access) {
@@ -83,7 +99,7 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const st = await readState(path);
-      if (req.query.debug) return res.json({ via: st.via, etag: st.etag, keys: Object.keys(st.data) });
+      if (req.query.debug) return res.json({ via: st.via, etag: st.etag, keys: Object.keys(st.data), errs: st.errs, sdk: Object.keys(Blob).filter(k => typeof Blob[k] === 'function') });
       return res.json(st.data);
     }
 
