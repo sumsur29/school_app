@@ -1,0 +1,445 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071A12">
+<title>Runway — DIA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Inter+Tight:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --pine:#0E3B2A; --ink:#071A12; --chalk:#E9EDE7; --sage:#7FA08C;
+  --red:#DC3B2B; --redink:#FFD9D4; --deep:#0A2A1E; --line:rgba(233,237,231,.16);
+  --pline:rgba(7,26,18,.14);
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Inter Tight',system-ui,sans-serif;
+  --mono:'DM Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink);color:var(--chalk);font-family:var(--body);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+#app{max-width:460px;margin:0 auto;min-height:100vh;padding-bottom:78px}
+button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:lowercase;opacity:.55}
+
+/* ---------- hero ---------- */
+.hero{background:var(--pine);padding:20px 22px 26px;position:relative;overflow:hidden}
+.hero .bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:34px}
+.count{display:flex;align-items:flex-start;gap:10px}
+.count b{font-family:var(--disp);font-weight:800;font-size:104px;line-height:.76;letter-spacing:-.055em;font-variant-numeric:tabular-nums;display:block}
+.count .ish{font-family:var(--mono);font-size:13px;color:var(--sage);border-bottom:1px dashed var(--sage);padding-bottom:2px;margin-top:8px}
+.lede{font-family:var(--disp);font-weight:400;font-size:24px;line-height:1.15;letter-spacing:-.02em;margin-top:20px;max-width:14ch}
+.sub{font-size:13.5px;color:var(--sage);margin-top:9px;line-height:1.45}
+
+/* ---------- register ---------- */
+.reg{margin-top:26px;border-top:1px solid var(--line);border-left:1px solid var(--line);display:grid;grid-template-columns:repeat(12,1fr);width:100%}
+.cell{aspect-ratio:1;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--sage);opacity:0}
+.cell.in{animation:pop .34s ease-out forwards}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+.cell.gone{color:rgba(127,160,140,.28)}
+.cell.ev{background:var(--sage);color:var(--pine)}
+.cell.hot{background:var(--red);color:#fff}
+.cell.day0{box-shadow:inset 0 0 0 2px var(--chalk)}
+.legend{display:flex;gap:14px;margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--sage);flex-wrap:wrap}
+.legend i{width:8px;height:8px;display:inline-block;margin-right:5px;vertical-align:0}
+
+/* ---------- urgent ---------- */
+.urgent{background:var(--red);color:#fff;padding:17px 22px;display:flex;align-items:center;gap:16px;width:100%;text-align:left}
+.urgent .l{flex:1;min-width:0}
+.urgent .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--redink)}
+.urgent .t{font-family:var(--disp);font-weight:500;font-size:19px;letter-spacing:-.01em;margin-top:5px}
+.urgent .m{font-size:13px;color:var(--redink);margin-top:3px}
+.urgent .n{font-family:var(--disp);font-weight:800;font-size:40px;line-height:.8;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+
+/* ---------- paper ---------- */
+.paper{background:var(--chalk);color:var(--ink);padding:22px 22px 28px}
+.paper .eyebrow{opacity:.5}
+.row{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--pline);width:100%;text-align:left}
+.row:last-child{border-bottom:none}
+.row .d{font-family:var(--mono);font-size:12.5px;opacity:.45;width:34px;flex-shrink:0;padding-top:3px;font-variant-numeric:tabular-nums}
+.row .b{flex:1;min-width:0}
+.row .b h4{margin:0;font-family:var(--disp);font-weight:500;font-size:17px;letter-spacing:-.01em}
+.row .b p{margin:4px 0 0;font-size:13.5px;opacity:.62;line-height:1.45}
+.row.done .b h4{text-decoration:line-through;opacity:.4}
+.row.done .b p{opacity:.35}
+.tick{width:19px;height:19px;border:1.5px solid rgba(7,26,18,.3);border-radius:50%;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent}
+.row.done .tick{background:var(--pine);border-color:var(--pine);color:#fff}
+.flag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;background:var(--red);color:#fff;padding:2px 6px;margin-left:7px;vertical-align:2px}
+.flag.wait{background:rgba(7,26,18,.1);color:rgba(7,26,18,.6)}
+
+/* ---------- generic dark blocks ---------- */
+.blk{padding:22px}
+.blk h3{font-family:var(--disp);font-weight:500;font-size:21px;letter-spacing:-.015em;margin:0 0 4px}
+.drow{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.drow:last-child{border-bottom:none}
+.drow .b{flex:1;min-width:0}
+.drow .b h4{margin:0;font-size:15.5px;font-weight:500}
+.drow .b p{margin:3px 0 0;font-size:12.5px;color:var(--sage);line-height:1.45}
+.st{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:3px 7px;flex-shrink:0;margin-top:2px}
+.st.todo{background:rgba(233,237,231,.1);color:var(--sage)}
+.st.sent{background:var(--sage);color:var(--pine)}
+.st.ok{background:var(--pine);color:var(--chalk);box-shadow:inset 0 0 0 1px var(--sage)}
+
+/* ---------- pipeline ---------- */
+.pipe{display:flex;align-items:center;margin:18px 0 8px}
+.pipe .n{width:11px;height:11px;border-radius:50%;border:1.5px solid var(--sage);flex-shrink:0}
+.pipe .n.on{background:var(--sage)}
+.pipe .n.now{background:var(--red);border-color:var(--red)}
+.pipe .s{flex:1;height:1px;background:var(--line)}
+.pipelab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--sage);letter-spacing:.04em}
+
+/* ---------- inbox ---------- */
+.conf{background:var(--chalk);color:var(--ink);padding:20px 22px;border-top:3px solid var(--red)}
+.conf .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--red)}
+.opt{border:1px solid rgba(7,26,18,.16);padding:12px 14px;margin-top:9px;display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;cursor:pointer}
+.opt.pick{border-color:var(--ink);background:rgba(7,26,18,.05)}
+.opt .v{font-family:var(--mono);font-size:16px}
+.opt .src{font-size:11.5px;opacity:.5;margin-top:3px}
+.reason{font-size:13.5px;line-height:1.5;opacity:.7;margin-top:14px}
+.btn{display:block;width:100%;text-align:center;padding:12px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;background:var(--ink);color:var(--chalk);margin-top:12px}
+.btn.ghost{background:none;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(7,26,18,.25)}
+.stg{display:flex;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.stg .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;padding:2px 6px;flex-shrink:0}
+.tag.new{background:var(--sage);color:var(--pine)}
+.tag.edit{background:rgba(233,237,231,.14);color:var(--chalk)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink);border-top:1px solid var(--line);display:flex;max-width:460px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+.nav button{flex:1;padding:13px 4px 15px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--sage);opacity:.6;position:relative}
+.nav button.on{opacity:1;color:var(--chalk)}
+.nav button.on::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:22px;height:2px;background:var(--red)}
+.dot{position:absolute;top:9px;right:calc(50% - 22px);width:6px;height:6px;border-radius:50%;background:var(--red)}
+
+.seg{display:flex;gap:0;margin-top:14px}
+.seg button{flex:1;padding:9px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--line);color:var(--sage)}
+.seg button.on{background:var(--chalk);color:var(--ink);border-color:var(--chalk)}
+.mrow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+.mrow:last-child{border-bottom:none}
+.mrow span:last-child{font-family:var(--mono);font-size:13px;color:var(--sage)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.cell.in{animation:none;opacity:1}}
+</style>
+
+<div id="app"></div>
+<nav class="nav" id="nav"></nav>
+
+<script>
+const BUILD='001';
+
+/* ---------------- storage ---------------- */
+const mem={};
+const store={
+  get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return mem[k]??null}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}
+};
+
+/* ---------------- facts ----------------
+   Facts come from documents. State is yours. They never mix.        */
+
+const YEAR_GROUP = store.get('yeargroup') || 'KG1';
+
+const FEES = {
+  KG1:{annual:44979,enrol:4500,t1:13491,t2:13494,t3:13494},
+  KG2:{annual:50726,enrol:5075,t1:15215,t2:15218,t3:15218}
+};
+
+const FACTS=[
+ {id:'fee-t1',type:'task',title:'Term 1 fees',due:'2026-08-28',blocking:true,
+  note:()=>`AED ${FEES[YEAR_GROUP].t1.toLocaleString()} · unpaid means she can't start`,src:'Fee structure 2026-27'},
+ {id:'rep-form',type:'task',title:'Class rep form opens',due:'2026-08-24',
+  note:()=>'4pm, if you want the role',src:'Welcome pack'},
+ {id:'hd-info',type:'event',title:'Homeroom teacher makes contact',due:'2026-08-26',waiting:true,
+  note:()=>'Hopes and dreams details, stationery list',src:'Welcome pack'},
+ {id:'cca-info',type:'event',title:'CCA list published',due:'2026-08-28',src:'Welcome pack'},
+ {id:'cca-signup',type:'task',title:'CCA sign-up',due:'2026-08-29',
+  note:()=>'Window closes 1 Sep · KG places go fast',src:'Welcome pack'},
+ {id:'hopes',type:'event',title:'Hopes and dreams',due:'2026-08-31',
+  note:()=>'Meet the teacher, set goals. Uniform sale in the foyer 07:30–12:00',src:'Welcome pack'},
+ {id:'firstday',type:'event',title:'First day',due:'2026-08-31',anchor:true,contested:true,
+  note:()=>'Settling-in week runs to 4 Sep · no school bus for KG',src:'Calendar outline'},
+ {id:'ccas',type:'event',title:'CCAs begin',due:'2026-09-07',src:'Welcome pack'},
+ {id:'infosess',type:'event',title:'Parent info sessions',due:'2026-09-14',
+  note:()=>'Runs to 17 Sep',src:'Calendar'},
+ {id:'midterm',type:'event',title:'Mid-term break',due:'2026-10-12',note:()=>'to 16 Oct',src:'Calendar'},
+ {id:'pd1',type:'event',title:'PD day — early dismissal',due:'2026-10-29',src:'Calendar'},
+ {id:'ptc1',type:'event',title:'Parent teacher consultations',due:'2026-11-03',
+  note:()=>'No school for primary',src:'Calendar'},
+ {id:'natday',type:'event',title:'UAE National Day',due:'2026-12-02',note:()=>'to 4 Dec, no school',src:'Calendar'},
+ {id:'winter',type:'event',title:'Winter break',due:'2026-12-14',note:()=>'to 3 Jan',src:'Calendar'},
+ {id:'fee-t2',type:'task',title:'Term 2 fees',due:'2026-12-31',blocking:true,
+  note:()=>`AED ${FEES[YEAR_GROUP].t2.toLocaleString()}`,src:'Fee structure'},
+ {id:'resume',type:'event',title:'Lessons resume',due:'2027-01-04',src:'Calendar'},
+ {id:'pd2',type:'event',title:'PD day — early dismissal',due:'2027-02-02',src:'Calendar'},
+ {id:'eidfitr',type:'event',title:'Eid Al Fitr',due:'2027-03-08',note:()=>'to 12 Mar',src:'Calendar'},
+ {id:'pd3',type:'event',title:'PD day — early dismissal',due:'2027-03-25',src:'Calendar'},
+ {id:'ptc2',type:'event',title:'Parent teacher consultations',due:'2027-03-31',src:'Calendar'},
+ {id:'spring',type:'event',title:'Spring break',due:'2027-04-05',note:()=>'to 9 Apr',src:'Calendar'},
+ {id:'fee-t3',type:'task',title:'Term 3 fees',due:'2027-04-09',blocking:true,
+  note:()=>`AED ${FEES[YEAR_GROUP].t3.toLocaleString()}`,src:'Fee structure'},
+ {id:'eidadha',type:'event',title:'Eid Al Adha',due:'2027-05-15',note:()=>'to 18 May',src:'Calendar'},
+ {id:'ptc3',type:'event',title:'Parent teacher consultations',due:'2027-05-24',src:'Calendar'},
+ {id:'endyear',type:'event',title:'End of year',due:'2027-07-02',src:'Calendar'}
+];
+
+const DOCS=[
+ {id:'d1',t:'Student passport',g:'Identity'},
+ {id:'d2',t:'Both parents’ passports',g:'Identity'},
+ {id:'d3',t:'Student Emirates ID',g:'Identity',n:'Front and back, colour'},
+ {id:'d4',t:'Both parents’ Emirates ID',g:'Identity',n:'Front and back, colour'},
+ {id:'d5',t:'Residence visas',g:'Identity'},
+ {id:'d6',t:'Birth certificate',g:'KHDA',n:'English or Arabic'},
+ {id:'d7',t:'Transfer certificate',g:'KHDA',n:'Required by KHDA'},
+ {id:'d8',t:'2025–26 school report',g:'School'},
+ {id:'d9',t:'Confidential report',g:'School',n:'Old school sends it, not you',wait:true},
+ {id:'d10',t:'Health and clinic form',g:'Clinic'},
+ {id:'d11',t:'Immunisation record',g:'Clinic'},
+ {id:'d12',t:'Terms and conditions',g:'Forms'},
+ {id:'d13',t:'Parent undertaking',g:'Forms'},
+ {id:'d14',t:'Toilet training undertaking',g:'Forms',n:'KG only'},
+ {id:'d15',t:'Language option form',g:'Forms'}
+];
+
+const KHDA=['Documents in','School enters KHDA','You verify in app','Sign contract'];
+
+const RULES=[
+ {k:'Gate opens',v:()=>YEAR_GROUP==='KG1'?'07:15':'07:00'},
+ {k:'Register',v:()=>'07:30 – 07:38'},
+ {k:'Marked absent',v:()=>'after 07:40'},
+ {k:'Pick-up',v:()=>'13:20, classrooms'},
+ {k:'Friday out',v:()=>'11:30'},
+ {k:'Absence form',v:()=>'before 08:00'},
+ {k:'Entrance',v:()=>YEAR_GROUP==='KG1'?'Montgomerie campus':'Kiss and drop'},
+ {k:'Lunchbox',v:()=>'no nuts, sweets, fizzy'}
+];
+
+const CONTACTS=[
+ {n:'Primary office',d:'pssecretary@diadubai.com',p:'04 871 3530'},
+ {n:'Head of year',d:()=>YEAR_GROUP==='KG1'?'jessicas@diadubai.com':'amberc@diadubai.com',
+  s:()=>YEAR_GROUP==='KG1'?'Jessica Simon':'Amber Corfe'},
+ {n:'Head of primary',d:'tomc@diadubai.com',s:'Tom Collar'},
+ {n:'Admissions',d:'admissions@diadubai.com',p:'04 871 3502'},
+ {n:'Accounts',d:'accounts@diadubai.com'},
+ {n:'Bus — Arab Falcon',d:'csr.diaeh@arabfalcondubai.ae',p:'050 1042285'},
+ {n:'Canteen — Kalo',d:'hello@kalohospitality.com'}
+];
+
+const STAGED=[
+ {id:'s1',kind:'conflict',field:'First day',
+  a:{v:'1 Sep',src:'Welcome pack calendar'},
+  b:{v:'31 Aug',src:'Calendar outline, KG1 row'},
+  why:'The incoming source names KG1 on its own line. The stored one lumps KG1 in with KG2, which is how the error usually happens. Leaning 31 Aug — but the office should confirm.'},
+ {id:'s2',kind:'new',t:'CCA sign-up opens',m:'29 Aug · task'},
+ {id:'s3',kind:'edit',t:'KG pick-up → 13:20',m:'was 13:00 · rule'},
+ {id:'s4',kind:'new',t:'Toilet training undertaking',m:'form · KG only'},
+ {id:'s5',kind:'new',t:'No bus for KG in week 1',m:'rule · expires 7 Sep'}
+];
+
+/* ---------------- state ---------------- */
+let S = store.get('state') || {done:{},docs:{},khda:1,resolved:{},dismissed:[]};
+const save=()=>store.set('state',S);
+let view = 'runway';
+
+/* ---------------- helpers ---------------- */
+const TODAY=new Date('2026-07-26T00:00:00');
+const D=s=>new Date(s+'T00:00:00');
+const days=(a,b)=>Math.round((b-a)/864e5);
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const fmt=d=>d.getDate()+' '+MON[d.getMonth()];
+const note=f=>typeof f.note==='function'?f.note():f.note;
+const val=x=>typeof x==='function'?x():x;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const upcoming=()=>FACTS.filter(f=>D(f.due)>=TODAY).sort((a,b)=>D(a.due)-D(b.due));
+const anchor=()=>upcoming().find(f=>f.anchor)||upcoming()[0];
+const nextBlocking=()=>upcoming().find(f=>f.blocking&&!S.done[f.id]);
+
+/* derived: two things landing on one day */
+const clashes=()=>{
+  const m={};upcoming().forEach(f=>{(m[f.due]=m[f.due]||[]).push(f)});
+  return Object.values(m).filter(a=>a.length>1);
+};
+
+/* ---------------- views ---------------- */
+function runway(){
+  const a=anchor(), n=days(TODAY,D(a.due)), u=nextBlocking();
+  const total=n, cells=[];
+  for(let i=0;i<=total;i++){
+    const d=new Date(TODAY.getTime()+i*864e5);
+    const iso=d.toISOString().slice(0,10);
+    const on=FACTS.filter(f=>f.due===iso);
+    const hot=on.some(f=>f.blocking&&!S.done[f.id]);
+    cells.push(`<div class="cell ${hot?'hot':on.length?'ev':'gone'} ${i===0?'day0':''}" style="animation-delay:${Math.min(i*11,700)}ms">${on.length||i===0?d.getDate():''}</div>`);
+  }
+  const list=upcoming().filter(f=>f!==a||true).slice(0,6);
+
+  return `
+  <div class="hero">
+    <div class="bar"><span class="eyebrow">runway</span><span class="eyebrow">${YEAR_GROUP.toLowerCase()} · dia eh</span></div>
+    <div class="count"><b>${n}</b>${a.contested?'<span class="ish">ish</span>':''}</div>
+    <div class="lede">sleeps until her first day</div>
+    <div class="sub">${a.contested?'Two calendars disagree — 31 Aug or 1 Sep.':fmt(D(a.due))}</div>
+    <div class="reg">${cells.join('')}</div>
+    <div class="legend">
+      <span><i style="background:var(--red)"></i>needs you</span>
+      <span><i style="background:var(--sage)"></i>something happens</span>
+      <span><i style="box-shadow:inset 0 0 0 2px var(--chalk)"></i>today</span>
+    </div>
+  </div>
+
+  ${u?`<button class="urgent" data-go="year">
+    <span class="l">
+      <span class="k">first hard deadline</span>
+      <span class="t">${esc(u.title)}</span>
+      <span class="m">${esc(note(u)||'')}</span>
+    </span>
+    <span class="n">${days(TODAY,D(u.due))}</span>
+  </button>`:''}
+
+  <div class="paper">
+    <div class="eyebrow">what's next</div>
+    ${list.map(f=>{
+      const done=!!S.done[f.id];
+      return `<button class="row ${done?'done':''}" data-tog="${f.id}">
+        <span class="d">${fmt(D(f.due))}</span>
+        <span class="b">
+          <h4>${esc(f.title)}${f.contested?'<span class="flag">contested</span>':''}${f.waiting?'<span class="flag wait">school</span>':''}</h4>
+          ${note(f)?`<p>${esc(note(f))}</p>`:''}
+        </span>
+        <span class="tick">✓</span>
+      </button>`}).join('')}
+  </div>
+
+  ${clashes().length?`<div class="blk" style="background:var(--deep)">
+    <div class="eyebrow">noticed</div>
+    ${clashes().slice(0,2).map(c=>`<div class="drow"><div class="b">
+      <h4>${esc(c.map(x=>x.title).join(' + '))}</h4>
+      <p>Both land on ${fmt(D(c[0].due))}. Same morning.</p></div></div>`).join('')}
+  </div>`:''}`;
+}
+
+function inbox(){
+  const c=STAGED.find(s=>s.kind==='conflict'&&!S.resolved[s.id]);
+  const rest=STAGED.filter(s=>s.kind!=='conflict'&&!S.dismissed.includes(s.id));
+  return `
+  <div class="blk">
+    <div class="bar" style="display:flex;justify-content:space-between">
+      <span class="eyebrow">inbox</span><span class="eyebrow">${rest.length+(c?1:0)} staged</span>
+    </div>
+    <h3 style="margin-top:16px">Nothing is saved until you accept it.</h3>
+    <p style="font-size:13.5px;color:var(--sage);margin:6px 0 0">Pulled from Welcome_Pack.pdf and the calendar outline.</p>
+  </div>
+
+  ${c?`<div class="conf">
+    <div class="k">conflict</div>
+    <h3 style="margin-top:9px">${esc(c.field)}</h3>
+    <button class="opt ${S.pick==='a'?'pick':''}" data-pick="a">
+      <span><span class="v">${esc(c.a.v)}</span><span class="src" style="display:block">${esc(c.a.src)}</span></span>
+      <span class="src">in store</span></button>
+    <button class="opt ${S.pick==='b'?'pick':''}" data-pick="b">
+      <span><span class="v">${esc(c.b.v)}</span><span class="src" style="display:block">${esc(c.b.src)}</span></span>
+      <span class="src">incoming</span></button>
+    <p class="reason">${esc(c.why)}</p>
+    <button class="btn" data-resolve="${c.id}">keep the one i picked</button>
+    <button class="btn ghost" data-mail="1">ask the office</button>
+  </div>`:''}
+
+  <div class="blk">
+    ${rest.map(s=>`<button class="stg" data-drop="${s.id}">
+      <span class="tag ${s.kind}">${s.kind}</span>
+      <span class="b"><h4 style="margin:0;font-size:15px;font-weight:500">${esc(s.t)}</h4>
+      <p style="margin:3px 0 0;font-size:12px;color:var(--sage)" class="mono">${esc(s.m)}</p></span>
+      <span style="color:var(--sage)">✓</span>
+    </button>`).join('')||'<p style="color:var(--sage);font-size:14px">Inbox clear. Drop a PDF or paste a newsletter to add more.</p>'}
+  </div>`;
+}
+
+function year(){
+  const byMonth={};
+  upcoming().forEach(f=>{const d=D(f.due),k=MON[d.getMonth()]+' '+d.getFullYear();(byMonth[k]=byMonth[k]||[]).push(f)});
+  return `<div class="blk"><span class="eyebrow">the year</span>
+    <h3 style="margin-top:14px">${YEAR_GROUP} · 2026–27</h3></div>
+  <div class="paper">
+    ${Object.entries(byMonth).map(([m,fs])=>`
+      <div class="eyebrow" style="margin:18px 0 2px">${m.toLowerCase()}</div>
+      ${fs.map(f=>`<div class="row"><span class="d">${D(f.due).getDate()}</span>
+        <span class="b"><h4>${esc(f.title)}${f.blocking?'<span class="flag">fees</span>':''}</h4>
+        ${note(f)?`<p>${esc(note(f))}</p>`:''}</span></div>`).join('')}
+    `).join('')}
+  </div>`;
+}
+
+function docs(){
+  const groups={};DOCS.forEach(d=>{(groups[d.g]=groups[d.g]||[]).push(d)});
+  const done=DOCS.filter(d=>S.docs[d.id]==='ok').length;
+  return `<div class="blk">
+    <span class="eyebrow">paperwork</span>
+    <h3 style="margin-top:14px">${done} of ${DOCS.length} in</h3>
+    <div class="pipe">${KHDA.map((_,i)=>`<span class="n ${i<S.khda?'on':''} ${i===S.khda?'now':''}"></span>${i<3?'<span class="s"></span>':''}`).join('')}</div>
+    <div class="pipelab">${KHDA.map(k=>`<span>${k.split(' ')[0]}</span>`).join('')}</div>
+    <p style="font-size:13px;color:var(--sage);margin-top:10px">Step ${S.khda+1} is the school's move, not yours.</p>
+  </div>
+  ${Object.entries(groups).map(([g,ds])=>`<div class="blk" style="padding-top:0">
+    <div class="eyebrow" style="margin-bottom:4px">${g.toLowerCase()}</div>
+    ${ds.map(d=>{const st=S.docs[d.id]||'todo';
+      return `<button class="drow" data-doc="${d.id}">
+        <span class="b"><h4>${esc(d.t)}</h4>${d.n?`<p>${esc(d.n)}</p>`:''}</span>
+        <span class="st ${st}">${st==='ok'?'in':st==='sent'?'sent':d.wait?'them':'todo'}</span>
+      </button>`}).join('')}
+  </div>`).join('')}`;
+}
+
+function day(){
+  return `<div class="blk"><span class="eyebrow">every day</span>
+    <h3 style="margin-top:14px">The shape of a morning</h3>
+    <div style="margin-top:14px">${RULES.map(r=>`<div class="mrow"><span>${esc(r.k)}</span><span>${esc(val(r.v))}</span></div>`).join('')}</div>
+    <div class="seg">
+      <button data-yg="KG1" class="${YEAR_GROUP==='KG1'?'on':''}">kg1</button>
+      <button data-yg="KG2" class="${YEAR_GROUP==='KG2'?'on':''}">kg2</button>
+    </div>
+    <p style="font-size:12.5px;color:var(--sage);margin-top:10px">Changes gate times and the fee schedule.</p>
+  </div>
+  <div class="paper">
+    <div class="eyebrow">who to ask</div>
+    ${CONTACTS.map(c=>`<div class="row"><span class="b">
+      <h4>${esc(c.n)}</h4>
+      <p>${c.s?esc(val(c.s))+' · ':''}<a href="mailto:${esc(val(c.d))}">${esc(val(c.d))}</a>${c.p?' · '+esc(c.p):''}</p>
+    </span></div>`).join('')}
+  </div>`;
+}
+
+/* ---------------- render ---------------- */
+const VIEWS={runway,inbox,year,docs,day};
+const TABS=[['runway','runway'],['inbox','inbox'],['year','year'],['docs','docs'],['day','daily']];
+
+function render(){
+  document.getElementById('app').innerHTML=VIEWS[view]();
+  const badge=STAGED.filter(s=>!S.dismissed.includes(s.id)&&!S.resolved[s.id]).length;
+  document.getElementById('nav').innerHTML=TABS.map(([k,l])=>
+    `<button data-view="${k}" class="${view===k?'on':''}">${l}${k==='inbox'&&badge?'<span class="dot"></span>':''}</button>`).join('');
+  requestAnimationFrame(()=>document.querySelectorAll('.cell').forEach(c=>c.classList.add('in')));
+}
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-view],[data-tog],[data-doc],[data-pick],[data-resolve],[data-drop],[data-yg],[data-go],[data-mail]');
+  if(!t)return;
+  const d=t.dataset;
+  if(d.view){view=d.view}
+  else if(d.go){view=d.go}
+  else if(d.tog){S.done[d.tog]=!S.done[d.tog];save()}
+  else if(d.doc){const c=S.docs[d.doc]||'todo';S.docs[d.doc]=c==='todo'?'sent':c==='sent'?'ok':'todo';save()}
+  else if(d.pick){S.pick=d.pick;save()}
+  else if(d.resolve){if(!S.pick)return;S.resolved[d.resolve]=S.pick;save()}
+  else if(d.drop){S.dismissed.push(d.drop);save()}
+  else if(d.yg){store.set('yeargroup',d.yg);location.reload();return}
+  else if(d.mail){location.href='mailto:pssecretary@diadubai.com?subject=KG1%20start%20date%202026-27&body=Hello%2C%0A%0AThe%20welcome%20pack%20calendar%20and%20the%20calendar%20outline%20give%20different%20first%20days%20for%20KG1%20(1%20September%20vs%2031%20August).%20Could%20you%20confirm%20which%20is%20correct%3F%0A%0AThank%20you.';return}
+  render();
+});
+
+render();
+</script>
