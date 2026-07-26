@@ -80,6 +80,14 @@ label.chk input{width:18px;height:18px;margin:0;accent-color:var(--red)}
 .row.taken .claim{border-color:var(--pine);color:var(--pine)}
 .row.done .claim{background:var(--pine);border-color:var(--pine);color:var(--chalk)}
 .by{font-family:var(--mono);font-size:11px;opacity:.5;margin-top:5px;display:block}
+.tt{display:block;width:100%;text-align:left}
+.links{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.links a,.links button{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;padding:5px 9px;box-shadow:inset 0 0 0 1px rgba(7,26,18,.2);color:rgba(7,26,18,.72);text-decoration:none;display:inline-block}
+.links a:active{background:rgba(7,26,18,.07)}
+.links button{opacity:.55}
+.portal{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;text-decoration:none;gap:12px}
+.portal:last-child{border-bottom:none}
+.portal span:last-child{font-family:var(--mono);font-size:10.5px;color:var(--sage)}
 .flag{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;padding:2px 6px;margin-left:6px;vertical-align:2px;background:rgba(7,26,18,.09);color:rgba(7,26,18,.55)}
 .flag.hot{background:var(--red);color:#fff}
 .grouprow{display:flex;gap:13px;align-items:center;padding:13px 0;border-bottom:1px solid var(--pline);width:100%}
@@ -163,7 +171,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='006';
+const BUILD='007';
 
 const mem={};
 const disk={
@@ -184,24 +192,24 @@ let YG='KG1';
 
 /* One kind of thing. A date is optional. A group is optional. */
 const SEED=[
- {id:'mt-register',src:'welcome',title:'Register for mother tongue',
+ {id:'mt-register',src:'welcome',title:'Register for mother tongue',links:[{t:'resources',u:'https://www.diadubai.com/resources-dia-eh'},{t:'email Ruchika',u:'mailto:ruchikas@diadubai.com?subject=Mother%20tongue%20registration%20KG1'},{t:'Hindi',u:'mailto:mthindi@diadubai.com'}],
   note:()=>'Optional, extra fee. Hindi sits in the timetable — mthindi@diadubai.com'},
- {id:'bus-register',src:'welcome',title:'Register for the school bus',
+ {id:'bus-register',src:'welcome',title:'Register for the school bus',links:[{t:'transport page',u:'https://www.diadubai.com/transport-dia-eh'},{t:'email Arab Falcon',u:'mailto:csr.diaeh@arabfalcondubai.ae'}],
   note:()=>'Arab Falcon, through the school website'},
- {id:'kalo-app',src:'welcome',title:'Set up the Kalo canteen app',
+ {id:'kalo-app',src:'welcome',title:'Set up the Kalo canteen app',links:[{t:'iOS',u:'https://apps.apple.com/ae/app/kalo-hospitality/id6461117251'},{t:'Android',u:'https://play.google.com/store/apps/details?id=munch.kalo.delivery'}],
   note:()=>'Register her student ID, top up, pre-order meal boxes'},
- {id:'uniform-buy',src:'welcome',title:'Buy uniform at Zaks',
+ {id:'uniform-buy',src:'welcome',title:'Buy uniform at Zaks',links:[{t:'Zaks DIA store',u:'https://www.zaksstore.com/shop/dia/en/5254-school-dubai-international-academy-emirates-hill'},{t:'uniform list',u:'https://www.diadubai.com/admissions/uniform'}],
   note:()=>'Uniform, black leather shoes, PE kit with non-marking trainers'},
- {id:'pickup-form',src:'welcome',title:'Nanny or driver collection form',
+ {id:'pickup-form',src:'welcome',title:'Nanny or driver collection form',links:[{t:'resources',u:'https://www.diadubai.com/resources-dia-eh'},{t:'ask the office',u:'mailto:pssecretary@diadubai.com?subject=Collection%20form%20for%20nanny%20or%20driver'}],
   note:()=>'Only if someone other than you collects her'},
- {id:'absence-link',src:'welcome',title:'Bookmark the absence form',
+ {id:'absence-link',src:'welcome',title:'Bookmark the absence form',links:[{t:'resources',u:'https://www.diadubai.com/resources-dia-eh'},{t:'office',u:'tel:+97148713530'}],
   note:()=>'Has to be in before 08:00 on the day'},
- {id:'khda-contract',src:'khda',title:'Sign the KHDA parent contract',blocking:true,waiting:true,
+ {id:'khda-contract',src:'khda',title:'Sign the KHDA parent contract',links:[{t:'KHDA portal',u:'https://www.khda.gov.ae/khdaparentportal/#/login'}],blocking:true,waiting:true,
   note:()=>'School publishes it first, then you sign in the KHDA app with an OTP'},
 
  {id:'p1',src:'khda',group:'paperwork',title:'Student passport',blocking:true},
  {id:'p2',src:'khda',group:'paperwork',title:'Both parents passports',blocking:true},
- {id:'p3',src:'khda',group:'paperwork',title:'Student Emirates ID',blocking:true,note:()=>'Colour, front and back. Needed before she joins'},
+ {id:'p3',src:'khda',group:'paperwork',title:'Student Emirates ID',links:[{t:'send to admissions',u:'mailto:admissions@diadubai.com'}],blocking:true,note:()=>'Colour, front and back. Needed before she joins'},
  {id:'p4',src:'khda',group:'paperwork',title:'Both parents Emirates ID',blocking:true,note:()=>'Colour, front and back'},
  {id:'p5',src:'khda',group:'paperwork',title:'Residence visas',blocking:true},
  {id:'p6',src:'khda',group:'paperwork',title:'Birth certificate',blocking:true,note:()=>'English or Arabic'},
@@ -219,12 +227,12 @@ const SEED=[
  {id:'prophet',src:'calendar',title:'Prophet Mohammad birthday',due:'2026-08-25',note:()=>'No school. Moves with the lunar calendar'},
  {id:'hd-info',src:'welcome',title:'Homeroom teacher makes contact',due:'2026-08-26',waiting:true,
   note:()=>'Hopes and dreams slot, stationery list, specialist timetable'},
- {id:'fee-t1',src:'fees',title:'Term 1 fees',due:'2026-08-28',blocking:true,
+ {id:'fee-t1',src:'fees',title:'Term 1 fees',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'},{t:'accounts',u:'mailto:accounts@diadubai.com'}],due:'2026-08-28',blocking:true,
   note:()=>'AED '+FEES[YG].t1.toLocaleString()+" · unpaid means she can't start"},
  {id:'cca-info',src:'welcome',title:'CCA list published',due:'2026-08-28',waiting:true},
- {id:'cca-signup',src:'welcome',title:'CCA sign-up opens',due:'2026-08-29',note:()=>'Through SOCS. Closes 1 Sep'},
+ {id:'cca-signup',src:'welcome',title:'CCA sign-up opens',links:[{t:'parent portal',u:'https://www.diadubai.com/parent-portal-dia-eh'}],due:'2026-08-29',note:()=>'Through SOCS. Closes 1 Sep'},
  {id:'hopes',src:'welcome',title:'Hopes and dreams',due:'2026-08-31',note:()=>'Meet the teacher, set goals for the year'},
- {id:'uniform-sale1',src:'welcome',title:'Second-hand uniform sale',due:'2026-08-31',
+ {id:'uniform-sale1',src:'welcome',title:'Second-hand uniform sale',links:[{t:'organisers',u:'mailto:diarecycle@gmail.com'}],due:'2026-08-31',
   note:()=>'Front lobby 07:30-12:00, AED 20 an item, small notes or pay online'},
  {id:'mt-expo',src:'welcome',title:'Mother tongue expo',due:'2026-08-31',
   note:()=>'Canteen extension 08:00-13:00, where you meet the coordinators'},
@@ -245,7 +253,7 @@ const SEED=[
  {id:'ptc1',src:'calendar',title:'Parent teacher consultations',due:'2026-11-03',note:()=>'No school for primary'},
  {id:'natday',src:'calendar',title:'UAE National Day',due:'2026-12-02',note:()=>'to 4 Dec'},
  {id:'winter',src:'calendar',title:'Winter break',due:'2026-12-14',note:()=>'to 3 Jan'},
- {id:'fee-t2',src:'fees',title:'Term 2 fees',due:'2026-12-31',blocking:true,note:()=>'AED '+FEES[YG].t2.toLocaleString()},
+ {id:'fee-t2',src:'fees',title:'Term 2 fees',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'}],due:'2026-12-31',blocking:true,note:()=>'AED '+FEES[YG].t2.toLocaleString()},
  {id:'resume',src:'calendar',title:'Lessons resume',due:'2027-01-04'},
  {id:'pd2',src:'calendar',title:'PD day — early dismissal',due:'2027-02-02'},
  {id:'ramadan',src:'calendar',title:'Ramadan begins',due:'2027-02-08',note:()=>'Timings usually change'},
@@ -253,12 +261,12 @@ const SEED=[
  {id:'pd3',src:'calendar',title:'PD day — early dismissal',due:'2027-03-25'},
  {id:'ptc2',src:'calendar',title:'Parent teacher consultations',due:'2027-03-31'},
  {id:'spring',src:'calendar',title:'Spring break',due:'2027-04-05',note:()=>'to 9 Apr'},
- {id:'fee-t3',src:'fees',title:'Term 3 fees',due:'2027-04-09',blocking:true,note:()=>'AED '+FEES[YG].t3.toLocaleString()},
+ {id:'fee-t3',src:'fees',title:'Term 3 fees',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'}],due:'2027-04-09',blocking:true,note:()=>'AED '+FEES[YG].t3.toLocaleString()},
  {id:'eidadha',src:'calendar',title:'Eid Al Adha',due:'2027-05-15',note:()=>'to 18 May'},
  {id:'ptc3',src:'calendar',title:'Parent teacher consultations',due:'2027-05-24'},
  {id:'hijri',src:'calendar',title:'Hijri new year',due:'2027-06-06'},
  {id:'endyear',src:'calendar',title:'End of year',due:'2027-07-02'},
- {id:'pe-switch',src:'welcome',title:'New PE kit compulsory',due:'2027-08-01',
+ {id:'pe-switch',src:'welcome',title:'New PE kit compulsory',links:[{t:'Zaks DIA store',u:'https://www.zaksstore.com/shop/dia/en/5254-school-dubai-international-academy-emirates-hill'}],due:'2027-08-01',
   note:()=>'Transition ends. G Force kit from Zaks, same price'}
 ];
 
@@ -323,6 +331,18 @@ const CONTACTS=[
  {n:'Bus — Arab Falcon',s:'Jaya Maini',d:'csr.diaeh@arabfalcondubai.ae',p:'050 1042285'},
  {n:'Canteen — Kalo',d:'hello@kalohospitality.com'},
  {n:'Second-hand uniform',d:'diarecycle@gmail.com'}
+];
+
+const PORTALS=[
+ {n:'DIA parent portal',u:'https://www.diadubai.com/parent-portal-dia-eh'},
+ {n:'Forms and resources',u:'https://www.diadubai.com/resources-dia-eh'},
+ {n:'Transport and bus form',u:'https://www.diadubai.com/transport-dia-eh'},
+ {n:'Uniform list',u:'https://www.diadubai.com/admissions/uniform'},
+ {n:'Zaks — DIA store',u:'https://www.zaksstore.com/shop/dia/en/5254-school-dubai-international-academy-emirates-hill'},
+ {n:'Zenda — pay fees',u:'https://innoventureseducation.zenda.com/'},
+ {n:'KHDA parent portal',u:'https://www.khda.gov.ae/khdaparentportal/#/login'},
+ {n:'Kalo canteen — iOS',u:'https://apps.apple.com/ae/app/kalo-hospitality/id6461117251'},
+ {n:'Kalo canteen — Android',u:'https://play.google.com/store/apps/details?id=munch.kalo.delivery'}
 ];
 
 const CLASH={id:'s1',src:'calendar',field:'First day',
@@ -445,16 +465,24 @@ function setup(){
 /* ---------- shared row ---------- */
 function row(f){
   const s=stateOf(f.id);
-  return '<button class="row '+s.status+'" data-tog="'+esc(f.id)+'">'+
-    '<span class="d">'+(f.due?fmt(D(f.due)):'—')+'</span><span class="b">'+
-    '<h4>'+esc(f.title)+
-      (f.contested?'<span class="flag hot">contested</span>':'')+
-      (f.waiting?'<span class="flag">school</span>':'')+
-      (f.custom?'<span class="flag">added</span>':'')+'</h4>'+
-    (val(f.note)?'<p>'+esc(val(f.note))+'</p>':'')+
-    ((s.status!=='open'&&s.by)?'<span class="by">'+(s.status==='done'?'done':'taken')+' by '+
-      esc(s.by===ME?'you':nameOf(s.by))+' · '+ago(s.at)+'</span>':'')+
-    '</span><span class="claim">'+(s.by?esc(initialOf(s.by)):'✓')+'</span></button>';
+  const extra=get('lnk:'+f.id);
+  const links=(f.links||[]).concat(extra&&extra.u?[{t:extra.t||'your link',u:extra.u}]:[]);
+  return '<div class="row '+s.status+'">'+
+    '<span class="d">'+(f.due?fmt(D(f.due)):'—')+'</span><div class="b">'+
+    '<button class="tt" data-tog="'+esc(f.id)+'">'+
+      '<h4>'+esc(f.title)+
+        (f.contested?'<span class="flag hot">contested</span>':'')+
+        (f.waiting?'<span class="flag">school</span>':'')+
+        (f.custom?'<span class="flag">added</span>':'')+'</h4>'+
+      (val(f.note)?'<p>'+esc(val(f.note))+'</p>':'')+
+      ((s.status!=='open'&&s.by)?'<span class="by">'+(s.status==='done'?'done':'taken')+' by '+
+        esc(s.by===ME?'you':nameOf(s.by))+' · '+ago(s.at)+'</span>':'')+
+    '</button>'+
+    '<div class="links">'+
+      links.map(l=>'<a href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>').join('')+
+      '<button data-addlink="'+esc(f.id)+'">'+(extra&&extra.u?'edit link':'+ link')+'</button>'+
+    '</div></div>'+
+    '<button class="claim" data-tog="'+esc(f.id)+'">'+(s.by?esc(initialOf(s.by)):'✓')+'</button></div>';
 }
 
 /* ---------- 1. now ---------- */
@@ -591,6 +619,9 @@ function info(){
     CONTACTS.map(c=>'<div class="row"><span class="b"><h4>'+esc(c.n)+'</h4><p>'+
       (c.s?esc(val(c.s))+' · ':'')+'<a href="mailto:'+esc(val(c.d))+'">'+esc(val(c.d))+'</a>'+
       (c.p?' · '+esc(c.p):'')+'</p></span></div>').join('')+'</div>'+
+    '<div class="blk"><span class="eyebrow">portals</span><div style="margin-top:12px">'+
+    PORTALS.map(x=>'<a class="portal" href="'+esc(x.u)+'" target="_blank" rel="noopener"><span>'+esc(x.n)+'</span><span>open ↗</span></a>').join('')+
+    '</div></div>'+
     '<div class="blk"><span class="eyebrow">this family</span><div style="margin-top:12px">'+
     '<div class="mrow"><span>You are</span><span>'+esc(nameOf(ME))+'</span></div>'+
     '<div class="mrow"><span>Family code</span><span>'+esc(FAM||'-')+'</span></div>'+
@@ -678,7 +709,7 @@ async function readSource(){
 }
 
 document.addEventListener('click',async function(e){
-  const t=e.target.closest('[data-view],[data-tog],[data-pick],[data-resolve],[data-yg],[data-mail],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-hide],[data-read],[data-accept],[data-reject],[data-delsrc],[data-open],[data-f]');
+  const t=e.target.closest('[data-view],[data-tog],[data-pick],[data-resolve],[data-yg],[data-mail],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-hide],[data-read],[data-accept],[data-reject],[data-delsrc],[data-open],[data-f],[data-addlink]');
   if(!t)return;
   const d=t.dataset;
 
@@ -709,6 +740,14 @@ document.addEventListener('click',async function(e){
     write('cf:'+newId('c'),{title:title,due:/^\d{4}-\d{2}-\d{2}$/.test(due)?due:null,
       note:(no&&no.value||'').trim().slice(0,200)||null,blocking:!!(bl&&bl.checked),src:'added'});
     view='runway';render();return}
+  if(d.addlink){
+    const cur=get('lnk:'+d.addlink,{});
+    const u=prompt('Paste the link for this one', cur.u||'https://');
+    if(u===null)return;
+    const clean=u.trim();
+    if(!clean||clean==='https://'){write('lnk:'+d.addlink,{u:'',t:''});return}
+    write('lnk:'+d.addlink,{u:clean,t:'your link'});return;
+  }
   if(d.del){write('cf:'+d.del,{deleted:true});return}
   if(d.delsrc){write('src:'+d.delsrc,{deleted:true});return}
   if(d.hide){write('hide:'+d.hide,{v:!isHidden(d.hide)});return}
