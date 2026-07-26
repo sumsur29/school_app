@@ -36,9 +36,9 @@ async function readState(path) {
   }
 }
 
-function writeState(path, data, etag) {
+function writeState(path, data, etag, access) {
   const opts = {
-    access: 'public',
+    access: access || 'private',
     contentType: 'application/json',
     allowOverwrite: true,
     addRandomSuffix: false,
@@ -46,6 +46,16 @@ function writeState(path, data, etag) {
   };
   if (etag) opts.ifMatch = etag;
   return Blob.put(path, JSON.stringify(data), opts);
+}
+
+async function writeEither(path, data, etag) {
+  try {
+    return await writeState(path, data, etag, 'private');
+  } catch (e) {
+    if (/access|public|private/i.test(String((e && e.message) || '')))
+      return writeState(path, data, etag, 'public');
+    throw e;
+  }
 }
 
 const isPreconditionFail = e =>
@@ -88,7 +98,7 @@ export default async function handler(req, res) {
         if (!changed) return res.json(data);
 
         try {
-          await writeState(path, data, etag);
+          await writeEither(path, data, etag);
           return res.json(data);
         } catch (e) {
           if (isPreconditionFail(e) && attempt < MAX_TRIES - 1) continue;
