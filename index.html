@@ -160,7 +160,7 @@ label.chk input{width:18px;height:18px;margin:0;accent-color:var(--red)}
 .filt{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
 .filt button{font-family:var(--body);font-size:13px;font-weight:500;padding:8px 13px;box-shadow:inset 0 0 0 1px var(--line);color:var(--sage)}
 .filt button.on{background:var(--chalk);color:var(--ink);box-shadow:none}
-.mrow{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px;gap:12px}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px;gap:12px;text-align:left}
 .mrow:last-child{border-bottom:none}
 .mrow span:last-child{font-family:var(--mono);font-size:13px;color:var(--sage);text-align:right}
 .sync{font-family:var(--body);font-size:12.5px;color:var(--sage);display:flex;align-items:center;gap:6px}
@@ -177,7 +177,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='010';
+const BUILD='011';
 
 const mem={};
 const disk={
@@ -343,6 +343,9 @@ const CONTACTS=[
  {n:'Second-hand uniform',d:'diarecycle@gmail.com'}
 ];
 
+const HOUSES={'Air':'#378ADD','Earth':'#639922','Fire':'#DC3B2B','Water':'#1D9E75'};
+const CHILD_DEFAULT={name:'Geet Surana',house:'Earth',klass:'',homegroup:''};
+
 const GLOSSARY={
  'CCA':'Co-curricular activity — the clubs, squads and lessons that run after school. Some are free and taught by school staff, others are paid and run by outside providers. Sign-up happens through a booking system called SOCS in the week before each term, and places go quickly. For KG the choice is smaller and nothing starts until after the settling-in week.',
  'SOCS':'The booking system the school moved to for CCA sign-ups, after parents complained about the old process. You log in and pick clubs during the sign-up window.',
@@ -389,6 +392,9 @@ const nameOf=id=>{const m=L['member:'+id];return (m&&m.name)||'someone'};
 const initialOf=id=>{const n=nameOf(id);return n.trim().charAt(0).toUpperCase()||'?'};
 const tintOf=id=>{let s=0;for(let i=0;i<String(id).length;i++)s+=String(id).charCodeAt(i);return s%2?'z':''};
 const others=()=>members().filter(m=>m.id!==ME);
+const child=()=>Object.assign({},CHILD_DEFAULT,get('child',{}));
+const firstName=()=>String(child().name||'').trim().split(' ')[0]||'her';
+const campus=()=>YG==='KG1'?'Montgomerie':'Main campus';
 
 function write(k,v){
   L[k]=Object.assign({},v,{at:Date.now(),who:ME});
@@ -544,7 +550,7 @@ function runway(){
     '<span style="font-size:13.5px;opacity:.72">'+YG+' · DIA Emirates Hills</span></span>'+
     '<span class="sync '+(online?'':'off')+'"><i></i>'+(online?'synced':'offline')+'</span></div>'+
     '<div class="count"><b>'+n+'</b>'+(a.contested?'<span class="ish">ish</span>':'')+'</div>'+
-    '<div class="lede">sleeps until '+(a.anchor?'her first day':esc(String(a.title).toLowerCase()))+'</div>'+
+    '<div class="lede">sleeps until '+(a.anchor?esc(firstName())+'\u2019s first day':esc(String(a.title).toLowerCase()))+'</div>'+
     '<div class="sub">'+(a.contested?'Two calendars disagree - 31 Aug or 1 Sep.':fmt(D(a.due)))+'</div>'+
     '<div class="reg">'+cells.join('')+'</div>'+
     '<div class="legend"><span><i style="background:var(--red)"></i>nobody has it</span>'+
@@ -655,7 +661,23 @@ function papers(){
 /* ---------- 4. info ---------- */
 function info(){
   const link=location.origin+'/?f='+FAM;
-  return '<div class="blk"><span class="eyebrow">every day</span>'+
+  const c=child(), hc=HOUSES[c.house]||'var(--sage)';
+  return '<div class="blk"><span class="eyebrow">her</span>'+
+    '<div style="display:flex;align-items:center;gap:13px;margin-top:14px">'+
+      '<span style="width:44px;height:44px;border-radius:50%;background:'+hc+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:500;font-size:19px">'+
+        esc((c.name||'?').trim().charAt(0).toUpperCase())+'</span>'+
+      '<span><span style="font-family:var(--disp);font-size:22px;font-weight:500;display:block;line-height:1.2">'+esc(c.name)+'</span>'+
+      '<span style="font-size:13.5px;color:var(--sage)">'+esc(YG)+' · '+esc(campus())+'</span></span></div>'+
+    '<div style="margin-top:16px">'+
+      '<button class="mrow" style="width:100%" data-edit="name"><span>Name</span><span>'+esc(c.name||'add')+'</span></button>'+
+      '<button class="mrow" style="width:100%" data-edit="house"><span>House</span><span style="color:'+hc+'">'+esc(c.house||'add')+'</span></button>'+
+      '<button class="mrow" style="width:100%" data-edit="klass"><span>Class</span><span>'+esc(c.klass||'not allocated yet')+'</span></button>'+
+      '<button class="mrow" style="width:100%" data-edit="homegroup"><span>Homegroup</span><span>'+esc(c.homegroup||'not allocated yet')+'</span></button>'+
+      '<div class="mrow"><span>Campus</span><span>'+esc(campus())+'</span></div>'+
+      '<div class="mrow"><span>Head of year</span><span>'+(YG==='KG1'?'Jessica Simon':'Amber Corfe')+'</span></div>'+
+    '</div>'+
+    '<p class="note">Class and homegroup come through with the hopes and dreams letter. Tap to fill them in when they land.</p></div>'+
+    '<div class="blk"><span class="eyebrow">every day</span>'+
     '<h3 style="margin-top:14px">The shape of a morning</h3>'+
     '<div style="margin-top:14px">'+RULES.map(r=>'<div class="mrow"><span>'+esc(r.k)+'</span><span>'+esc(val(r.v))+'</span></div>').join('')+'</div>'+
     '<div class="seg"><button data-yg="KG1" class="'+(YG==='KG1'?'on':'')+'">kg1</button>'+
@@ -760,7 +782,7 @@ async function readSource(){
 }
 
 document.addEventListener('click',async function(e){
-  const t=e.target.closest('[data-view],[data-tog],[data-pick],[data-resolve],[data-yg],[data-mail],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-hide],[data-read],[data-accept],[data-reject],[data-delsrc],[data-open],[data-f],[data-addlink],[data-help],[data-nix],[data-unnix]');
+  const t=e.target.closest('[data-view],[data-tog],[data-pick],[data-resolve],[data-yg],[data-mail],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-hide],[data-read],[data-accept],[data-reject],[data-delsrc],[data-open],[data-f],[data-addlink],[data-help],[data-nix],[data-unnix],[data-edit]');
   if(!t)return;
   const d=t.dataset;
 
@@ -798,6 +820,15 @@ document.addEventListener('click',async function(e){
     const clean=u.trim();
     if(!clean||clean==='https://'){write('lnk:'+d.addlink,{u:'',t:''});return}
     write('lnk:'+d.addlink,{u:clean,t:'your link'});return;
+  }
+  if(d.edit){
+    const c=child();
+    const labels={name:'Her full name',house:'House — Air, Earth, Fire or Water',klass:'Class',homegroup:'Homegroup'};
+    const v=prompt(labels[d.edit]||'Value', c[d.edit]||'');
+    if(v===null)return;
+    const next=Object.assign({},get('child',{}));
+    next[d.edit]=v.trim().slice(0,40);
+    write('child',next);return;
   }
   if(d.help!==undefined){openHelp=d.help;render();return}
   if(d.unnix){write('hide:'+d.unnix,{v:false});return}
