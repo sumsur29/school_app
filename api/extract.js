@@ -1,44 +1,73 @@
-/* Turns a document or a pasted message into a summary plus proposed facts.
+/* Reads a newsletter (by URL or pasted text or uploaded PDF) and returns a
+ * summary plus proposed items, filtered to what touches the child.
  *
- * Never writes anything. It returns proposals; the client stages them and a
- * human accepts them. The summary and the "also" list exist so you can check
- * the extraction against the original instead of trusting it.
+ * Never writes. The client stages the proposals and a human accepts them.
  */
 
 const MODEL = process.env.RUNWAY_MODEL || 'claude-sonnet-5';
 const MAX_PROPOSALS = 40;
+const MAX_PDF_BYTES = 25 * 1024 * 1024;
 
-const SYSTEM = `You read school communications for a parent in Dubai and pull out everything that needs action or belongs on a calendar.
+const ALLOWED_HOSTS = ['innoventuresedu.static.amais.com', 'diadubai.com', 'www.diadubai.com',
+  'innoventureseducation-my.sharepoint.com', 'innoventureseducation.sharepoint.com'];
+
+function system(yg, childName) {
+  return `You read a primary-school newsletter for the parents of ${childName || 'a child'} in ${yg} at DIA Emirates Hills, Dubai.
 
 Return ONLY a JSON object. No prose, no markdown fences.
 
 {
-  "title": short name for this document, max 6 words,
-  "summary": 2-3 sentences on what this document covers, in your own words,
-  "also": [up to 6 short strings: things worth knowing that are NOT tasks — policies, rules, limits, contacts],
+  "title": short name for this document, max 7 words (e.g. "Newsletter Issue 7, 23 Oct"),
+  "issued": "YYYY-MM-DD" date of the document if stated, else null,
+  "summary": 2-3 sentences on what matters to a ${yg} family in this issue,
+  "also": [up to 6 short strings: things worth knowing that are not tasks — reminders, rules, policy changes],
   "proposals": [ ... ]
 }
 
 Each proposal:
 {
-  "type": "task" | "event" | "rule" | "doc",
-  "title": short, sentence case, max 6 words,
-  "due": "YYYY-MM-DD", or null if it needs doing but has no fixed date,
-  "note": one short sentence of detail, or null,
-  "blocking": true only if missing it stops the child attending or enrolling,
-  "waiting": true if the school must act before the parent can,
-  "match": id of an existing fact this updates, or null,
-  "conflict": true if it contradicts an existing fact
+  "type": "task" | "event" | "deadline",
+  "title": short, sentence case, max 7 words,
+  "due": "YYYY-MM-DD" or null if it needs doing but has no fixed date,
+  "until": "YYYY-MM-DD" if it runs across several days, else null,
+  "time": "HH:MM" 24h start time if the item has one, else null,
+  "endTime": "HH:MM" if an end time is given, else null,
+  "note": one sentence of detail — amount, where, what to wear, what to bring,
+  "blocking": true only for a payment or registration deadline that, missed, means the child cannot take part,
+  "dress": true if the child must wear or bring something specific that day,
+  "match": id of an existing item this updates, or null,
+  "conflict": true if it contradicts an existing item
 }
 
-Rules:
-- Be thorough. A registration link, a form, an app to download, a sale, an expo, an opt-in programme are all proposals. Parents miss exactly these.
-- Anything that needs doing but carries no date gets "due": null. Do not invent a date.
-- A date range gets the start date in "due" and the range in "note".
-- Skip greetings, mission statements, staff bios, and curriculum theory.
-- Skip anything already in the existing list with the same date.
-- If a date is ambiguous between year groups, set conflict true and say so in note.
-- Amounts stay in the note, with the currency.`;
+Rules — read these carefully, they are the whole job:
+- Include anything for ${yg}, for KG generally, for "KG1-Y6", for "all primary", for "PS", or for parents and families generally.
+- EXCLUDE anything only for other year groups: Y1, Y2, Y3, Y4, Y5, Y6, KG2 (unless ${yg} is KG2), camps, CAT4, NGRT, PASS, residentials, Sri Lanka, exhibitions by a named other year.
+- Payment deadlines are the single most important thing. Zenda payments with a date are always blocking deadlines. Put the amount in the note.
+- Early dismissal, no-school days, breaks, PTCs, changed timings: always include, always as events.
+- "Wear X" or "bring X" days: include, set dress true, put what to wear or bring in the note.
+- Photo days, concerts, picnics, fairs, performances for ${yg}: include with times if given.
+- A PADIA sale, souq, coffee morning or community event: include.
+- An external competition or opportunity (spelling bee, olympiad, fitness challenge): include once as an event with "optional" in the note.
+- Do not repeat anything already in the existing list with the same date unless the time or detail changed — then set match to its id.
+- If the newsletter calendar says one thing and the body text says another, trust the body text and set conflict true.
+- Prefer accuracy over volume. Twelve correct items beat thirty noisy ones.`;
+}
+
+async function fetchPdf(url) {
+  let u;
+  try { u = new URL(url); } catch (e) { throw new Error('not a valid link'); }
+  if (u.protocol !== 'https:') throw new Error('link must be https');
+  if (!ALLOWED_HOSTS.some(h => u.hostname === h || u.hostname.endsWith('.' + h)))
+    throw new Error('that site is not on the list — paste the text instead, or upload the PDF');
+  const r = await fetch(u.toString(), { headers: { 'User-Agent': 'Runway/1.0' }, redirect: 'follow' });
+  if (!r.ok) throw new Error('could not download it (' + r.status + ')');
+  const len = Number(r.headers.get('content-length') || 0);
+  if (len > MAX_PDF_BYTES) throw new Error('that file is too big');
+  const buf = Buffer.from(await r.arrayBuffer());
+  if (buf.length > MAX_PDF_BYTES) throw new Error('that file is too big');
+  if (buf.slice(0, 5).toString() !== '%PDF-') throw new Error('that link is not a PDF');
+  return buf.toString('base64');
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'post only' });
@@ -47,84 +76,72 @@ export default async function handler(req, res) {
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-    const { text, pdf, filename, existing } = body;
+    const { text, url, filename, existing, yg, childName } = body;
+    let pdf = body.pdf || null;
+    let sourceName = filename || null;
+
+    if (url && !pdf && !text) {
+      pdf = await fetchPdf(url);
+      try { sourceName = decodeURIComponent(new URL(url).pathname.split('/').pop() || 'newsletter.pdf'); } catch (e) { sourceName = 'newsletter.pdf'; }
+    }
     if (!text && !pdf) return res.status(400).json({ error: 'nothing to read' });
 
-    const known = Array.isArray(existing) ? existing.slice(0, 150) : [];
+    const known = Array.isArray(existing) ? existing.slice(0, 200) : [];
     const content = [];
-
-    if (pdf) {
-      content.push({
-        type: 'document',
-        source: { type: 'base64', media_type: 'application/pdf', data: pdf }
-      });
-    }
+    if (pdf) content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: pdf } });
     content.push({
       type: 'text',
-      text:
-        'Facts already in the app (do not repeat unless the date changed):\n' +
-        JSON.stringify(known) +
-        '\n\n' +
-        (pdf
-          ? 'Read the attached document' + (filename ? ' (' + filename + ')' : '') + '.'
-          : 'Read this message:\n\n' + String(text).slice(0, 60000))
+      text: 'Items already in the app (skip unless changed):\n' + JSON.stringify(known) + '\n\n' +
+        (pdf ? 'Read the attached newsletter' + (sourceName ? ' (' + sourceName + ')' : '') + '.'
+             : 'Read this message:\n\n' + String(text).slice(0, 60000))
     });
 
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 6000,
-        system: SYSTEM,
-        messages: [{ role: 'user', content }]
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: MODEL, max_tokens: 6000, system: system(yg || 'KG1', childName), messages: [{ role: 'user', content }] })
     });
-
     if (!r.ok) {
       const detail = await r.text();
       return res.status(502).json({ error: 'model call failed', status: r.status, detail: detail.slice(0, 400) });
     }
 
     const data = await r.json();
-    const raw = (data.content || [])
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('\n')
-      .replace(/```json|```/g, '')
-      .trim();
-
+    const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n')
+      .replace(/```json|```/g, '').trim();
     let out;
-    try {
-      out = JSON.parse(raw);
-    } catch (e) {
+    try { out = JSON.parse(raw); }
+    catch (e) {
       const m = raw.match(/\{[\s\S]*\}/);
       if (!m) return res.status(422).json({ error: 'could not parse model output', raw: raw.slice(0, 400) });
       out = JSON.parse(m[0]);
     }
 
+    const isDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s || '');
+    const isTime = s => /^\d{2}:\d{2}$/.test(s || '');
     const list = Array.isArray(out.proposals) ? out.proposals : [];
     const clean = list.slice(0, MAX_PROPOSALS).map(x => ({
-      type: ['task', 'event', 'rule', 'doc'].includes(x.type) ? x.type : 'event',
+      type: ['task', 'event', 'deadline'].includes(x.type) ? x.type : 'event',
       title: String(x.title || '').slice(0, 80),
-      due: /^\d{4}-\d{2}-\d{2}$/.test(x.due || '') ? x.due : null,
+      due: isDate(x.due) ? x.due : null,
+      until: isDate(x.until) ? x.until : null,
+      time: isTime(x.time) ? x.time : null,
+      endTime: isTime(x.endTime) ? x.endTime : null,
       note: x.note ? String(x.note).slice(0, 200) : null,
       blocking: !!x.blocking,
-      waiting: !!x.waiting,
+      dress: !!x.dress,
       match: x.match ? String(x.match).slice(0, 40) : null,
       conflict: !!x.conflict
     })).filter(x => x.title);
 
     return res.json({
-      title: String(out.title || filename || 'Pasted message').slice(0, 60),
+      title: String(out.title || sourceName || 'Pasted message').slice(0, 60),
+      issued: isDate(out.issued) ? out.issued : null,
       summary: String(out.summary || '').slice(0, 600),
       also: (Array.isArray(out.also) ? out.also : []).slice(0, 6).map(s => String(s).slice(0, 160)),
       proposals: clean,
-      source: filename || 'pasted text'
+      source: sourceName || 'pasted text',
+      url: url || null
     });
   } catch (e) {
     return res.status(500).json({ error: String((e && e.message) || e) });
