@@ -1,8 +1,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071A12">
+<meta name="theme-color" content="#F1F2ED">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Runway">
 <title>Runway</title>
 <link rel="manifest" href="/manifest.json">
@@ -10,189 +10,182 @@
 <link rel="icon" href="/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,800&family=Inter+Tight:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,600,50&family=Inter+Tight:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --pine:#0E3B2A; --ink:#071A12; --chalk:#E9EDE7; --sage:#7FA08C;
-  --red:#DC3B2B; --redink:#FFD9D4; --deep:#0A2A1E; --amber:#E0A040;
-  --line:rgba(233,237,231,.16); --pline:rgba(7,26,18,.13);
-  --disp:'Bricolage Grotesque',system-ui,sans-serif;
-  --body:'Inter Tight',system-ui,sans-serif;
-  --mono:'DM Mono',ui-monospace,monospace;
+  --paper:#F1F2ED; --card:#FFFFFF; --ink:#15211B; --mute:#6A7770; --faint:#A3ACA6;
+  --line:rgba(21,33,27,.11); --line2:rgba(21,33,27,.2);
+  --pay:#D9931E; --wear:#D9573B; --event:#2B8A7D; --do:#7A6BC4; --off:#9AA39D; --info:#6A7770;
+  --payb:#FBF1DE; --wearb:#FBE7E1; --eventb:#DFF0ED; --dob:#ECE8F8; --offb:#EBEDEA;
+  --disp:'Fraunces',Georgia,serif; --body:'Inter Tight',system-ui,sans-serif; --mono:'DM Mono',ui-monospace,monospace;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{background:var(--ink);color:var(--chalk);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
-#app{max-width:460px;margin:0 auto;min-height:100vh;padding-bottom:calc(96px + env(safe-area-inset-bottom))}
-#app > .blk:first-child,#app > .paper:first-child{padding-top:calc(env(safe-area-inset-top) + 24px)}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+#app{max-width:480px;margin:0 auto;min-height:100vh;padding:calc(env(safe-area-inset-top) + 18px) 0 calc(96px + env(safe-area-inset-bottom))}
 button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;text-align:left}
-input,textarea{font:inherit;background:rgba(233,237,231,.08);border:1px solid var(--line);color:var(--chalk);padding:12px 13px;width:100%;border-radius:0;margin-top:8px}
-textarea{min-height:88px;resize:vertical;line-height:1.45}
+input,textarea{font:inherit;background:var(--card);border:1px solid var(--line2);color:var(--ink);padding:12px 13px;width:100%;border-radius:10px;margin-top:8px}
+textarea{min-height:92px;resize:vertical;line-height:1.45}
 input[type=file]{padding:9px;font-size:13px}
-label.chk{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14.5px;color:var(--sage)}
-label.chk input{width:18px;height:18px;margin:0;accent-color:var(--red)}
-.eyebrow{font-family:var(--body);font-size:13px;font-weight:500;opacity:.55}
-.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
-
-.hero{background:var(--pine);padding:calc(env(safe-area-inset-top) + 22px) 22px 26px}
-.hbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;gap:12px}
-.who{display:flex;align-items:center;gap:8px}
-.av{width:26px;height:26px;border-radius:50%;background:var(--sage);color:var(--pine);font-family:var(--body);font-weight:500;font-size:13px;display:flex;align-items:center;justify-content:center}
-.av.z{background:var(--chalk)}
-.sync{font-family:var(--body);font-size:12.5px;color:var(--sage);display:flex;align-items:center;gap:6px}
-.sync i{width:6px;height:6px;border-radius:50%;background:var(--sage)}
-.sync.off i{background:var(--red)}
-
-.today{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
-.today .dn{font-family:var(--disp);font-weight:800;font-size:64px;line-height:.82;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
-.today .dl{font-family:var(--disp);font-size:22px;line-height:1.15;letter-spacing:-.015em;margin-top:8px}
-.today .ds{font-size:14px;color:var(--sage);margin-top:7px;line-height:1.5}
-.tm{text-align:right;flex-shrink:0}
-.tm b{display:block;font-family:var(--mono);font-size:24px;font-weight:500;letter-spacing:-.02em;line-height:1.05}
-.tm span{display:block;font-size:12px;color:var(--sage);margin-top:3px}
-.tm .hot{color:var(--amber)}
-
-.week{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:24px}
-.day{background:rgba(7,26,18,.35);padding:9px 7px 10px;min-height:96px;display:flex;flex-direction:column;gap:4px}
-.day.now{box-shadow:inset 0 0 0 2px var(--chalk)}
-.day.off{background:rgba(233,237,231,.07);opacity:.55}
-.day .d{font-family:var(--mono);font-size:11px;color:var(--sage);display:flex;justify-content:space-between}
-.day .d b{font-weight:500;color:var(--chalk)}
-.day .e{font-size:11px;line-height:1.25;letter-spacing:-.01em;color:var(--chalk);opacity:.9;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
-.day .e.pay{color:var(--amber)}
-.day .e.dress{color:#F0C9A0}
-.day .e.off{color:var(--sage)}
-.day .more{font-size:10.5px;color:var(--sage)}
-.wkn{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12.5px;color:var(--sage)}
-.wkn button{color:var(--sage);font-weight:500;padding:6px 0}
-
-.strip{margin-top:22px}
-.strip .lab{display:flex;justify-content:space-between;font-size:12.5px;color:var(--sage);margin-bottom:7px}
-.strip .bar{display:flex;gap:2px;height:14px}
-.strip .w{flex:1;background:rgba(233,237,231,.12)}
-.strip .w.brk{background:rgba(233,237,231,.04)}
-.strip .w.gone{background:var(--sage);opacity:.55}
-.strip .w.now{background:var(--chalk)}
-.strip .w.pay{box-shadow:inset 0 -3px 0 var(--amber)}
-
-.urgent{background:var(--red);color:#fff;padding:17px 22px;display:flex;align-items:center;gap:16px;width:100%}
-.urgent .l{flex:1;min-width:0}
-.urgent .k{font-family:var(--body);font-size:12.5px;font-weight:500;color:var(--redink);display:block;opacity:.9}
-.urgent .t{font-family:var(--disp);font-weight:500;font-size:19px;margin-top:5px;display:block}
-.urgent .m{font-size:13px;color:var(--redink);margin-top:3px;display:block}
-.urgent .n{font-family:var(--disp);font-weight:800;font-size:40px;line-height:.8;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-
-.paper{background:var(--chalk);color:var(--ink);padding:20px 22px 22px}
-.paper .eyebrow{opacity:.5}
-.phead{display:flex;justify-content:space-between;align-items:center}
-.plus{font-family:var(--body);font-size:13.5px;font-weight:500;opacity:.6;padding:6px 0 6px 14px}
-.row{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--pline);width:100%}
-.row:last-child{border-bottom:none}
-.row .d{font-family:var(--mono);font-size:12px;opacity:.42;width:48px;flex-shrink:0;padding-top:4px;font-variant-numeric:tabular-nums;line-height:1.3;white-space:nowrap}
-.row .d small{display:block;font-size:10px;opacity:.8}
-.row .b{flex:1;min-width:0}
-.row h4{margin:0;font-family:var(--disp);font-weight:500;font-size:17.5px;letter-spacing:-.01em;line-height:1.3}
-.row p{margin:5px 0 0;font-size:14px;opacity:.62;line-height:1.5}
-.row.done h4{text-decoration:line-through;opacity:.38}
-.row.done p{opacity:.32}
-.claim{width:27px;height:27px;border:1.5px solid rgba(7,26,18,.26);border-radius:50%;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10.5px;color:transparent}
-.row.taken .claim{border-color:var(--pine);color:var(--pine)}
-.row.done .claim{background:var(--pine);border-color:var(--pine);color:var(--chalk)}
-.by{font-family:var(--body);font-size:12.5px;opacity:.5;margin-top:5px;display:block}
-.tt{display:block;width:100%;text-align:left}
-.flag{display:inline-block;font-family:var(--body);font-size:11px;font-weight:500;padding:2px 7px;margin-left:6px;vertical-align:2px;background:rgba(7,26,18,.09);color:rgba(7,26,18,.55)}
-.flag.hot{background:var(--red);color:#fff}
-.flag.pay{background:var(--amber);color:#3a2400}
-.links{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-.links a,.links button{font-family:var(--body);font-size:12.5px;font-weight:500;padding:7px 11px;box-shadow:inset 0 0 0 1px rgba(7,26,18,.2);color:rgba(7,26,18,.72);text-decoration:none;display:inline-block}
-.links a:active{background:rgba(7,26,18,.07)}
-.links button{opacity:.55}
-.links.dk a{box-shadow:inset 0 0 0 1px var(--line);color:var(--sage)}
-.gloss{margin:11px 0 2px;font-size:13.5px;line-height:1.6;opacity:.72;border-left:2px solid rgba(7,26,18,.18);padding-left:12px}
-
-.blk{padding:22px}
-.blk h3{font-family:var(--disp);font-weight:500;font-size:21px;letter-spacing:-.015em;margin:0 0 4px}
-.drow{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line);width:100%}
-.drow:last-child{border-bottom:none}
-.drow .b{flex:1;min-width:0}
-.drow h4{margin:0;font-size:15.5px;font-weight:500}
-.drow p{margin:3px 0 0;font-size:12.5px;color:var(--sage);line-height:1.45}
-.st{font-family:var(--body);font-size:11.5px;font-weight:500;padding:4px 8px;flex-shrink:0;margin-top:2px}
-.st.todo{background:rgba(233,237,231,.1);color:var(--sage)}
-.st.del{background:rgba(220,59,43,.16);color:var(--red)}
-
-.src{border-top:1px solid var(--line);padding:20px 22px}
-.src h4{margin:0;font-family:var(--disp);font-weight:500;font-size:18px}
-.src .kind{font-family:var(--body);font-size:12.5px;color:var(--sage);margin-top:6px;display:block}
-.src .sum{font-size:14px;line-height:1.55;opacity:.82;margin-top:11px}
-.fold{font-family:var(--body);font-size:13px;font-weight:500;color:var(--sage);margin-top:14px;display:inline-block;border-bottom:1px solid var(--line);padding-bottom:4px}
-.derived{margin-top:12px;border-left:2px solid var(--line);padding-left:13px}
-.derived div{font-size:13.5px;line-height:1.5;padding:3px 0;opacity:.75}
-.derived .dt{font-family:var(--mono);font-size:11px;color:var(--sage);margin-right:7px}
-.alsolist{margin-top:10px}
-.alsolist div{font-size:13px;line-height:1.5;color:var(--sage);padding:3px 0 3px 13px;position:relative}
-.alsolist div::before{content:"·";position:absolute;left:2px}
-.pend{background:var(--chalk);color:var(--ink);margin:14px -22px -20px;padding:16px 22px}
-.pend .k{font-family:var(--body);font-size:13px;font-weight:500;color:var(--red)}
-.stg{padding:12px 0;border-bottom:1px solid var(--pline)}
-.stg:last-child{border-bottom:none}
-.stg h5{margin:0;font-size:15px;font-weight:500}
-.stg p{margin:4px 0 0;font-size:12.5px;opacity:.6}
-.mini{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
-.mini button{font-family:var(--body);font-size:13px;font-weight:500;padding:8px 14px;box-shadow:inset 0 0 0 1px rgba(7,26,18,.22);color:rgba(7,26,18,.7)}
-.mini button.yes{background:var(--ink);color:var(--chalk);box-shadow:none}
-.opt{border:1px solid rgba(7,26,18,.16);padding:11px 13px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;width:100%}
-.opt.pick{border-color:var(--ink);background:rgba(7,26,18,.05)}
-.opt .v{font-family:var(--mono);font-size:15px}
-.opt .s2{font-size:11.5px;opacity:.5}
-
-.btn{display:block;width:100%;text-align:center;padding:14px;font-family:var(--body);font-size:14.5px;font-weight:500;background:var(--ink);color:var(--chalk);margin-top:11px}
-.btn.ghost{background:none;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(7,26,18,.25)}
-.btn.dark{background:var(--chalk);color:var(--ink)}
-.btn.dghost{background:none;color:var(--chalk);box-shadow:inset 0 0 0 1px var(--line)}
-.btn.busy{opacity:.5}
-
-.nav{position:fixed;bottom:0;left:0;right:0;background:#061710;border-top:1px solid var(--line);display:flex;max-width:460px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom);z-index:10}
-.nav button{flex:1;padding:17px 4px 19px;font-family:var(--body);font-size:14px;font-weight:500;color:rgba(233,237,231,.5);position:relative;text-align:center;transition:color .15s}
-.nav button.on{color:var(--chalk)}
-.nav button.on::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:30px;height:3px;background:var(--red)}
-.dot{position:absolute;top:13px;right:calc(50% - 30px);width:7px;height:7px;border-radius:50%;background:var(--red)}
-
-.seg{display:flex;margin-top:14px}
-.seg button{flex:1;padding:12px;font-family:var(--body);font-size:14px;font-weight:500;border:1px solid var(--line);color:var(--sage);text-align:center}
-.seg button.on{background:var(--chalk);color:var(--ink);border-color:var(--chalk)}
-.filt{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
-.filt button{font-family:var(--body);font-size:13px;font-weight:500;padding:8px 13px;box-shadow:inset 0 0 0 1px var(--line);color:var(--sage)}
-.filt button.on{background:var(--chalk);color:var(--ink);box-shadow:none}
-.mrow{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px;gap:12px;text-align:left}
-.mrow:last-child{border-bottom:none}
-.mrow span:last-child{font-family:var(--mono);font-size:13px;color:var(--sage);text-align:right}
-.portal{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;text-decoration:none;gap:12px}
-.portal:last-child{border-bottom:none}
-.portal span:last-child{font-family:var(--mono);font-size:10.5px;color:var(--sage)}
-.calbox{background:var(--deep);padding:18px 20px;margin-top:16px}
-.calbox h4{margin:0;font-family:var(--disp);font-weight:500;font-size:17px}
-.calbox p{font-size:13.5px;color:var(--sage);margin:6px 0 0;line-height:1.5}
-.calbox code{display:block;font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.3);padding:10px 12px;margin-top:12px;word-break:break-all;color:var(--chalk);opacity:.85;line-height:1.5}
-.back{font-family:var(--body);font-size:13.5px;font-weight:500;color:var(--sage);display:inline-block;margin-bottom:14px}
-.note{font-size:13px;color:var(--sage);line-height:1.5;margin-top:12px}
+label.chk{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14.5px;color:var(--mute)}
+label.chk input{width:18px;height:18px;margin:0;accent-color:var(--ink)}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:500;margin:0;letter-spacing:-.01em}
+.sec{padding:0 20px}
+.eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--faint);margin:28px 0 10px}
+.eyebrow.first{margin-top:6px}
+.note{font-size:13.5px;color:var(--mute);line-height:1.5}
+.mono{font-family:var(--mono)}
+
+/* top bar */
+.top{display:flex;justify-content:space-between;align-items:center;padding:0 20px 14px}
+.who{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--mute)}
+.av{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:center}
+.sync{font-size:12.5px;color:var(--faint);display:flex;align-items:center;gap:6px}
+.sync i{width:6px;height:6px;border-radius:50%;background:var(--event)}
+.sync.off i{background:var(--wear)}
+
+/* date block */
+.date{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:6px 20px 0}
+.date .n{font-family:var(--disp);font-size:88px;font-weight:600;line-height:.8;letter-spacing:-.04em;font-variation-settings:"opsz" 144,"SOFT" 60}
+.date .w{font-family:var(--disp);font-size:26px;line-height:1.1;margin-top:10px}
+.date .m{font-size:14px;color:var(--mute);margin-top:6px}
+.times{text-align:right;padding-top:6px;flex-shrink:0}
+.times b{display:block;font-family:var(--mono);font-size:22px;font-weight:500;letter-spacing:-.02em;line-height:1.1}
+.times span{display:block;font-size:11.5px;color:var(--faint);margin-top:2px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
+.times b.hot{color:var(--wear)}
+.lead{font-family:var(--disp);font-size:21px;line-height:1.25;margin:18px 20px 0;max-width:22ch}
+.lead small{display:block;font-family:var(--body);font-size:14px;color:var(--mute);margin-top:6px;line-height:1.5}
+
+/* bag */
+.bag{margin:18px 20px 0;background:var(--card);border-radius:14px;padding:14px 16px 15px;border:1px solid var(--line)}
+.bag .h{font-size:12.5px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between}
+.bag ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:7px}
+.bag li{font-size:14.5px;font-weight:500;padding:7px 12px;border-radius:999px;background:var(--wearb);color:#7A2B1B}
+.bag li.d{background:var(--dob);color:#3E3480}
+.bag li.p{background:var(--payb);color:#6B4300}
+.bag .none{font-size:14.5px;color:var(--mute);margin-top:6px}
+
+/* strip */
+.strip{margin:16px 20px 0}
+.strip .lab{display:flex;justify-content:space-between;font-size:12.5px;color:var(--faint);margin-bottom:6px}
+.strip .bar{display:flex;gap:2px;height:8px}
+.strip .w{flex:1;background:rgba(21,33,27,.1);border-radius:1px}
+.strip .w.brk{background:rgba(21,33,27,.04)}
+.strip .w.gone{background:rgba(21,33,27,.28)}
+.strip .w.now{background:var(--ink)}
+.strip .w.pay{background:var(--pay)}
+
+/* diary */
+.diary{margin:0 20px;background:var(--card);border-radius:14px;border:1px solid var(--line);overflow:hidden}
+.drow{display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);min-height:56px}
+.drow:last-child{border-bottom:none}
+.drow.today{background:var(--paper)}
+.drow .dl{width:44px;flex-shrink:0;padding-top:2px}
+.drow .dl b{display:block;font-family:var(--disp);font-size:20px;font-weight:500;line-height:1}
+.drow .dl span{display:block;font-size:11.5px;color:var(--faint);margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+.drow .it{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;padding-top:1px}
+.ev{display:flex;align-items:flex-start;gap:9px;font-size:14.5px;line-height:1.35}
+.ev i{width:4px;align-self:stretch;min-height:16px;border-radius:2px;flex-shrink:0;margin-top:2px;background:var(--event)}
+.ev.pay i{background:var(--pay)} .ev.wear i{background:var(--wear)} .ev.do i{background:var(--do)} .ev.off i{background:var(--off)} .ev.info i{background:var(--info)}
+.ev .t{font-family:var(--mono);font-size:12.5px;color:var(--mute);margin-right:6px}
+.ev.done{color:var(--faint);text-decoration:line-through}
+.drow .empty{font-size:14px;color:var(--faint)}
+.wkn{display:flex;justify-content:space-between;align-items:center;margin:10px 20px 0;font-size:13.5px;color:var(--mute)}
+.wkn button{color:var(--mute);font-weight:500;padding:8px 0}
+
+/* item rows (list) */
+.list{margin:0 20px;background:var(--card);border-radius:14px;border:1px solid var(--line);overflow:hidden}
+.row{display:flex;gap:12px;padding:14px 14px 14px 0;border-bottom:1px solid var(--line);width:100%;position:relative}
+.row:last-child{border-bottom:none}
+.row::before{content:"";width:4px;border-radius:0 2px 2px 0;background:var(--event);margin:2px 0}
+.row.pay::before{background:var(--pay)} .row.wear::before{background:var(--wear)} .row.do::before{background:var(--do)} .row.off::before{background:var(--off)} .row.info::before{background:var(--info)}
+.row .d{width:46px;flex-shrink:0;padding-top:3px;font-size:12.5px;color:var(--mute);line-height:1.3}
+.row .d b{display:block;font-family:var(--disp);font-size:18px;font-weight:500;color:var(--ink);line-height:1.05}
+.row .d small{display:block;font-size:11px;color:var(--faint);margin-top:2px}
+.row .b{flex:1;min-width:0}
+.row h4{font-size:16.5px;line-height:1.3}
+.row p{margin:4px 0 0;font-size:13.5px;color:var(--mute);line-height:1.5}
+.row.done h4{text-decoration:line-through;color:var(--faint)}
+.row.done p{color:var(--faint)}
+.tt{display:block;width:100%;text-align:left}
+.by{font-size:12.5px;color:var(--faint);margin-top:5px;display:block}
+.claim{width:28px;height:28px;border:1.5px solid var(--line2);border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:transparent}
+.row.taken .claim{border-color:var(--ink);color:var(--ink)}
+.row.done .claim{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.acts a,.acts button{font-size:12.5px;font-weight:500;padding:6px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink);text-decoration:none;display:inline-block;background:var(--card)}
+.acts a{background:var(--paper)}
+.dots{font-size:13px;color:var(--faint);padding:2px 6px;letter-spacing:.08em;line-height:1}
+.gloss{margin:10px 0 2px;font-size:13.5px;line-height:1.6;color:var(--mute);border-left:2px solid var(--line2);padding-left:12px}
+.pill{display:inline-block;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:0;padding:2px 7px;border-radius:999px;margin-left:6px;vertical-align:3px}
+.pill.pay{background:var(--payb);color:#6B4300} .pill.wear{background:var(--wearb);color:#7A2B1B} .pill.do{background:var(--dob);color:#3E3480} .pill.g{background:var(--offb);color:var(--mute)}
+
+/* buttons */
+.btn{display:block;width:100%;text-align:center;padding:14px;font-size:15px;font-weight:600;background:var(--ink);color:var(--paper);margin-top:10px;border-radius:12px}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line2)}
+.btn.busy{opacity:.5}
+.fold{font-size:13.5px;font-weight:500;color:var(--mute);margin-top:12px;display:inline-block;border-bottom:1px solid var(--line2);padding-bottom:3px}
+.filt{display:flex;gap:7px;flex-wrap:wrap;margin:12px 20px 14px}
+.filt button{font-size:13px;font-weight:500;padding:7px 12px;border-radius:999px;border:1px solid var(--line2);color:var(--mute);background:var(--card)}
+.filt button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.seg{display:flex;gap:6px;margin-top:12px}
+.seg button{flex:1;padding:11px;font-size:14px;font-weight:500;border:1px solid var(--line2);border-radius:10px;color:var(--mute);text-align:center;background:var(--card)}
+.seg button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14.5px;gap:12px;text-align:left;width:100%}
+.mrow:last-child{border-bottom:none}
+.mrow span:last-child{font-size:13.5px;color:var(--mute);text-align:right}
+.card{margin:0 20px;background:var(--card);border-radius:14px;border:1px solid var(--line);overflow:hidden}
+.card.pad{padding:16px}
+.card h3{font-size:18px}
+.card p{margin:6px 0 0;font-size:14px;color:var(--mute);line-height:1.5}
+.portal{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);font-size:14.5px;text-decoration:none;gap:12px}
+.portal:last-child{border-bottom:none}
+.portal span:last-child{font-size:12px;color:var(--faint)}
+
+/* papers */
+.src{margin:0 20px 12px;background:var(--card);border-radius:14px;border:1px solid var(--line);padding:16px}
+.src h4{font-size:18px}
+.src .kind{font-size:12.5px;color:var(--mute);margin-top:4px;display:block}
+.src .sum{font-size:14px;line-height:1.55;margin-top:10px;color:var(--ink);opacity:.85}
+.derived{margin-top:12px;border-left:2px solid var(--line2);padding-left:12px}
+.derived div{font-size:13.5px;line-height:1.5;padding:3px 0;color:var(--mute)}
+.derived .dt{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-right:7px}
+.alsolist{margin-top:10px}
+.alsolist div{font-size:13px;line-height:1.5;color:var(--mute);padding:3px 0 3px 13px;position:relative}
+.alsolist div::before{content:"·";position:absolute;left:2px}
+.pend{background:var(--paper);margin:14px -16px -16px;padding:14px 16px 16px;border-top:1px solid var(--line)}
+.pend .k{font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.02em;color:var(--wear)}
+.stg{padding:11px 0;border-bottom:1px solid var(--line)}
+.stg:last-child{border-bottom:none}
+.stg h5{margin:0;font-size:15px;font-weight:600}
+.stg p{margin:4px 0 0;font-size:13px;color:var(--mute)}
+.mini{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+.mini button{font-size:13px;font-weight:500;padding:7px 13px;border-radius:999px;border:1px solid var(--line2);color:var(--ink);background:var(--card)}
+.mini button.yes{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.waitline{margin:0 20px 14px;background:var(--wearb);color:#7A2B1B;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:500;display:flex;justify-content:space-between;align-items:center;width:calc(100% - 40px)}
+
+/* nav */
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(241,242,237,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;max-width:480px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+.nav button{flex:1;padding:16px 4px 18px;font-size:14px;font-weight:600;color:var(--faint);position:relative;text-align:center}
+.nav button.on{color:var(--ink)}
+.nav button.on::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:28px;height:3px;background:var(--ink);border-radius:0 0 3px 3px}
+.dot{position:absolute;top:12px;right:calc(50% - 28px);width:7px;height:7px;border-radius:50%;background:var(--wear)}
+.back{font-size:13.5px;font-weight:500;color:var(--mute);display:inline-block;margin:0 20px 12px}
 </style>
 
 <div id="app"></div>
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='012';
+const BUILD='013';
 
 const mem={};
 const disk={
   get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return mem[k]??null}},
   set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}
 };
-
 const qs=new URLSearchParams(location.search);
 let FAM=qs.get('f')||disk.get('fam')||null;
 if(FAM){FAM=String(FAM).replace(/[^a-z0-9-]/gi,'').slice(0,40);disk.set('fam',FAM)}
@@ -280,20 +273,20 @@ const SEED=[
  {id:'ptc3',src:'calendar',title:'Parent teacher consultations',due:'2027-05-24'},
  {id:'hijri',src:'calendar',title:'Hijri new year',due:'2027-06-06'},
  {id:'endyear',src:'calendar',title:'End of year',due:'2027-07-02'},
- {id:'n5-house',src:'nl5',title:'House day',due:'2026-10-01',dress:true,note:()=>'Wear Earth colours'},
- {id:'n5-dyslexia',src:'nl5',title:'Dyslexia awareness day',due:'2026-10-08',dress:true,note:()=>'Wear red'},
+ {id:'n5-house',src:'nl5',title:'House day',due:'2026-10-01',kind:'wear',bring:'Earth colours',note:()=>'Wear house colours'},
+ {id:'n5-dyslexia',src:'nl5',title:'Dyslexia awareness day',due:'2026-10-08',kind:'wear',bring:'something red',note:()=>'Wear red'},
  {id:'n5-garage',src:'nl5',title:'PADIA garage sale',due:'2026-10-23',time:'07:00',endTime:'13:00',note:()=>'PS gym. Second-hand uniform sale at the same time'},
- {id:'n5-lunch-survey',src:'nl5',title:'KG1 lunch delivery survey',note:()=>'Kalo asking whether you want meal boxes delivered to class'},
- {id:'n7-photos',src:'nl7',title:'KG1 school photos',due:'2026-10-26',until:'2026-10-27',dress:true,note:()=>'Correct uniform, plain navy or DIA jumper only'},
+ {id:'n5-lunch-survey',src:'nl5',title:'KG1 lunch delivery survey',kind:'do',note:()=>'Kalo asking whether you want meal boxes delivered to class'},
+ {id:'n7-photos',src:'nl7',title:'School photos',due:'2026-10-26',until:'2026-10-27',kind:'wear',bring:'full correct uniform',note:()=>'Plain navy or DIA jumper only'},
  {id:'n7-uniform-sale',src:'nl7',title:'Second-hand uniform sale',due:'2026-10-26',time:'07:30',endTime:'09:30',note:()=>'Foyer'},
- {id:'n7-pd',src:'nl7',title:'Early finish — Innoventures conference',due:'2026-10-29',time:'11:40',note:()=>'All students out at 11:40. No CCAs'},
- {id:'n7-hat',src:'nl7',title:'Send a hat every day',note:()=>'Outdoor lunch play is back. No hat means sitting in the shade'},
+ {id:'n7-pd',src:'nl7',title:'Early finish',due:'2026-10-29',time:'11:40',kind:'off',early:'11:40',note:()=>'Innoventures conference. Everyone out at 11:40, no CCAs'},
+ {id:'n7-hat',src:'nl7',title:'Hat in the bag every day',every:true,bring:'hat',note:()=>'Outdoor lunch play is back. No hat means sitting in the shade'},
  {id:'n7-fitness',src:'nl7',title:'Dubai Fitness Challenge',due:'2026-10-31',until:'2026-11-29',note:()=>'Optional, 30 minutes a day for 30 days'},
  {id:'n5-mt-start',src:'nl5',title:'Mother tongue classes begin',due:'2026-11-02',note:()=>'KG1 Hindi starts'},
  {id:'n5-bookfair',src:'nl5',title:'Book fair',due:'2026-11-02',until:'2026-11-06',note:()=>'Booktopia, in the foyer all week'},
  {id:'n7-ps-photos',src:'nl7',title:'Primary photo weeks',due:'2026-11-02',until:'2026-11-27',note:()=>'Catch-up and sibling photos run through November'},
  {id:'n7-exec',src:'nl7',title:'Parent session: executive function',due:'2026-11-06',time:'07:45',note:()=>'Guest speaker on emotional regulation, KG gym'},
- {id:'n5-duck-pay',src:'nl5',title:'Pay for The Ugly Duckling',due:'2026-11-08',blocking:true,note:()=>'AED 60 on Zenda. Final deadline',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'}]},
+ {id:'n5-duck-pay',src:'nl5',title:'Pay for The Ugly Duckling',due:'2026-11-08',kind:'pay',blocking:true,note:()=>'AED 60 on Zenda. Final deadline',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'}]},
  {id:'n5-duck',src:'nl5',title:'The Ugly Duckling show',due:'2026-11-10',time:'09:30',endTime:'10:20',note:()=>'Musical in the SS PE hall. KG1 slot'},
  {id:'n7-adhd',src:'nl7',title:'ADHD awareness activities',due:'2026-11-12'},
  {id:'n7-antibully',src:'nl7',title:'Anti-bullying week',due:'2026-11-16',until:'2026-11-20'},
@@ -302,6 +295,9 @@ const SEED=[
  {id:'n7-natday-assembly',src:'nl7',title:'National Day assembly',due:'2026-12-01'},
  {id:'n7-concert',src:'nl7',title:'KG1 winter concert',due:'2026-12-08',until:'2026-12-10',time:'08:30',note:()=>'Montgomerie campus. Exact day by class, teacher will confirm'},
  {id:'n5-reports',src:'nl5',title:'Term 1 reports to parents',due:'2026-12-10'},
+ {id:'uoi-photos',src:'uoi1',title:'Email three photos to the class teacher',due:'2026-10-28',kind:'do',blocking:true,note:()=>'Baby, toddler and a recent one — for the Who We Are timeline',links:[{t:'email Jessica',u:'mailto:jessicas@diadubai.com?subject=Geet%20—%20photos%20for%20the%20Who%20We%20Are%20timeline'}]},
+ {id:'uoi-video',src:'uoi1',title:'All About Me video',due:'2026-11-27',kind:'do',blocking:true,note:()=>'Two minutes, made with her: how she has grown, family, pets, home country, words in Hindi. She shows it at circle time'},
+ {id:'uoi-talk',src:'uoi1',title:'Talk about her baby days and the wider family',kind:'info',note:()=>'Grandparents, cousins, aunts, uncles — photos help. Part of the unit'},
  {id:'pe-switch',src:'welcome',title:'New PE kit compulsory',links:[{t:'Zaks DIA store',u:'https://www.zaksstore.com/shop/dia/en/'}],due:'2027-08-01',
   note:()=>'Transition ends. G Force kit from Zaks, same price'}
 ];
@@ -356,6 +352,13 @@ const SOURCES=[
         'Hats every day — no hat, no sun',
         'Camp payments and Sri Lanka are Y4-6 only',
         'KG1 winter concert is 8-10 Dec at Montgomerie, class day to be confirmed']}
+,
+ {id:'uoi1',title:'Unit 1: Who we are',kind:'Class sheet',issued:'2026-10-27',
+  summary:'First PYP unit of inquiry. Central idea: we change over time. Three lines — how I look and have changed, my family and friends, what I like. Two things asked of parents: three photos by 28 Oct for a timeline, and a two-minute All About Me video by 27 Nov.',
+  also:['Learner profiles this unit: thinker and communicator',
+        'Concepts: form, perspective, change',
+        'Talk with her about being a baby, early years, Dubai or home country',
+        'Share photos of extended family — grandparents, cousins, aunts, uncles']}
 ];
 
 const RULES=[
@@ -416,494 +419,367 @@ const PORTALS=[
  {n:'DIA parent portal',u:'https://www.diadubai.com/parent-portal-dia-eh'}
 ];
 
-const CLASH={id:'s1',src:'calendar',field:'First day',
-  a:{v:'1 Sep',src:'Welcome pack calendar'},
-  b:{v:'31 Aug',src:'Calendar outline, KG1 row'},
-  why:'Resolved by now — she has started. Kept so the papers tab shows how it was decided.'};
+
 let L=(FAM&&disk.get('runway:'+FAM))||{};
 let pending=new Set();
-let online=true, view='now', busy='', flash='', filter='all', openSrc='', openHelp='', weekOff=0;
+let online=true, view='today', busy='', flash='', filter='all', openSrc='', openHelp='', openRow='', weekOff=0;
 
 const saveLocal=()=>{if(FAM)disk.set('runway:'+FAM,L)};
 const get=(k,d)=>L[k]||d;
-
-const members=()=>Object.keys(L).filter(k=>k.indexOf('member:')===0)
-  .map(k=>({id:k.slice(7),name:(L[k]&&L[k].name)||'?'})).sort((a,b)=>a.name.localeCompare(b.name));
+const members=()=>Object.keys(L).filter(k=>k.indexOf('member:')===0).map(k=>({id:k.slice(7),name:(L[k]&&L[k].name)||'?'})).sort((a,b)=>a.name.localeCompare(b.name));
 const nameOf=id=>{const m=L['member:'+id];return (m&&m.name)||'someone'};
 const initialOf=id=>{const n=nameOf(id);return n.trim().charAt(0).toUpperCase()||'?'};
-const tintOf=id=>{let s=0;for(let i=0;i<String(id).length;i++)s+=String(id).charCodeAt(i);return s%2?'z':''};
 const others=()=>members().filter(m=>m.id!==ME);
 const child=()=>Object.assign({},CHILD_DEFAULT,get('child',{}));
 const firstName=()=>String(child().name||'').trim().split(' ')[0]||'her';
 const campus=()=>YG==='KG1'?'Montgomerie':'Main campus';
 
-function write(k,v){
-  L[k]=Object.assign({},v,{at:Date.now(),who:ME});
-  saveLocal();pending.add(k);render();queuePush();
-}
-function mergeIn(remote){
-  let touched=false;
-  for(const k in (remote||{})){
-    const v=remote[k];
-    if(!v||typeof v!=='object')continue;
-    if(!L[k]||(Number(v.at)||0)>(Number(L[k].at)||0)){L[k]=v;touched=true}
-  }
-  if(touched)saveLocal();
-  return touched;
-}
-let pushTimer=null;
-const queuePush=()=>{clearTimeout(pushTimer);pushTimer=setTimeout(push,600)};
-
-/* The calendar feed runs server-side and cannot see SEED, so the client
-   mirrors the dated seed items into the blob whenever they change. */
+function write(k,v){L[k]=Object.assign({},v,{at:Date.now(),who:ME});saveLocal();pending.add(k);render();queuePush()}
+function mergeIn(remote){let t=false;for(const k in (remote||{})){const v=remote[k];if(!v||typeof v!=='object')continue;if(!L[k]||(Number(v.at)||0)>(Number(L[k].at)||0)){L[k]=v;t=true}}if(t)saveLocal();return t}
+let pushTimer=null;const queuePush=()=>{clearTimeout(pushTimer);pushTimer=setTimeout(push,600)};
 function mirrorSeed(){
-  const items=SEED.filter(f=>f.due).map(f=>({id:f.id,title:f.title,due:f.due,until:f.until||null,time:f.time||null,endTime:f.endTime||null,note:val(f.note)||null,blocking:!!f.blocking}));
+  const items=SEED.filter(f=>f.due).map(f=>({id:f.id,title:f.title,due:f.due,until:f.until||null,time:f.time||null,endTime:f.endTime||null,note:val(f.note)||null,blocking:!!f.blocking,bring:f.bring||null}));
   const sig=JSON.stringify(items).length+':'+BUILD;
-  const cur=get('seedcal',{});
-  if(cur.sig===sig)return;
-  L['seedcal']={items:items,sig:sig,at:Date.now(),who:ME};
-  saveLocal();pending.add('seedcal');queuePush();
+  if((get('seedcal',{})).sig===sig)return;
+  L['seedcal']={items:items,sig:sig,at:Date.now(),who:ME};saveLocal();pending.add('seedcal');queuePush();
 }
-
 async function push(){
   if(!FAM||!pending.size)return;
   const body={};pending.forEach(k=>{if(L[k])body[k]=L[k]});
-  try{
-    const r=await fetch('/api/state?f='+encodeURIComponent(FAM),
-      {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(!r.ok)throw new Error('bad');
-    const server=await r.json();
-    pending.clear();online=true;
-    if(mergeIn(server))render();else paintSync();
-  }catch(e){online=false;paintSync()}
+  try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error('bad');const server=await r.json();pending.clear();online=true;if(mergeIn(server))render();else paintSync()}
+  catch(e){online=false;paintSync()}
 }
 async function pull(){
   if(!FAM)return;
-  try{
-    const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{cache:'no-store'});
-    if(!r.ok)throw new Error('bad');
-    online=true;
-    if(mergeIn(await r.json()))render();else paintSync();
-  }catch(e){online=false;paintSync()}
+  try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{cache:'no-store'});if(!r.ok)throw new Error('bad');online=true;if(mergeIn(await r.json()))render();else paintSync()}
+  catch(e){online=false;paintSync()}
 }
 
 const today=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
 const D=s=>new Date(s+'T00:00:00');
 const days=(a,b)=>Math.round((b-a)/864e5);
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DOWL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const fmt=d=>d.getDate()+' '+MON[d.getMonth()];
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const val=x=>typeof x==='function'?x():x;
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const ago=t=>{const m=Math.round((Date.now()-t)/6e4);
-  return m<1?'just now':m<60?m+'m ago':m<1440?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
+const ago=t=>{const m=Math.round((Date.now()-t)/6e4);return m<1?'just now':m<60?m+'m ago':m<1440?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
 const t12=t=>{if(!t)return'';const [h,m]=t.split(':');const H=+h;return (H%12||12)+(m!=='00'?':'+m:'')+(H<12?'am':'pm')};
 const inBreak=d=>{const k=iso(d);return BREAKS.some(b=>k>=b[0]&&k<=b[1])};
 const isWeekend=d=>d.getDay()===6||d.getDay()===0;
 const schoolDay=d=>!isWeekend(d)&&!inBreak(d);
+const started=()=>iso(today())>=TERM_START;
 
 const isHidden=id=>{const h=get('hide:'+id);return !!(h&&h.v)};
-const customFacts=()=>Object.keys(L).filter(k=>k.indexOf('cf:')===0)
-  .map(k=>Object.assign({},L[k],{id:k.slice(3),custom:true})).filter(f=>!f.deleted&&f.title);
+const customFacts=()=>Object.keys(L).filter(k=>k.indexOf('cf:')===0).map(k=>Object.assign({},L[k],{id:k.slice(3),custom:true})).filter(f=>!f.deleted&&f.title);
 const items=()=>SEED.filter(f=>!isHidden(f.id)).concat(customFacts());
 const stateOf=id=>get('fact:'+id,{status:'open'});
+const kindOf=f=>f.kind||(f.blocking?(/fee|pay/i.test(f.title)?'pay':'do'):f.dress?'wear':/break|holiday|national day|eid|no school|hijri|prophet|early/i.test(f.title)?'off':f.waiting?'info':f.group?'do':!f.due?'do':'event');
 
-const dated=()=>items().filter(f=>f.due).sort((a,b)=>D(a.due)-D(b.due));
+const dated=()=>items().filter(f=>f.due).sort((a,b)=>D(a.due)-D(b.due)||(a.time||'').localeCompare(b.time||''));
 const spans=(f,d)=>{const k=iso(d);return f.due&&k>=f.due&&k<=(f.until||f.due)};
-const onDay=d=>dated().filter(f=>spans(f,d));
+const shortSpan=f=>!f.until||days(D(f.due),D(f.until))<=7;
+const onDay=d=>dated().filter(f=>spans(f,d)&&shortSpan(f));
 const ahead=()=>dated().filter(f=>D(f.until||f.due)>=today());
-const started=()=>iso(today())>=TERM_START;
-const loose=()=>items().filter(f=>!f.due&&!f.group&&!(f.pre&&(started()||stateOf(f.id).status==='done')));
-const lingering=()=>items().filter(f=>f.pre&&started()&&stateOf(f.id).status!=='done');
+const owed=()=>items().filter(f=>f.due&&['pay','do'].includes(kindOf(f))&&D(f.due)>=new Date(today().getTime()-864e5)&&stateOf(f.id).status!=='done').sort((a,b)=>D(a.due)-D(b.due));
+const loose=()=>items().filter(f=>!f.due&&!f.group&&!f.every&&!(f.pre&&(started()||stateOf(f.id).status==='done')));
 const paperwork=()=>items().filter(f=>f.group==='paperwork');
-const nextBlocking=()=>ahead().find(f=>f.blocking&&stateOf(f.id).status!=='done');
+const lingering=()=>items().filter(f=>f.pre&&started()&&stateOf(f.id).status!=='done');
+const everyday=()=>items().filter(f=>f.every&&stateOf(f.id).status!=='done');
 
-const sourcesAdded=()=>Object.keys(L).filter(k=>k.indexOf('src:')===0)
-  .map(k=>Object.assign({},L[k],{id:k.slice(4),added:true})).filter(s=>!s.deleted);
+const sourcesAdded=()=>Object.keys(L).filter(k=>k.indexOf('src:')===0).map(k=>Object.assign({},L[k],{id:k.slice(4),added:true})).filter(s=>!s.deleted);
 const allSources=()=>SOURCES.concat(sourcesAdded()).sort((a,b)=>(b.issued||'0')<(a.issued||'0')?-1:1);
 const fromSource=sid=>items().filter(f=>f.src===sid);
-const stagedFor=sid=>Object.keys(L).filter(k=>k.indexOf('st:')===0)
-  .map(k=>Object.assign({},L[k],{sid:k.slice(3)})).filter(s=>!s.settled&&s.title&&(s.srcId===sid));
-const stagedAll=()=>Object.keys(L).filter(k=>k.indexOf('st:')===0)
-  .map(k=>Object.assign({},L[k],{sid:k.slice(3)})).filter(s=>!s.settled&&s.title);
-const clashOpen=()=>false;
-const waiting=()=>stagedAll().length;
+const stagedAll=()=>Object.keys(L).filter(k=>k.indexOf('st:')===0).map(k=>Object.assign({},L[k],{sid:k.slice(3)})).filter(s=>!s.settled&&s.title);
+const stagedFor=sid=>stagedAll().filter(s=>s.srcId===sid);
 
 /* ---------- onboarding ---------- */
 function setup(){
-  if(!FAM) return '<div class="blk" style="padding-top:60px"><span class="eyebrow">runway</span>'+
-    '<h3 style="margin-top:16px;font-size:26px">One app, both parents.</h3>'+
-    '<p class="note">Start a family space, then send the link to the other phone. Whatever one of you claims, the other sees.</p>'+
-    '<button class="btn dark" data-mkfam="1">start a family space</button>'+
-    '<p class="eyebrow" style="margin:26px 0 8px">or join one you were sent</p>'+
+  if(!FAM) return '<div class="sec" style="padding-top:40px"><p class="eyebrow first">runway</p>'+
+    '<h2 style="font-size:30px">One diary, both parents.</h2>'+
+    '<p class="note" style="margin-top:10px">Start a family space, then send the link to the other phone. Whatever one of you takes on, the other sees.</p>'+
+    '<button class="btn" data-mkfam="1">start a family space</button>'+
+    '<p class="eyebrow">or join one you were sent</p>'+
     '<input id="joinid" placeholder="paste the link or code" autocapitalize="off" autocorrect="off">'+
-    '<button class="btn dghost" data-join="1">join</button></div>';
+    '<button class="btn ghost" data-join="1">join</button></div>';
   const link=location.origin+'/?f='+FAM, list=members();
-  return '<div class="blk" style="padding-top:52px"><span class="eyebrow">runway</span>'+
-    '<h3 style="margin-top:16px;font-size:26px">'+(list.length?'Who is holding the phone?':'Your family space is live.')+'</h3>'+
-    '<div class="mrow" style="margin-top:16px"><span>Family code</span><span>'+esc(FAM)+'</span></div>'+
-    '<button class="btn dghost" data-share="'+esc(link)+'">copy the link for the other phone</button>'+
-    (list.length?'<p class="eyebrow" style="margin:26px 0 6px">already here</p>'+
-      list.map(m=>'<button class="btn dark" data-be="'+esc(m.id)+'">'+esc(m.name)+'</button>').join(''):'')+
-    '<p class="eyebrow" style="margin:26px 0 8px">'+(list.length?'not one of them?':'add yourself')+'</p>'+
+  return '<div class="sec" style="padding-top:40px"><p class="eyebrow first">runway</p>'+
+    '<h2 style="font-size:30px">'+(list.length?'Who is holding the phone?':'Your family space is live.')+'</h2>'+
+    '<div class="card" style="margin:16px 0 0"><div class="mrow"><span>Family code</span><span>'+esc(FAM)+'</span></div></div>'+
+    '<button class="btn ghost" data-share="'+esc(link)+'">copy the link for the other phone</button>'+
+    (list.length?'<p class="eyebrow">already here</p>'+list.map(m=>'<button class="btn" data-be="'+esc(m.id)+'">'+esc(m.name)+'</button>').join(''):'')+
+    '<p class="eyebrow">'+(list.length?'not one of them?':'add yourself')+'</p>'+
     '<input id="myname" placeholder="your first name" autocapitalize="words">'+
-    '<button class="btn dark" data-addme="1">that is me</button></div>';
+    '<button class="btn" data-addme="1">that is me</button></div>';
 }
 
-/* ---------- shared row ---------- */
+/* ---------- item row ---------- */
 function row(f){
-  const s=stateOf(f.id);
+  const s=stateOf(f.id), k=kindOf(f);
   const extra=get('lnk:'+f.id);
   const links=(f.links||[]).concat(extra&&extra.u?[{t:extra.t||'your link',u:extra.u}]:[]);
-  const when=f.due?fmt(D(f.due))+(f.until&&f.until!==f.due?'<small>– '+D(f.until).getDate()+'</small>':f.time?'<small>'+t12(f.time)+'</small>':''):'—';
-  return '<div class="row '+s.status+'">'+
+  const open=openRow===f.id;
+  const when=f.due?'<b>'+D(f.due).getDate()+'</b>'+MON[D(f.due).getMonth()]+(f.until&&f.until!==f.due?'<small>to '+D(f.until).getDate()+(D(f.until).getMonth()!==D(f.due).getMonth()?' '+MON[D(f.until).getMonth()]:'')+'</small>':f.time?'<small>'+t12(f.time)+'</small>':''):'<b style="color:var(--faint)">–</b>';
+  return '<div class="row '+k+' '+s.status+'">'+
     '<span class="d">'+when+'</span><div class="b">'+
-    '<button class="tt" data-tog="'+esc(f.id)+'">'+
-      '<h4>'+esc(f.title)+
-        (f.blocking?'<span class="flag pay">pay</span>':'')+
-        (f.dress?'<span class="flag">wear</span>':'')+
-        (f.waiting?'<span class="flag">school</span>':'')+
-        (f.custom?'<span class="flag">added</span>':'')+'</h4>'+
+    '<button class="tt" data-tog="'+esc(f.id)+'"><h4>'+esc(f.title)+
+      (k==='pay'?'<span class="pill pay">pay</span>':k==='wear'?'<span class="pill wear">wear</span>':k==='do'&&f.blocking?'<span class="pill do">deadline</span>':'')+
+      (f.waiting?'<span class="pill g">school</span>':'')+(f.custom?'<span class="pill g">added</span>':'')+'</h4>'+
       (val(f.note)?'<p>'+esc(val(f.note))+'</p>':'')+
-      ((s.status!=='open'&&s.by)?'<span class="by">'+(s.status==='done'?'done':'taken')+' by '+
-        esc(s.by===ME?'you':nameOf(s.by))+' · '+ago(s.at)+'</span>':'')+
+      ((s.status!=='open'&&s.by)?'<span class="by">'+(s.status==='done'?'done':'taken')+' by '+esc(s.by===ME?'you':nameOf(s.by))+' · '+ago(s.at)+'</span>':'')+
     '</button>'+
-    '<div class="links">'+
-      links.map(l=>'<a href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>').join('')+
-      (f.term?'<button data-help="'+esc(openHelp===f.id?'':f.id)+'">'+(openHelp===f.id?'close':'what is '+esc(f.term.toLowerCase())+'?')+'</button>':'')+
-      '<button data-addlink="'+esc(f.id)+'">'+(extra&&extra.u?'edit link':'+ link')+'</button>'+
-      '<button data-nix="'+esc(f.id)+'">not for us</button>'+
-    '</div>'+
+    ((links.length||open)?'<div class="acts">'+links.map(l=>'<a href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>').join('')+
+      (open?(f.term?'<button data-help="'+esc(openHelp===f.id?'':f.id)+'">what is '+esc(f.term.toLowerCase())+'?</button>':'')+
+        '<button data-addlink="'+esc(f.id)+'">'+(extra&&extra.u?'edit link':'+ link')+'</button>'+
+        '<button data-nix="'+esc(f.id)+'">not for us</button>':'')+'</div>':'')+
     ((openHelp===f.id&&f.term&&GLOSSARY[f.term])?'<p class="gloss">'+esc(GLOSSARY[f.term])+'</p>':'')+
-    '</div>'+
-    '<button class="claim" data-tog="'+esc(f.id)+'">'+(s.by?esc(initialOf(s.by)):'✓')+'</button></div>';
+    '</div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0">'+
+    '<button class="claim" data-tog="'+esc(f.id)+'">'+(s.by?esc(initialOf(s.by)):'✓')+'</button>'+
+    '<button class="dots" data-row="'+esc(open?'':f.id)+'" aria-label="more">'+(open?'×':'···')+'</button></div></div>';
 }
 
-/* ---------- 1. now ---------- */
-function dayCell(d){
-  const k=iso(d), isToday=k===iso(today());
-  const ev=onDay(d).filter(f=>!f.until||days(D(f.due),D(f.until))<=7);
+/* ---------- today ---------- */
+function diaryRow(d){
+  const k=iso(d), isT=k===iso(today());
+  const ev=onDay(d);
   const off=!schoolDay(d);
-  const early=ev.find(f=>/early|11:40|dismissal/i.test(f.title+' '+(val(f.note)||'')));
-  const short=t=>String(t).replace(/^KG1 /,'').replace(/^Second-hand uniform sale$/,'Uniform sale').replace(/^Early finish — .*$/,'Early finish').replace(/^Parent session: /,'Parents: ').replace(/^Pay for /,'Pay: ').replace(/^The Ugly Duckling show$/,'Ugly Duckling').replace(/^Mother tongue classes begin$/,'MT starts');
-  const lines=ev.slice(0,3).map(f=>{
-    const cls=f.blocking?'pay':f.dress?'dress':'';
-    return '<span class="e '+cls+'">'+(f.time&&!f.blocking?'<b style="font-weight:500">'+t12(f.time)+'</b> ':'')+esc(short(f.title))+'</span>';
-  });
-  return '<div class="day '+(isToday?'now':'')+(off?' off':'')+'">'+
-    '<span class="d"><span>'+DOW[d.getDay()]+'</span><b>'+d.getDate()+'</b></span>'+
-    (off&&!ev.length?'<span class="e off">'+(isWeekend(d)?'':'break')+'</span>':'')+
-    lines.join('')+(ev.length>3?'<span class="more">+'+(ev.length-3)+'</span>':'')+
-    '</div>';
+  return '<div class="drow '+(isT?'today':'')+'"><div class="dl"><b>'+d.getDate()+'</b><span>'+DOW[d.getDay()]+'</span></div><div class="it">'+
+    (off&&!ev.length?'<span class="empty">'+(isWeekend(d)?'weekend':'no school')+'</span>':'')+
+    (!off&&!ev.length?'<span class="empty">normal day</span>':'')+
+    ev.map(f=>{const s=stateOf(f.id),kk=kindOf(f);
+      return '<span class="ev '+kk+' '+(s.status==='done'?'done':'')+'"><i></i><span>'+(f.time?'<span class="t">'+t12(f.time)+'</span>':'')+esc(f.title)+'</span></span>'}).join('')+
+    '</div></div>';
 }
-
 function termStrip(){
-  const start=D(TERM_START), end=D(TERM_END), tot=Math.ceil(days(start,end)/7);
-  const nowW=Math.floor(days(start,today())/7);
-  const payW=new Set(dated().filter(f=>f.blocking&&stateOf(f.id).status!=='done').map(f=>Math.floor(days(start,D(f.due))/7)));
-  const cells=[];
-  for(let w=0;w<tot;w++){
-    const d=new Date(start.getTime()+w*7*864e5);
-    const brk=inBreak(d)&&inBreak(new Date(d.getTime()+2*864e5));
-    cells.push('<span class="w '+(brk?'brk':'')+(w<nowW?' gone':'')+(w===nowW?' now':'')+(payW.has(w)?' pay':'')+'"></span>');
-  }
-  const left=dated().filter(f=>D(f.due)>=today()&&f.title.toLowerCase().indexOf('break')>=0)[0];
-  return '<div class="strip"><div class="lab"><span>week '+(nowW+1)+' of '+tot+'</span>'+
-    '<span>'+(left?days(today(),D(left.due))+' days to '+esc(left.title.toLowerCase()):'')+'</span></div>'+
-    '<div class="bar">'+cells.join('')+'</div></div>';
+  const start=D(TERM_START), end=D(TERM_END), tot=Math.ceil(days(start,end)/7), nowW=Math.floor(days(start,today())/7);
+  const payW=new Set(owed().filter(f=>kindOf(f)==='pay').map(f=>Math.floor(days(start,D(f.due))/7)));
+  let cells='';
+  for(let w=0;w<tot;w++){const d=new Date(start.getTime()+w*7*864e5);const brk=inBreak(d)&&inBreak(new Date(d.getTime()+2*864e5));
+    cells+='<span class="w '+(brk?'brk':'')+(w<nowW?' gone':'')+(w===nowW?' now':'')+(payW.has(w)?' pay':'')+'"></span>'}
+  const nb=dated().filter(f=>D(f.due)>=today()&&/break/i.test(f.title))[0];
+  return '<div class="strip"><div class="lab"><span>week '+(nowW+1)+' of '+tot+'</span><span>'+(nb?days(today(),D(nb.due))+' days to '+esc(nb.title.toLowerCase()):'')+'</span></div><div class="bar">'+cells+'</div></div>';
 }
-
-function nowView(){
+function todayView(){
   const t=today(), tk=iso(t), dow=t.getDay();
-  const tEv=onDay(t), u=nextBlocking();
-  const off=!schoolDay(t);
-  const early=tEv.find(f=>f.time&&/early|dismissal|finish/i.test(f.title));
-  const fri=dow===5;
+  const ev=onDay(t), off=!schoolDay(t), fri=dow===5;
+  const early=ev.find(f=>f.early||(f.time&&kindOf(f)==='off'));
   const gate=YG==='KG1'?'07:15':'07:00';
-  const out=early?early.time:(fri?'11:30':'13:20');
-  const dress=tEv.filter(f=>f.dress);
-
+  const out=early?(early.early||early.time):(fri?'11:30':'13:20');
+  const bag=[].concat(
+    everyday().map(f=>({t:f.bring||f.title,c:''})),
+    ev.filter(f=>f.bring&&stateOf(f.id).status!=='done').map(f=>({t:f.bring,c:kindOf(f)==='pay'?'p':''})),
+    owed().filter(f=>f.due===tk).map(f=>({t:f.title,c:'d'}))
+  );
   const monday=new Date(t.getTime()-((dow+6)%7)*864e5+weekOff*7*864e5);
   const week=[];for(let i=0;i<5;i++)week.push(new Date(monday.getTime()+i*864e5));
-  const wkLabel=weekOff===0?'this week':weekOff===1?'next week':fmt(week[0])+' – '+fmt(week[4]);
+  const wkLabel=weekOff===0?'this week':weekOff===1?'next week':weekOff===-1?'last week':fmt(week[0])+' – '+fmt(week[4]);
+  const due=owed().slice(0,6), later=ahead().filter(f=>!due.includes(f)&&D(f.due)>week[4]).slice(0,5);
+  const waiting=stagedAll().length;
+  const headline=off?(isWeekend(t)?'No school.':'Break — no school.'):early?'Early finish, '+t12(out)+'.':ev.filter(f=>kindOf(f)==='wear').length?esc(ev.filter(f=>kindOf(f)==='wear')[0].title)+'.':fri?'Friday, short day.':'Ordinary day.';
+  const sub=off?'':(early?esc(val(early.note)||''):'Gate '+gate+' at '+campus()+', register closes 07:40.');
 
-  const pw=paperwork(), pwIn=pw.filter(f=>stateOf(f.id).status==='done').length;
-  const openLoose=loose().filter(f=>stateOf(f.id).status!=='done');
-  const soon=ahead().filter(f=>f!==u&&!(f.until&&f.until!==f.due&&days(D(f.due),D(f.until))>7)).slice(0,6);
-  const mine=items().filter(f=>stateOf(f.id).status==='taken'&&stateOf(f.id).by===ME).length;
-  const theirs=others().map(m=>({m:m,c:items().filter(f=>stateOf(f.id).status==='taken'&&stateOf(f.id).by===m.id).length}));
-
-  const headline=off?(isWeekend(t)?'No school today.':'Break — no school.')
-    :early?'Early finish today, '+t12(early.time)+'.'
-    :dress.length?esc(dress[0].title)+'.'
-    :fri?'Friday — short day.':'Normal day.';
-  const sub=off?(isWeekend(t)?'':esc((tEv[0]||{}).title||''))
-    :(dress.length?esc(val(dress[0].note)||''):(early?esc(val(early.note)||''):'Gate '+gate+' at '+campus()+', register closes 07:40.'));
-
-  return '<div class="hero">'+
-    '<div class="hbar"><span class="who"><span class="av '+tintOf(ME)+'">'+esc(initialOf(ME))+'</span>'+
-    '<span style="font-size:13.5px;opacity:.72">'+esc(firstName())+' · '+YG+'</span></span>'+
+  return '<div class="top"><span class="who"><span class="av">'+esc(initialOf(ME))+'</span>'+esc(firstName())+' · '+YG+'</span>'+
     '<span class="sync '+(online?'':'off')+'"><i></i>'+(online?'synced':'offline')+'</span></div>'+
-    '<div class="today"><div>'+
-      '<div class="dn">'+DOW[dow]+'</div>'+
-      '<div class="dl">'+headline+'</div>'+
-      (sub?'<div class="ds">'+sub+'</div>':'')+
-    '</div>'+
-    (off?'':'<div class="tm"><b>'+gate+'</b><span>gate</span><b class="'+(early?'hot':'')+'" style="margin-top:10px">'+out+'</b><span>out</span></div>')+
-    '</div>'+
-    '<div class="week">'+week.map(dayCell).join('')+'</div>'+
-    '<div class="wkn"><button data-wk="-1">‹ prev</button><span>'+wkLabel+'</span><button data-wk="1">next ›</button></div>'+
+    '<div class="date"><div><div class="n">'+t.getDate()+'</div><div class="w">'+DOWL[dow]+'</div><div class="m">'+MONL[t.getMonth()]+'</div></div>'+
+    (off?'':'<div class="times"><b>'+gate+'</b><span>gate</span><b class="'+(early?'hot':'')+'">'+out+'</b><span>out</span></div>')+'</div>'+
+    '<div class="lead">'+headline+(sub?'<small>'+sub+'</small>':'')+'</div>'+
+    (off?'':'<div class="bag"><div class="h"><span>In the bag today</span></div>'+
+      (bag.length?'<ul>'+bag.map(b=>'<li class="'+b.c+'">'+esc(b.t)+'</li>').join('')+'</ul>':'<p class="none">Nothing special. Uniform, water, snack.</p>')+'</div>')+
+    (waiting?'<button class="waitline" style="margin-top:14px" data-view="papers"><span>'+waiting+' new thing'+(waiting===1?'':'s')+' from the school to look at</span><span>›</span></button>':'')+
     termStrip()+
-    '</div>'+
-
-    (u?'<button class="urgent" data-view="all"><span class="l"><span class="k">next payment</span>'+
-      '<span class="t">'+esc(u.title)+'</span><span class="m">'+esc(val(u.note)||'')+'</span></span>'+
-      '<span class="n">'+days(today(),D(u.due))+'</span></button>':'')+
-
-    '<div class="paper"><div class="phead"><span class="eyebrow">coming up</span>'+
-    '<button class="plus" data-view="add">+ add</button></div>'+
-    ((pwIn<pw.length&&!started())?'<button class="row" data-view="all" data-f="paperwork"><span class="d">—</span><div class="b">'+
-      '<h4>Paperwork</h4><p>'+pwIn+' of '+pw.length+' in — tap to finish</p></div></button>':'')+
-    soon.map(row).join('')+
-    openLoose.map(row).join('')+
-    '</div>'+
-    (lingering().length?'<div class="blk" style="padding-top:18px"><button class="fold" data-view="all" data-f="pre">'+lingering().length+' pre-joining task'+(lingering().length===1?'':'s')+' still open — probably done, tap to tidy</button></div>':'')+
-
-    '<div class="blk" style="background:var(--deep);padding:15px 22px">'+
-    '<div style="display:flex;gap:15px;flex-wrap:wrap;font-size:12.5px;color:var(--sage)"><span>'+mine+' with you</span>'+
-    theirs.map(x=>'<span>'+x.c+' with '+esc(x.m.name)+'</span>').join('')+
-    '<span>tap a circle to take it, again when done</span></div></div>';
+    '<p class="eyebrow" style="margin:26px 20px 10px">Diary</p><div class="diary">'+week.map(diaryRow).join('')+'</div>'+
+    '<div class="wkn"><button data-wk="-1">‹ earlier</button><span>'+wkLabel+'</span><button data-wk="1">later ›</button></div>'+
+    (due.length?'<p class="eyebrow" style="margin:28px 20px 10px">Due from us</p><div class="list">'+due.map(row).join('')+'</div>':'')+
+    (loose().filter(f=>stateOf(f.id).status!=='done').length?'<p class="eyebrow" style="margin:28px 20px 10px">Whenever</p><div class="list">'+loose().filter(f=>stateOf(f.id).status!=='done').map(row).join('')+'</div>':'')+
+    (later.length?'<p class="eyebrow" style="margin:28px 20px 10px">Further out</p><div class="list">'+later.map(row).join('')+'</div>':'')+
+    '<div class="sec"><p class="note" style="margin-top:22px">'+
+      (()=>{const mine=items().filter(f=>stateOf(f.id).status==='taken'&&stateOf(f.id).by===ME).length;
+        return mine+' with you'+others().map(m=>' · '+items().filter(f=>stateOf(f.id).status==='taken'&&stateOf(f.id).by===m.id).length+' with '+esc(m.name)).join('')+'. Tap a circle to take something, again when it is done.'})()+
+      (lingering().length?' <button class="fold" style="margin:0" data-view="all" data-f="pre">'+lingering().length+' pre-joining tasks still open</button>':'')+
+    '</p><button class="btn ghost" data-view="add">add something</button></div>';
 }
 
-/* ---------- 2. all ---------- */
+/* ---------- all ---------- */
+function filtRow(f){return '<div class="filt">'+[['all','all'],['open','unclaimed'],['mine','mine'],['pay','payments'],['do','to do'],['paperwork','paperwork'],['pre','pre-joining'],['done','done'],['hidden','set aside']]
+  .map(x=>'<button data-f="'+x[0]+'" class="'+(f===x[0]?'on':'')+'">'+x[1]+'</button>').join('')+'</div>'}
 function all(){
   const f=filter;
-  if(f==='hidden'){
-    const back=SEED.filter(x=>isHidden(x.id));
-    return '<div class="blk"><div class="phead"><span class="eyebrow">everything</span>'+
-      '<button class="plus" data-view="add">+ add</button></div><h3 style="margin-top:14px">Set aside</h3>'+
-      filtRow(f)+'</div><div class="paper">'+(back.length?back.map(x=>'<div class="row"><span class="d">'+
-        (x.due?fmt(D(x.due)):'—')+'</span><div class="b"><h4 style="opacity:.55">'+esc(x.title)+'</h4>'+
-        '<div class="links"><button data-unnix="'+esc(x.id)+'">bring it back</button></div></div></div>').join('')
-        :'<p style="opacity:.5;font-size:14px">Nothing set aside.</p>')+'</div>';
-  }
+  if(f==='hidden'){const back=SEED.filter(x=>isHidden(x.id));
+    return '<div class="sec"><h2 style="font-size:28px">Set aside</h2></div>'+filtRow(f)+'<div class="list">'+(back.length?back.map(x=>'<div class="row off"><span class="d"><b>'+(x.due?D(x.due).getDate():'–')+'</b>'+(x.due?MON[D(x.due).getMonth()]:'')+'</span><div class="b"><h4 style="color:var(--faint)">'+esc(x.title)+'</h4><div class="acts"><button data-unnix="'+esc(x.id)+'">bring it back</button></div></div></div>').join(''):'<p class="note" style="padding:16px">Nothing set aside.</p>')+'</div>'}
   let list=items();
   if(f==='paperwork')list=paperwork();
   else if(f==='mine')list=list.filter(x=>stateOf(x.id).by===ME&&stateOf(x.id).status!=='done');
   else if(f==='open')list=list.filter(x=>stateOf(x.id).status==='open');
-  else if(f==='pay')list=list.filter(x=>x.blocking);
+  else if(f==='pay')list=list.filter(x=>kindOf(x)==='pay');
+  else if(f==='do')list=list.filter(x=>kindOf(x)==='do'&&!x.group);
   else if(f==='pre')list=list.filter(x=>x.pre);
   else if(f==='done')list=list.filter(x=>stateOf(x.id).status==='done');
   if(f!=='done')list=list.filter(x=>!x.due||D(x.until||x.due)>=today()||stateOf(x.id).status!=='done');
-  if(f==='all')list=list.filter(x=>!x.pre);
-
-  const nodate=list.filter(x=>!x.due);
-  const withdate=list.filter(x=>x.due).sort((a,b)=>D(a.due)-D(b.due));
-  const by={};withdate.forEach(x=>{const d=D(x.due),k=MON[d.getMonth()]+' '+d.getFullYear();if(!by[k])by[k]=[];by[k].push(x)});
-  return '<div class="blk"><div class="phead"><span class="eyebrow">everything</span>'+
-    '<button class="plus" data-view="add">+ add</button></div>'+
-    '<h3 style="margin-top:14px">'+YG+' · 2026-27</h3>'+filtRow(f)+'</div>'+
-    '<div class="paper">'+
-    (nodate.length?'<div class="eyebrow">no date</div>'+nodate.map(row).join(''):'')+
-    Object.keys(by).map(m=>'<div class="eyebrow" style="margin:20px 0 2px">'+m.toLowerCase()+'</div>'+by[m].map(row).join('')).join('')+
-    (!nodate.length&&!withdate.length?'<p style="opacity:.5;font-size:14px">Nothing here.</p>':'')+'</div>';
-}
-function filtRow(f){
-  return '<div class="filt">'+[['all','all'],['open','unclaimed'],['mine','mine'],['pay','payments'],['paperwork','paperwork'],['pre','pre-joining'],['done','done'],['hidden','set aside']]
-    .map(x=>'<button data-f="'+x[0]+'" class="'+(f===x[0]?'on':'')+'">'+x[1]+'</button>').join('')+'</div>';
+  if(f==='all')list=list.filter(x=>!x.pre&&!x.group);
+  const nodate=list.filter(x=>!x.due), withdate=list.filter(x=>x.due).sort((a,b)=>D(a.due)-D(b.due));
+  const by={};withdate.forEach(x=>{const d=D(x.due),k=MONL[d.getMonth()]+' '+d.getFullYear();if(!by[k])by[k]=[];by[k].push(x)});
+  return '<div class="sec"><h2 style="font-size:28px">Everything</h2><p class="note">'+YG+' · 2026–27</p></div>'+filtRow(f)+
+    (nodate.length?'<p class="eyebrow" style="margin:6px 20px 10px">No date</p><div class="list">'+nodate.map(row).join('')+'</div>':'')+
+    Object.keys(by).map(m=>'<p class="eyebrow" style="margin:24px 20px 10px">'+m+'</p><div class="list">'+by[m].map(row).join('')+'</div>').join('')+
+    (!nodate.length&&!withdate.length?'<p class="note" style="padding:0 20px">Nothing here.</p>':'');
 }
 
-/* ---------- 3. papers ---------- */
+/* ---------- papers ---------- */
 function papers(){
-  return '<div class="blk"><div class="phead"><span class="eyebrow">papers</span>'+
-    '<span class="eyebrow">'+allSources().length+' read</span></div>'+
-    '<h3 style="margin-top:14px">Friday newsletter goes here</h3>'+
-    '<p class="note">Paste the link from the Friday email. It gets read for anything that touches '+esc(firstName())+', and whatever it finds waits below for you to keep or discard.</p>'+
-    '<input id="nlurl" placeholder="https://innoventuresedu.static.amais.com/…" autocapitalize="off" autocorrect="off" inputmode="url">'+
-    '<button class="btn dark '+(busy?'busy':'')+'" data-read="url">'+(busy?'reading…':'read the newsletter')+'</button>'+
-    '<button class="fold" data-open="'+(openSrc==='_more'?'':'_more')+'">'+(openSrc==='_more'?'hide':'or paste text / upload a PDF')+'</button>'+
-    (openSrc==='_more'?'<textarea id="paste" placeholder="paste a WhatsApp message or email"></textarea>'+
-      '<input type="file" id="pdf" accept="application/pdf"><button class="btn dghost" data-read="file">read it</button>':'')+
-    (flash?'<p class="note">'+esc(flash)+'</p>':'')+'</div>'+
-
+  return '<div class="sec"><h2 style="font-size:28px">Papers</h2>'+
+    '<p class="note" style="margin-top:6px">Drop in whatever the school sends — the Friday newsletter link, a screenshot from the class group, a letter. It gets read for anything that touches '+esc(firstName())+' and the rest is filed with a summary.</p>'+
+    '<input id="nlurl" placeholder="newsletter link" autocapitalize="off" autocorrect="off" inputmode="url">'+
+    '<input type="file" id="pdf" accept="application/pdf,image/*">'+
+    '<button class="btn '+(busy?'busy':'')+'" data-read="any">'+(busy?'reading…':'read it')+'</button>'+
+    '<button class="fold" data-open="'+(openSrc==='_more'?'':'_more')+'">'+(openSrc==='_more'?'hide':'or paste a message')+'</button>'+
+    (openSrc==='_more'?'<textarea id="paste" placeholder="paste a WhatsApp message or email"></textarea>':'')+
+    (flash?'<p class="note" style="margin-top:10px;color:var(--ink)">'+esc(flash)+'</p>':'')+'</div>'+
+    '<p class="eyebrow" style="margin:26px 20px 10px">'+allSources().length+' read</p>'+
     allSources().map(function(s){
       const fs=fromSource(s.id), st=stagedFor(s.id), isOpen=openSrc===s.id;
       return '<div class="src"><h4>'+esc(s.title)+'</h4>'+
-        '<span class="kind">'+esc(s.kind||'added')+' · '+fs.length+' item'+(fs.length===1?'':'s')+(st.length?' · <b style="color:var(--red)">'+st.length+' waiting</b>':'')+'</span>'+
+        '<span class="kind">'+esc(s.kind||'added')+(s.issued?' · '+fmt(D(s.issued)):'')+' · '+fs.length+' item'+(fs.length===1?'':'s')+(st.length?' · <b style="color:var(--wear)">'+st.length+' waiting</b>':'')+'</span>'+
         '<p class="sum">'+esc(s.summary)+'</p>'+
-        '<div class="links dk">'+(s.url?'<a href="'+esc(s.url)+'" target="_blank" rel="noopener">open the pdf</a>':'')+
-          ((s.links||[]).map(l=>'<a href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>').join(''))+'</div>'+
-        '<button class="fold" data-open="'+esc(isOpen?'':s.id)+'">'+(isOpen?'hide detail':'what it gave us')+'</button>'+
+        '<div class="acts">'+(s.url?'<a href="'+esc(s.url)+'" target="_blank" rel="noopener">open original</a>':'')+((s.links||[]).map(l=>'<a href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>').join(''))+
+          '<button data-open="'+esc(isOpen?'':s.id)+'">'+(isOpen?'less':'what it gave us')+'</button></div>'+
         (isOpen?(fs.length?'<div class="derived">'+fs.map(x=>'<div><span class="dt">'+(x.due?fmt(D(x.due)):'no date')+'</span>'+esc(x.title)+'</div>').join('')+'</div>':'')+
           ((s.also&&s.also.length)?'<div class="alsolist">'+s.also.map(a=>'<div>'+esc(a)+'</div>').join('')+'</div>':'')+
-          (s.added?'<button class="btn dghost" data-delsrc="'+esc(s.id)+'">remove this document</button>':''):'')+
-        (st.length?'<div class="pend"><div class="k">waiting on you</div>'+
-          st.map(x=>'<div class="stg"><h5>'+esc(x.title)+(x.blocking?' <span class="flag pay">pay</span>':'')+(x.dress?' <span class="flag">wear</span>':'')+'</h5>'+
-            '<p>'+esc(x.due||'no date')+(x.until?' to '+esc(x.until):'')+(x.time?' · '+t12(x.time):'')+(x.note?' — '+esc(x.note):'')+'</p>'+
-            '<span class="mini"><button class="yes" data-accept="'+esc(x.sid)+'">keep</button>'+
-            '<button data-reject="'+esc(x.sid)+'">discard</button></span></div>').join('')+
-          (st.length>1?'<span class="mini" style="margin-top:14px"><button class="yes" data-acceptall="'+esc(s.id)+'">keep all '+st.length+'</button></span>':'')+
-        '</div>':'')+
+          (s.added?'<div class="acts"><button data-delsrc="'+esc(s.id)+'">remove this document</button></div>':''):'')+
+        (st.length?'<div class="pend"><div class="k">Waiting on you</div>'+
+          st.map(x=>'<div class="stg"><h5>'+esc(x.title)+(x.kind==='pay'||x.blocking?' <span class="pill pay">'+(x.kind==='pay'?'pay':'deadline')+'</span>':'')+(x.kind==='wear'?' <span class="pill wear">wear</span>':'')+'</h5>'+
+            '<p>'+esc(x.due||'no date')+(x.until?' to '+esc(x.until):'')+(x.time?' · '+t12(x.time):'')+(x.bring?' · bring: '+esc(x.bring):'')+(x.note?' — '+esc(x.note):'')+'</p>'+
+            '<span class="mini"><button class="yes" data-accept="'+esc(x.sid)+'">keep</button><button data-reject="'+esc(x.sid)+'">discard</button></span></div>').join('')+
+          (st.length>1?'<span class="mini" style="margin-top:14px"><button class="yes" data-acceptall="'+esc(s.id)+'">keep all '+st.length+'</button></span>':'')+'</div>':'')+
       '</div>';
     }).join('');
 }
 
-/* ---------- 4. info ---------- */
+/* ---------- info ---------- */
 function info(){
-  const link=location.origin+'/?f='+FAM;
-  const c=child(), hc=HOUSES[c.house]||'var(--sage)';
-  const ics=location.origin+'/api/calendar?f='+FAM;
-  const webcal='webcal://'+location.host+'/api/calendar?f='+FAM;
-  return '<div class="blk"><span class="eyebrow">her</span>'+
-    '<div style="display:flex;align-items:center;gap:13px;margin-top:14px">'+
-      '<span style="width:44px;height:44px;border-radius:50%;background:'+hc+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:500;font-size:19px">'+esc((c.name||'?').trim().charAt(0).toUpperCase())+'</span>'+
-      '<span><span style="font-family:var(--disp);font-size:22px;font-weight:500;display:block;line-height:1.2">'+esc(c.name)+'</span>'+
-      '<span style="font-size:13.5px;color:var(--sage)">'+esc(YG)+' · '+esc(campus())+'</span></span></div>'+
-    '<div style="margin-top:16px">'+
-      '<button class="mrow" style="width:100%" data-edit="name"><span>Name</span><span>'+esc(c.name||'add')+'</span></button>'+
-      '<button class="mrow" style="width:100%" data-edit="house"><span>House</span><span style="color:'+hc+'">'+esc(c.house||'add')+'</span></button>'+
-      '<button class="mrow" style="width:100%" data-edit="klass"><span>Class</span><span>'+esc(c.klass||'tap to add')+'</span></button>'+
-      '<button class="mrow" style="width:100%" data-edit="homegroup"><span>Homegroup</span><span>'+esc(c.homegroup||'tap to add')+'</span></button>'+
+  const link=location.origin+'/?f='+FAM, c=child(), hc=HOUSES[c.house]||'var(--mute)';
+  const ics=location.origin+'/api/calendar?f='+FAM, webcal='webcal://'+location.host+'/api/calendar?f='+FAM;
+  return '<div class="sec"><div style="display:flex;align-items:center;gap:14px">'+
+      '<span style="width:52px;height:52px;border-radius:50%;background:'+hc+';color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:24px;font-weight:500">'+esc((c.name||'?').trim().charAt(0).toUpperCase())+'</span>'+
+      '<span><h2 style="font-size:26px">'+esc(c.name)+'</h2><p class="note" style="margin:2px 0 0">'+esc(YG)+' · '+esc(campus())+' · '+esc(c.house)+' house</p></span></div></div>'+
+    '<div class="card" style="margin-top:16px">'+
+      '<button class="mrow" data-edit="klass"><span>Class</span><span>'+esc(c.klass||'tap to add')+'</span></button>'+
+      '<button class="mrow" data-edit="homegroup"><span>Homegroup</span><span>'+esc(c.homegroup||'tap to add')+'</span></button>'+
+      '<button class="mrow" data-edit="house"><span>House</span><span style="color:'+hc+'">'+esc(c.house||'add')+'</span></button>'+
       '<div class="mrow"><span>Head of year</span><span>'+(YG==='KG1'?'Jessica Simon':'Amber Corfe')+'</span></div></div>'+
 
-    '<div class="calbox"><h4>Put it on your calendar</h4>'+
-    '<p>Subscribe once on each phone. Every dated item lands on your calendar and stays in sync — payments get a reminder the day before, timed events 30 minutes ahead.</p>'+
-    '<a class="btn dark" href="'+esc(webcal)+'">add to iPhone calendar</a>'+
-    '<button class="btn dghost" data-share="'+esc(ics)+'">copy link for Google Calendar</button>'+
-    '<p style="font-size:12px;margin-top:10px">Google: calendar.google.com → other calendars → + → from URL → paste.</p></div>'+
-    '</div>'+
+    '<p class="eyebrow" style="margin:28px 20px 10px">Calendar</p>'+
+    '<div class="card pad"><h3>Put it on both phones</h3><p>Subscribe once on each phone. Every dated item lands on your calendar and stays in sync. Payments get a reminder the day before, timed events 30 minutes ahead.</p>'+
+    '<a class="btn" href="'+esc(webcal)+'">add to iPhone calendar</a>'+
+    '<button class="btn ghost" data-share="'+esc(ics)+'">copy link for Google Calendar</button>'+
+    '<p style="font-size:12.5px;margin-top:10px;color:var(--faint)">Google: calendar.google.com → other calendars → + → from URL → paste.</p></div>'+
 
-    '<div class="blk" style="padding-top:0"><span class="eyebrow">every day</span>'+
-    '<div style="margin-top:12px">'+RULES.map(r=>'<div class="mrow"><span>'+esc(r.k)+'</span><span>'+esc(val(r.v))+'</span></div>').join('')+'</div>'+
-    '<div class="seg"><button data-yg="KG1" class="'+(YG==='KG1'?'on':'')+'">kg1</button><button data-yg="KG2" class="'+(YG==='KG2'?'on':'')+'">kg2</button></div></div>'+
-    '<div class="paper"><div class="eyebrow">who to ask</div>'+
-    CONTACTS.map(c=>'<div class="row"><span class="b"><h4>'+esc(c.n)+'</h4><p>'+(c.s?esc(val(c.s))+' · ':'')+'<a href="mailto:'+esc(val(c.d))+'">'+esc(val(c.d))+'</a>'+(c.p?' · '+esc(c.p):'')+'</p></span></div>').join('')+'</div>'+
-    '<div class="blk"><span class="eyebrow">what the words mean</span><div style="margin-top:6px">'+
-    Object.keys(GLOSSARY).map(k=>'<button class="drow" data-help="'+esc(openHelp===('g:'+k)?'':('g:'+k))+'"><span class="b"><h4>'+esc(k)+'</h4>'+
-      (openHelp===('g:'+k)?'<p style="line-height:1.6">'+esc(GLOSSARY[k])+'</p>':'')+'</span><span class="st todo">'+(openHelp===('g:'+k)?'close':'what')+'</span></button>').join('')+'</div></div>'+
-    '<div class="blk"><span class="eyebrow">portals</span><div style="margin-top:12px">'+
-    PORTALS.map(x=>'<a class="portal" href="'+esc(x.u)+'" target="_blank" rel="noopener"><span>'+esc(x.n)+'</span><span>open ↗</span></a>').join('')+'</div></div>'+
-    '<div class="blk"><span class="eyebrow">this family</span><div style="margin-top:12px">'+
-    '<div class="mrow"><span>You are</span><span>'+esc(nameOf(ME))+'</span></div>'+
-    '<div class="mrow"><span>Family code</span><span>'+esc(FAM||'-')+'</span></div>'+
-    '<div class="mrow"><span>Build</span><span>'+BUILD+'</span></div></div>'+
-    '<button class="btn dark" data-share="'+esc(link)+'">copy the link for the other phone</button>'+
-    '<button class="btn dghost" data-switch="1">not '+esc(nameOf(ME))+'? switch this phone</button></div>';
+    '<p class="eyebrow" style="margin:28px 20px 10px">Every day</p><div class="card">'+RULES.map(r=>'<div class="mrow"><span>'+esc(r.k)+'</span><span>'+esc(val(r.v))+'</span></div>').join('')+'</div>'+
+    '<div class="sec"><div class="seg"><button data-yg="KG1" class="'+(YG==='KG1'?'on':'')+'">KG1</button><button data-yg="KG2" class="'+(YG==='KG2'?'on':'')+'">KG2</button></div></div>'+
+    '<p class="eyebrow" style="margin:28px 20px 10px">Who to ask</p><div class="card">'+CONTACTS.map(c=>'<div class="mrow" style="flex-direction:column;align-items:flex-start;gap:2px"><span style="font-weight:500">'+esc(c.n)+(c.s?' <span style="color:var(--mute);font-weight:400">· '+esc(val(c.s))+'</span>':'')+'</span><span style="text-align:left"><a href="mailto:'+esc(val(c.d))+'">'+esc(val(c.d))+'</a>'+(c.p?' · '+esc(c.p):'')+'</span></div>').join('')+'</div>'+
+    '<p class="eyebrow" style="margin:28px 20px 10px">What the words mean</p><div class="card">'+Object.keys(GLOSSARY).map(k=>'<button class="mrow" style="flex-direction:column;align-items:flex-start;gap:4px" data-help="'+esc(openHelp===('g:'+k)?'':('g:'+k))+'"><span style="font-weight:500">'+esc(k)+'</span>'+(openHelp===('g:'+k)?'<span style="text-align:left;line-height:1.55">'+esc(GLOSSARY[k])+'</span>':'')+'</button>').join('')+'</div>'+
+    '<p class="eyebrow" style="margin:28px 20px 10px">Portals</p><div class="card">'+PORTALS.map(x=>'<a class="portal" href="'+esc(x.u)+'" target="_blank" rel="noopener"><span>'+esc(x.n)+'</span><span>open ↗</span></a>').join('')+'</div>'+
+    '<p class="eyebrow" style="margin:28px 20px 10px">This family</p><div class="card">'+
+      '<div class="mrow"><span>You are</span><span>'+esc(nameOf(ME))+'</span></div><div class="mrow"><span>Family code</span><span>'+esc(FAM||'-')+'</span></div><div class="mrow"><span>Build</span><span>'+BUILD+'</span></div></div>'+
+    '<div class="sec"><button class="btn ghost" data-share="'+esc(link)+'">copy the link for the other phone</button>'+
+    '<button class="btn ghost" data-switch="1">not '+esc(nameOf(ME))+'? switch this phone</button></div>';
 }
 
 /* ---------- add ---------- */
 function addview(){
   const custom=customFacts();
-  return '<div class="blk"><button class="back" data-view="now">← back</button><h3>Add something</h3>'+
-    '<p class="note">Leave the date empty if it just needs doing at some point.</p>'+
-    '<input id="ntitle" placeholder="what is it" autocapitalize="sentences">'+
-    '<input id="ndue" type="date"><input id="ntime" type="time">'+
-    '<input id="nnote" placeholder="detail, amount, where — optional">'+
-    '<label class="chk"><input type="checkbox" id="nblock"> it is a payment or hard deadline</label>'+
-    '<button class="btn dark" data-save="1">add it</button></div>'+
-    (custom.length?'<div class="paper"><div class="eyebrow">things you added</div>'+
-      custom.map(f=>'<div class="row"><span class="d">'+(f.due?fmt(D(f.due)):'—')+'</span><span class="b"><h4>'+esc(f.title)+'</h4>'+(f.note?'<p>'+esc(f.note)+'</p>':'')+'</span>'+
-        '<button class="st del" data-del="'+esc(f.id)+'">remove</button></div>').join('')+'</div>':'');
+  return '<button class="back" data-view="today">‹ back</button><div class="sec"><h2 style="font-size:28px">Add something</h2>'+
+    '<input id="ntitle" placeholder="what is it" autocapitalize="sentences"><input id="ndue" type="date"><input id="ntime" type="time">'+
+    '<input id="nbring" placeholder="anything to bring or wear — optional"><input id="nnote" placeholder="detail, amount, where — optional">'+
+    '<div class="seg"><button data-kind="event" class="on">event</button><button data-kind="do">to do</button><button data-kind="pay">payment</button><button data-kind="wear">wear</button></div>'+
+    '<input type="hidden" id="nkind" value="event"><button class="btn" data-save="1">add it</button></div>'+
+    (custom.length?'<p class="eyebrow" style="margin:28px 20px 10px">Things you added</p><div class="list">'+custom.map(f=>'<div class="row '+kindOf(f)+'"><span class="d"><b>'+(f.due?D(f.due).getDate():'–')+'</b>'+(f.due?MON[D(f.due).getMonth()]:'')+'</span><div class="b"><h4>'+esc(f.title)+'</h4>'+(f.note?'<p>'+esc(f.note)+'</p>':'')+'<div class="acts"><button data-del="'+esc(f.id)+'">remove</button></div></div></div>').join('')+'</div>':'');
 }
 
-/* ---------- render ---------- */
-const VIEWS={now:nowView,all:all,papers:papers,info:info,add:addview};
-const TABS=[['now','today'],['all','all'],['papers','papers'],['info','info']];
+const VIEWS={today:todayView,all:all,papers:papers,info:info,add:addview};
+const TABS=[['today','today'],['all','all'],['papers','papers'],['info','info']];
 function paintSync(){const el=document.querySelector('.sync');if(el){el.className='sync '+(online?'':'off');el.innerHTML='<i></i>'+(online?'synced':'offline')}}
 function render(){
   YG=get('yg',{v:'KG1'}).v;
   const app=document.getElementById('app'), nav=document.getElementById('nav');
   if(!FAM||!ME){app.innerHTML=setup();nav.style.display='none';return}
-  nav.style.display='flex';
-  app.innerHTML=(VIEWS[view]||nowView)();
-  const w=waiting();
+  nav.style.display='flex';app.innerHTML=(VIEWS[view]||todayView)();
+  const w=stagedAll().length;
   nav.innerHTML=TABS.map(t=>'<button data-view="'+t[0]+'" class="'+(view===t[0]?'on':'')+'">'+t[1]+((t[0]==='papers'&&w)?'<span class="dot"></span>':'')+'</button>').join('');
 }
-
 function b64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=()=>rej(new Error('could not read that file'));r.readAsDataURL(file)})}
 
-async function readSource(mode){
+async function readSource(){
   const payload={yg:YG,childName:firstName(),existing:items().map(f=>({id:f.id,title:f.title,due:f.due||null}))};
-  if(mode==='url'){
-    const u=(document.getElementById('nlurl')||{}).value||'';
-    if(!/^https?:\/\//.test(u.trim())){flash='Paste the newsletter link first.';render();return}
-    payload.url=u.trim();
-  }else{
-    const ta=document.getElementById('paste'), fi=document.getElementById('pdf');
-    const text=(ta&&ta.value||'').trim(), file=fi&&fi.files&&fi.files[0];
-    if(!text&&!file){flash='Paste something or pick a PDF first.';render();return}
-    if(file&&file.size>4000000){flash='That PDF is over 4MB. Paste the newsletter link instead — the server fetches it directly.';render();return}
-    if(file){payload.pdf=await b64(file);payload.filename=file.name}else payload.text=text;
-  }
+  const u=((document.getElementById('nlurl')||{}).value||'').trim();
+  const fi=document.getElementById('pdf'), file=fi&&fi.files&&fi.files[0];
+  const text=((document.getElementById('paste')||{}).value||'').trim();
+  if(file){
+    if(file.size>4000000){flash='Over 4MB. For a newsletter, paste the link instead — the server fetches it.';render();return}
+    const b=await b64(file);
+    if(/^image\//.test(file.type)){payload.image=b;payload.imageType=file.type}else{payload.pdf=b}
+    payload.filename=file.name;
+  }else if(/^https?:\/\//.test(u)){payload.url=u}
+  else if(text){payload.text=text}
+  else{flash='Give me a link, a file, or some text.';render();return}
   busy='1';flash='';render();
   try{
     const r=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await r.json();
     if(!r.ok){flash='Could not read it: '+(data.error||'unknown');busy='';render();return}
     const sid=newId('d');
-    L['src:'+sid]={title:data.title,summary:data.summary,also:data.also||[],issued:data.issued||null,url:data.url||null,kind:'Newsletter · added by '+nameOf(ME),at:Date.now(),who:ME};
+    L['src:'+sid]={title:data.title,summary:data.summary,also:data.also||[],issued:data.issued||null,url:data.url||null,kind:(data.docKind||'Document')+' · '+nameOf(ME),at:Date.now(),who:ME};
     pending.add('src:'+sid);
     (data.proposals||[]).forEach(p=>{const k='st:'+newId('s');L[k]=Object.assign({},p,{srcId:sid,at:Date.now(),who:ME});pending.add(k)});
-    saveLocal();
-    const n=(data.proposals||[]).length;
+    saveLocal();const n=(data.proposals||[]).length;
     flash=n?(n+' found for '+firstName()+'. Keep or discard below.'):'Read it — nothing new for '+firstName()+'.';
     openSrc=sid;busy='';render();queuePush();
     setTimeout(()=>{const el=document.querySelector('.pend');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},80);
   }catch(e){flash='That did not go through. '+String(e.message||e);busy='';render()}
 }
-
 function acceptStaged(sid){
   const s=L['st:'+sid];if(!s)return;
-  write('cf:'+newId('c'),{title:s.title,due:s.due||null,until:s.until||null,time:s.time||null,endTime:s.endTime||null,note:s.note||null,blocking:!!s.blocking,dress:!!s.dress,src:s.srcId||'added'});
+  write('cf:'+newId('c'),{title:s.title,due:s.due||null,until:s.until||null,time:s.time||null,endTime:s.endTime||null,note:s.note||null,kind:s.kind||null,bring:s.bring||null,blocking:!!s.blocking,src:s.srcId||'added'});
   write('st:'+sid,Object.assign({},s,{settled:true}));
 }
 
 document.addEventListener('click',async function(e){
-  const t=e.target.closest('[data-view],[data-tog],[data-yg],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-nix],[data-unnix],[data-read],[data-accept],[data-acceptall],[data-reject],[data-delsrc],[data-open],[data-f],[data-addlink],[data-help],[data-edit],[data-wk]');
-  if(!t)return;
-  const d=t.dataset;
+  const t=e.target.closest('[data-view],[data-tog],[data-yg],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-nix],[data-unnix],[data-read],[data-accept],[data-acceptall],[data-reject],[data-delsrc],[data-open],[data-f],[data-addlink],[data-help],[data-edit],[data-wk],[data-row],[data-kind]');
+  if(!t)return;const d=t.dataset;
   if(d.mkfam){FAM=newFam();disk.set('fam',FAM);L={};saveLocal();render();return}
-  if(d.join){const el=document.getElementById('joinid'),raw=el?el.value:'';const m=raw.match(/[?&]f=([a-z0-9-]+)/i);
-    const code=(m?m[1]:raw).trim().replace(/[^a-z0-9-]/gi,'').slice(0,40);if(!code)return;
-    FAM=code;disk.set('fam',FAM);L=disk.get('runway:'+FAM)||{};render();pull();return}
+  if(d.join){const el=document.getElementById('joinid'),raw=el?el.value:'';const m=raw.match(/[?&]f=([a-z0-9-]+)/i);const code=(m?m[1]:raw).trim().replace(/[^a-z0-9-]/gi,'').slice(0,40);if(!code)return;FAM=code;disk.set('fam',FAM);L=disk.get('runway:'+FAM)||{};render();pull();return}
   if(d.be){ME=d.be;disk.set('me',ME);render();pull();mirrorSeed();return}
-  if(d.addme){const el=document.getElementById('myname'),nm=(el&&el.value||'').trim().slice(0,24);if(!nm){if(el)el.focus();return}
-    ME=newMemberId();disk.set('me',ME);write('member:'+ME,{name:nm});mirrorSeed();return}
+  if(d.addme){const el=document.getElementById('myname'),nm=(el&&el.value||'').trim().slice(0,24);if(!nm){if(el)el.focus();return}ME=newMemberId();disk.set('me',ME);write('member:'+ME,{name:nm});mirrorSeed();return}
   if(d.switch){ME=null;disk.set('me',null);render();return}
   if(d.share){try{await navigator.clipboard.writeText(d.share);t.textContent='copied'}catch(err){t.textContent=d.share}setTimeout(render,1400);return}
   if(d.wk){weekOff+=Number(d.wk);render();return}
-  if(d.read){readSource(d.read);return}
+  if(d.row!==undefined){openRow=d.row;openHelp='';render();return}
+  if(d.kind){document.querySelectorAll('[data-kind]').forEach(b=>b.classList.toggle('on',b===t));document.getElementById('nkind').value=d.kind;return}
+  if(d.read){readSource();return}
   if(d.open!==undefined){openSrc=d.open;render();return}
-  if(d.edit){const c=child();const labels={name:'Her full name',house:'House — Air, Earth, Fire or Water',klass:'Class',homegroup:'Homegroup'};
-    const v=prompt(labels[d.edit]||'Value',c[d.edit]||'');if(v===null)return;
-    const next=Object.assign({},get('child',{}));next[d.edit]=v.trim().slice(0,40);write('child',next);return}
+  if(d.edit){const c=child();const labels={name:'Her full name',house:'House — Air, Earth, Fire or Water',klass:'Class',homegroup:'Homegroup'};const v=prompt(labels[d.edit]||'Value',c[d.edit]||'');if(v===null)return;const next=Object.assign({},get('child',{}));next[d.edit]=v.trim().slice(0,40);write('child',next);return}
   if(d.help!==undefined){openHelp=d.help;render();return}
   if(d.unnix){write('hide:'+d.unnix,{v:false});return}
   if(d.nix){const cf=L['cf:'+d.nix];if(cf)write('cf:'+d.nix,Object.assign({},cf,{deleted:true}));else write('hide:'+d.nix,{v:true});return}
-  if(d.addlink){const cur=get('lnk:'+d.addlink,{});const u=prompt('Paste the link for this one',cur.u||'https://');if(u===null)return;
-    const clean=u.trim();if(!clean||clean==='https://'){write('lnk:'+d.addlink,{u:'',t:''});return}write('lnk:'+d.addlink,{u:clean,t:'your link'});return}
-  if(d.save){const ti=document.getElementById('ntitle'),du=document.getElementById('ndue'),tm=document.getElementById('ntime'),no=document.getElementById('nnote'),bl=document.getElementById('nblock');
-    const title=(ti&&ti.value||'').trim().slice(0,80),due=(du&&du.value||'').trim(),time=(tm&&tm.value||'').trim();
-    if(!title){if(ti)ti.focus();return}
-    write('cf:'+newId('c'),{title:title,due:/^\d{4}-\d{2}-\d{2}$/.test(due)?due:null,time:/^\d{2}:\d{2}$/.test(time)?time:null,note:(no&&no.value||'').trim().slice(0,200)||null,blocking:!!(bl&&bl.checked),src:'added'});
-    view='now';render();return}
+  if(d.addlink){const cur=get('lnk:'+d.addlink,{});const u=prompt('Paste the link for this one',cur.u||'https://');if(u===null)return;const clean=u.trim();if(!clean||clean==='https://'){write('lnk:'+d.addlink,{u:'',t:''});return}write('lnk:'+d.addlink,{u:clean,t:'your link'});return}
+  if(d.save){const g=id=>((document.getElementById(id)||{}).value||'').trim();const title=g('ntitle').slice(0,80),due=g('ndue'),time=g('ntime'),kind=g('nkind')||'event';if(!title){const el=document.getElementById('ntitle');if(el)el.focus();return}
+    write('cf:'+newId('c'),{title:title,due:/^\d{4}-\d{2}-\d{2}$/.test(due)?due:null,time:/^\d{2}:\d{2}$/.test(time)?time:null,bring:g('nbring').slice(0,80)||null,note:g('nnote').slice(0,200)||null,kind:kind,blocking:kind==='pay',src:'added'});view='today';render();return}
   if(d.del){write('cf:'+d.del,{deleted:true});return}
   if(d.delsrc){write('src:'+d.delsrc,{deleted:true});return}
   if(d.accept){acceptStaged(d.accept);return}
   if(d.acceptall){stagedFor(d.acceptall).forEach(s=>acceptStaged(s.sid));return}
   if(d.reject){const s=L['st:'+d.reject];if(!s)return;write('st:'+d.reject,Object.assign({},s,{settled:true}));return}
   if(d.f&&!d.view){filter=d.f;render();return}
-  if(d.view){view=d.view;flash='';weekOff=0;if(d.f)filter=d.f;render();window.scrollTo(0,0);return}
+  if(d.view){view=d.view;flash='';weekOff=0;openRow='';if(d.f)filter=d.f;render();window.scrollTo(0,0);return}
   if(d.tog){const s=stateOf(d.tog);const next=s.status==='open'?{status:'taken',by:ME}:s.status==='taken'?{status:'done',by:ME}:{status:'open',by:null};write('fact:'+d.tog,next);return}
   if(d.yg){write('yg',{v:d.yg});return}
 });
-
 document.addEventListener('visibilitychange',function(){if(!document.hidden){pull();push()}});
 window.addEventListener('online',function(){online=true;pull();push()});
 window.addEventListener('offline',function(){online=false;paintSync()});
-
-render();
-if(FAM&&ME){pull().then(mirrorSeed)}
+render();if(FAM&&ME){pull().then(mirrorSeed)}
 setInterval(function(){if(!document.hidden)pull()},90000);
 </script>

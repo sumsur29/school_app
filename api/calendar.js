@@ -64,7 +64,7 @@ function event(it, fam) {
 
   const prefix = it.blocking ? '⚠ ' : '';
   lines.push(fold(`SUMMARY:${esc(prefix + it.title)}`));
-  const desc = [it.note, it.status && it.status !== 'open' ? `Status: ${it.status}${it.by ? ' (' + it.by + ')' : ''}` : '', 'From Runway']
+  const desc = [it.bring ? 'Bring: ' + it.bring : '', it.note, it.status && it.status !== 'open' ? `Status: ${it.status}${it.by ? ' (' + it.by + ')' : ''}` : '', 'From Runway']
     .filter(Boolean).join('\n');
   lines.push(fold(`DESCRIPTION:${esc(desc)}`));
   if (it.blocking) {
