@@ -17,8 +17,7 @@ function system(yg, childName) {
 Return ONLY a JSON object. No prose, no markdown fences.
 
 {
-  "title": short name for this document, max 7 words (e.g. "Newsletter Issue 7, 23 Oct", "Unit 1: Who we are"),
-  "docKind": "Newsletter" | "Class sheet" | "Letter" | "Message" | "Other",
+  "title": short name for this document, max 7 words (e.g. "Newsletter Issue 7, 23 Oct"),
   "issued": "YYYY-MM-DD" date of the document if stated, else null,
   "summary": 2-3 sentences on what matters to a ${yg} family in this issue,
   "also": [up to 6 short strings: things worth knowing that are not tasks — reminders, rules, policy changes],
@@ -27,15 +26,15 @@ Return ONLY a JSON object. No prose, no markdown fences.
 
 Each proposal:
 {
-  "kind": "pay" | "do" | "wear" | "event" | "off" | "info",
+  "type": "task" | "event" | "deadline",
   "title": short, sentence case, max 7 words,
   "due": "YYYY-MM-DD" or null if it needs doing but has no fixed date,
   "until": "YYYY-MM-DD" if it runs across several days, else null,
   "time": "HH:MM" 24h start time if the item has one, else null,
   "endTime": "HH:MM" if an end time is given, else null,
   "note": one sentence of detail — amount, where, what to wear, what to bring,
-  "bring": what physically has to go in the bag or on the child that day (e.g. "something red", "three photos", "picnic blanket"), or null,
-  "blocking": true for any payment deadline, and for a dated task the parents must deliver by that date (photos, forms, a video),
+  "blocking": true only for a payment or registration deadline that, missed, means the child cannot take part,
+  "dress": true if the child must wear or bring something specific that day,
   "match": id of an existing item this updates, or null,
   "conflict": true if it contradicts an existing item
 }
@@ -43,11 +42,9 @@ Each proposal:
 Rules — read these carefully, they are the whole job:
 - Include anything for ${yg}, for KG generally, for "KG1-Y6", for "all primary", for "PS", or for parents and families generally.
 - EXCLUDE anything only for other year groups: Y1, Y2, Y3, Y4, Y5, Y6, KG2 (unless ${yg} is KG2), camps, CAT4, NGRT, PASS, residentials, Sri Lanka, exhibitions by a named other year.
-- kind: "pay" = money due; "do" = something the parents must send, fill, email or make; "wear" = dress-up or bring-something day; "event" = something happening; "off" = no school, break, early finish, changed timings; "info" = worth knowing, nothing to act on.
-- Payment deadlines are the single most important thing. Zenda payments with a date are always kind "pay", blocking true. Put the amount in the note.
-- Things parents must deliver — photos to the teacher, a video, a form — are kind "do", blocking true, with the due date.
-- Early dismissal, no-school days, breaks, PTCs, changed timings: kind "off", always include. Put the new time in "time".
-- "Wear X" or "bring X" days: kind "wear", put the thing in "bring".
+- Payment deadlines are the single most important thing. Zenda payments with a date are always blocking deadlines. Put the amount in the note.
+- Early dismissal, no-school days, breaks, PTCs, changed timings: always include, always as events.
+- "Wear X" or "bring X" days: include, set dress true, put what to wear or bring in the note.
 - Photo days, concerts, picnics, fairs, performances for ${yg}: include with times if given.
 - A PADIA sale, souq, coffee morning or community event: include.
 - An external competition or opportunity (spelling bee, olympiad, fitness challenge): include once as an event with "optional" in the note.
@@ -79,7 +76,7 @@ export default async function handler(req, res) {
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-    const { text, url, filename, existing, yg, childName, image, imageType } = body;
+    const { text, url, filename, existing, yg, childName } = body;
     let pdf = body.pdf || null;
     let sourceName = filename || null;
 
@@ -87,19 +84,15 @@ export default async function handler(req, res) {
       pdf = await fetchPdf(url);
       try { sourceName = decodeURIComponent(new URL(url).pathname.split('/').pop() || 'newsletter.pdf'); } catch (e) { sourceName = 'newsletter.pdf'; }
     }
-    if (!text && !pdf && !image) return res.status(400).json({ error: 'nothing to read' });
+    if (!text && !pdf) return res.status(400).json({ error: 'nothing to read' });
 
     const known = Array.isArray(existing) ? existing.slice(0, 200) : [];
     const content = [];
     if (pdf) content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: pdf } });
-    if (image) {
-      const mt = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(imageType) ? imageType : 'image/jpeg';
-      content.push({ type: 'image', source: { type: 'base64', media_type: mt, data: image } });
-    }
     content.push({
       type: 'text',
       text: 'Items already in the app (skip unless changed):\n' + JSON.stringify(known) + '\n\n' +
-        ((pdf || image) ? 'Read the attached document' + (sourceName ? ' (' + sourceName + ')' : '') + '.'
+        (pdf ? 'Read the attached newsletter' + (sourceName ? ' (' + sourceName + ')' : '') + '.'
              : 'Read this message:\n\n' + String(text).slice(0, 60000))
     });
 
@@ -128,22 +121,21 @@ export default async function handler(req, res) {
     const isTime = s => /^\d{2}:\d{2}$/.test(s || '');
     const list = Array.isArray(out.proposals) ? out.proposals : [];
     const clean = list.slice(0, MAX_PROPOSALS).map(x => ({
-      kind: ['pay', 'do', 'wear', 'event', 'off', 'info'].includes(x.kind) ? x.kind : 'event',
+      type: ['task', 'event', 'deadline'].includes(x.type) ? x.type : 'event',
       title: String(x.title || '').slice(0, 80),
       due: isDate(x.due) ? x.due : null,
       until: isDate(x.until) ? x.until : null,
       time: isTime(x.time) ? x.time : null,
       endTime: isTime(x.endTime) ? x.endTime : null,
       note: x.note ? String(x.note).slice(0, 200) : null,
-      bring: x.bring ? String(x.bring).slice(0, 80) : null,
       blocking: !!x.blocking,
+      dress: !!x.dress,
       match: x.match ? String(x.match).slice(0, 40) : null,
       conflict: !!x.conflict
     })).filter(x => x.title);
 
     return res.json({
       title: String(out.title || sourceName || 'Pasted message').slice(0, 60),
-      docKind: ['Newsletter', 'Class sheet', 'Letter', 'Message', 'Other'].includes(out.docKind) ? out.docKind : (pdf ? 'Newsletter' : image ? 'Class sheet' : 'Message'),
       issued: isDate(out.issued) ? out.issued : null,
       summary: String(out.summary || '').slice(0, 600),
       also: (Array.isArray(out.also) ? out.also : []).slice(0, 6).map(s => String(s).slice(0, 160)),
