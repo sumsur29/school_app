@@ -11,8 +11,10 @@ const MAX_PDF_BYTES = 25 * 1024 * 1024;
 const ALLOWED_HOSTS = ['innoventuresedu.static.amais.com', 'diadubai.com', 'www.diadubai.com',
   'innoventureseducation-my.sharepoint.com', 'innoventureseducation.sharepoint.com'];
 
-function system(yg, childName) {
-  return `You read a primary-school newsletter for the parents of ${childName || 'a child'} in ${yg} at DIA Emirates Hills, Dubai.
+function system(yg, childName, todayIso) {
+  return `Today is ${todayIso}. The academic year runs 31 Aug 2026 to 2 Jul 2027, so any date without a year falls in that window — never earlier.
+
+You read a primary-school newsletter for the parents of ${childName || 'a child'} in ${yg} at DIA Emirates Hills, Dubai.
 
 Return ONLY a JSON object. No prose, no markdown fences.
 
@@ -54,7 +56,8 @@ Rules — read these carefully, they are the whole job:
 - An external competition or opportunity (spelling bee, olympiad, fitness challenge): include once as an event with "optional" in the note.
 - Do not repeat anything already in the existing list with the same date unless the time or detail changed — then set match to its id.
 - If the newsletter calendar says one thing and the body text says another, trust the body text and set conflict true.
-- Prefer accuracy over volume. Twelve correct items beat thirty noisy ones.`;
+- Prefer accuracy over volume. Twelve correct items beat thirty noisy ones.
+- "next Thursday", "tomorrow", "this Friday" are relative to today's date above. Resolve them to a real date in the academic year.`;
 }
 
 async function fetchPdf(url) {
@@ -107,7 +110,7 @@ export default async function handler(req, res) {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 6000, system: system(yg || 'KG1', childName), messages: [{ role: 'user', content }] })
+      body: JSON.stringify({ model: MODEL, max_tokens: 6000, system: system(yg || 'KG1', childName, new Date(Date.now() + 4 * 3600e3).toISOString().slice(0, 10)), messages: [{ role: 'user', content }] })
     });
     if (!r.ok) {
       const detail = await r.text();
@@ -126,13 +129,20 @@ export default async function handler(req, res) {
     }
 
     const isDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s || '');
+    const fixYear = s => {
+      if (!isDate(s)) return null;
+      const d = new Date(s + 'T00:00:00Z'), now = Date.now();
+      if (d.getTime() < now - 60 * 864e5) { d.setUTCFullYear(d.getUTCFullYear() + 1); return d.toISOString().slice(0, 10); }
+      if (d.getTime() > now + 400 * 864e5) { d.setUTCFullYear(d.getUTCFullYear() - 1); return d.toISOString().slice(0, 10); }
+      return s;
+    };
     const isTime = s => /^\d{2}:\d{2}$/.test(s || '');
     const list = Array.isArray(out.proposals) ? out.proposals : [];
     const clean = list.slice(0, MAX_PROPOSALS).map(x => ({
       kind: ['pay', 'do', 'wear', 'event', 'off', 'info'].includes(x.kind) ? x.kind : 'event',
       title: String(x.title || '').slice(0, 80),
-      due: isDate(x.due) ? x.due : null,
-      until: isDate(x.until) ? x.until : null,
+      due: fixYear(x.due),
+      until: fixYear(x.until),
       time: isTime(x.time) ? x.time : null,
       endTime: isTime(x.endTime) ? x.endTime : null,
       note: x.note ? String(x.note).slice(0, 200) : null,
