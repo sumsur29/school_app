@@ -39,6 +39,7 @@ a{color:inherit}
 .top{display:flex;justify-content:space-between;align-items:center;padding:8px 22px 0;font-size:13.5px;color:var(--mute);font-weight:500}
 .top .l{display:flex;gap:10px;align-items:center}
 .av{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.syncb{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--faint);padding:4px 8px;border-radius:999px;border:1px solid var(--line)}
 .sync{width:7px;height:7px;border-radius:50%;background:var(--event);display:inline-block}
 .sync.off{background:var(--wear)}
 .plus{width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:300;line-height:1}
@@ -204,7 +205,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='014';
+const BUILD='015';
 
 const mem={};
 const disk={get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return mem[k]??null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}};
@@ -310,6 +311,8 @@ const SEED=[
  {id:'n7-exec',src:'nl7',title:'Parent session: executive function',due:'2026-11-06',time:'07:45',note:()=>'Guest speaker on emotional regulation, KG gym'},
  {id:'n5-duck-pay',src:'nl5',title:'Pay for The Ugly Duckling',due:'2026-11-08',kind:'pay',blocking:true,note:()=>'AED 60 on Zenda. Final deadline',links:[{t:'pay on Zenda',u:'https://innoventureseducation.zenda.com/'}]},
  {id:'n5-duck',src:'nl5',title:'The Ugly Duckling show',due:'2026-11-10',time:'09:30',endTime:'10:20',note:()=>'Musical in the SS PE hall. KG1 slot'},
+ {id:'bf-env',src:'bf1',title:'Book fair envelope, AED 50',due:'2026-11-04',kind:'pay',blocking:true,bring:'envelope with AED 50',note:()=>'Cash in the envelope she brought home, back to Miss Nida by Wednesday'},
+ {id:'bf-day',src:'bf1',title:'Booktopia book fair, KG1 campus',due:'2026-11-05',kind:'event',note:()=>'Her class visits and she picks a book. Parents can buy at pick-up too'},
  {id:'n7-adhd',src:'nl7',title:'ADHD awareness activities',due:'2026-11-12'},
  {id:'n7-antibully',src:'nl7',title:'Anti-bullying week',due:'2026-11-16',until:'2026-11-20'},
  {id:'n7-assess',src:'nl7',title:'Parent session: assessment and reporting',due:'2026-11-26',time:'07:45',note:()=>'KG gym. Billed as Y1-6 but worth knowing'},
@@ -325,6 +328,9 @@ const SEED=[
 ];
 
 const SOURCES=[
+ {id:'bf1',title:'Book fair — KG1 Teachers',kind:'Message',issued:'2026-10-28',
+  summary:'Booktopia comes to the KG1 campus on Thursday 5 November. An envelope came home today: send it back with AED 50 by Wednesday 4 November if she is to buy a book. Parents can also buy at pick-up.',
+  also:['Questions go to the class teacher, not the office']},
  {id:'welcome',title:'Primary welcome back pack',kind:'PDF · 2026-27',
   summary:'The main handbook. Daily timings, gates and pick-up, registers and absence, uniform, canteen, buses, mother tongue, CCAs, the device policy, PADIA, and every staff contact.',
   also:['Class placement requests are heard but not guaranteed, and lists never change once published',
@@ -445,7 +451,7 @@ const PORTALS=[
 
 let L=(FAM&&disk.get('runway:'+FAM))||{};
 let pending=new Set();
-let online=true, view='today', busy='', flash='', filter='all', openSrc='', openHelp='', openRow='';
+let online=true, lastSync=0, view='today', busy='', flash='', filter='all', openSrc='', openHelp='', openRow='';
 let SEL=null, MONTH=null, addDate='';
 
 const saveLocal=()=>{if(FAM)disk.set('runway:'+FAM,L)};
@@ -468,8 +474,8 @@ function mirrorSeed(){
   L['seedcal']={items:items,sig:sig,at:Date.now(),who:ME};saveLocal();pending.add('seedcal');queuePush();
 }
 async function push(){if(!FAM||!pending.size)return;const body={};pending.forEach(k=>{if(L[k])body[k]=L[k]});
-  try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error('bad');const server=await r.json();pending.clear();online=true;if(mergeIn(server))render();else paintSync()}catch(e){online=false;paintSync()}}
-async function pull(){if(!FAM)return;try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{cache:'no-store'});if(!r.ok)throw new Error('bad');online=true;if(mergeIn(await r.json()))render();else paintSync()}catch(e){online=false;paintSync()}}
+  try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error('bad');const server=await r.json();pending.clear();online=true;lastSync=Date.now();if(mergeIn(server))render();else paintSync()}catch(e){online=false;paintSync()}}
+async function pull(){if(!FAM)return;try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{cache:'no-store'});if(!r.ok)throw new Error('bad');online=true;lastSync=Date.now();if(mergeIn(await r.json()))render();else paintSync()}catch(e){online=false;paintSync()}}
 
 const today=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
 const D=s=>new Date(s+'T00:00:00');
@@ -520,7 +526,7 @@ function setup(){
     '<p class="eyebrow" style="margin-top:26px">'+(list.length?'not one of them?':'add yourself')+'</p><input id="myname" placeholder="your first name" autocapitalize="words"><button class="btn" data-addme="1">that is me</button></div>';
 }
 
-function topbar(){return '<div class="top"><span class="l"><button class="av" data-view="info">'+esc(initialOf(ME))+'</button><span>'+esc(firstName())+' · '+YG+' · '+esc(child().house||'')+'</span><i class="sync '+(online?'':'off')+'"></i></span><button class="plus" data-view="add">+</button></div>'}
+function topbar(){return '<div class="top"><span class="l"><button class="av" data-view="info">'+esc(initialOf(ME))+'</button><span>'+esc(firstName())+' · '+YG+'</span><button class="syncb" data-sync="1"><i class="sync '+(online?'':'off')+'"></i>'+(online?(lastSync?ago(lastSync):'…'):'offline')+'</button></span><button class="plus" data-view="add">+</button></div>'}
 
 function row(f,opts){
   opts=opts||{};const s=stateOf(f.id), k=kindOf(f), extra=get('lnk:'+f.id), open=openRow===f.id;
@@ -626,7 +632,7 @@ function needsView(){
 function papersView(){
   const tabOf=s=>/newsletter/i.test(s.kind||'')||s.id.indexOf('nl')===0?'nl':/class/i.test(s.kind||'')?'cs':/message/i.test(s.kind||'')?'ms':'';
   return topbar()+'<div class="hero"><div class="h1" style="font-size:40px">Papers</div></div>'+
-    '<div class="drop" id="drop"><input type="file" id="pdf" accept="application/pdf,image/*"><div class="ic">+</div><div class="t" id="dropt">Drop it here</div><div class="s">Friday newsletter, a screenshot, a letter</div></div>'+
+    '<div class="drop'+(pastedImage?' has':'')+'" id="drop"><input type="file" id="pdf" accept="application/pdf,image/*"><div class="ic">+</div><div class="t" id="dropt">'+(pastedImage?'pasted image ready':'Drop it here')+'</div><div class="s">A screenshot, a photo of a letter, a PDF — or paste an image</div></div>'+
     '<div class="pad"><input id="nlurl" placeholder="or paste the newsletter link" autocapitalize="off" autocorrect="off" inputmode="url">'+
     '<button class="fold" data-open="'+(openSrc==='_more'?'':'_more')+'">'+(openSrc==='_more'?'hide':'or paste a message')+'</button>'+
     (openSrc==='_more'?'<textarea id="paste" placeholder="paste a WhatsApp message or email"></textarea>':'')+
@@ -658,7 +664,8 @@ function infoView(){
     '<div class="grp">What the words mean</div><div class="card">'+Object.keys(GLOSSARY).map(k=>'<button class="mrow" style="flex-direction:column;align-items:flex-start;gap:4px" data-help="'+esc(openHelp===('g:'+k)?'':('g:'+k))+'"><span style="font-weight:600">'+esc(k)+'</span>'+(openHelp===('g:'+k)?'<span style="text-align:left;line-height:1.55">'+esc(GLOSSARY[k])+'</span>':'')+'</button>').join('')+'</div>'+
     '<div class="grp">Portals</div><div class="card">'+PORTALS.map(x=>'<a class="portal" href="'+esc(x.u)+'" target="_blank" rel="noopener"><span>'+esc(x.n)+'</span><span>open ↗</span></a>').join('')+'</div>'+
     '<div class="grp">Set aside</div><div class="card">'+(SEED.filter(x=>isHidden(x.id)).map(x=>'<button class="mrow" data-unnix="'+esc(x.id)+'"><span style="color:var(--faint)">'+esc(x.title)+'</span><span>bring back</span></button>').join('')||'<div class="mrow"><span class="note">Nothing set aside.</span></div>')+'</div>'+
-    '<div class="grp">This family</div><div class="card"><div class="mrow"><span>You are</span><span>'+esc(nameOf(ME))+'</span></div><div class="mrow"><span>Family code</span><span>'+esc(FAM||'-')+'</span></div><div class="mrow"><span>Build</span><span>'+BUILD+'</span></div></div>'+
+    '<div class="grp">This family</div><div class="card"><div class="mrow"><span>You are</span><span>'+esc(nameOf(ME))+'</span></div><div class="mrow"><span>Family code</span><span>'+esc(FAM||'-')+'</span></div><div class="mrow"><span>In this space</span><span>'+esc(members().map(m=>m.name).join(', ')||'just you')+'</span></div><div class="mrow"><span>Build</span><span>'+BUILD+'</span></div></div>'+
+    '<p class="note pad" style="margin-top:10px">If the other phone shows a different family code, it is in a different space. Open the link below on that phone and tap join.</p>'+
     '<div class="pad"><button class="btn ghost" data-share="'+esc(link)+'">copy the link for the other phone</button><button class="btn ghost" data-switch="1">not '+esc(nameOf(ME))+'? switch this phone</button></div>';
 }
 
@@ -677,7 +684,7 @@ function addView(){
 
 const VIEWS={today:todayView,month:monthView,needs:needsView,papers:papersView,info:infoView,add:addView};
 const TABS=[['today','Today'],['month','Month'],['needs','Needs us'],['papers','Papers']];
-function paintSync(){const el=document.querySelector('.sync');if(el)el.className='sync '+(online?'':'off')}
+function paintSync(){const el=document.querySelector('.syncb');if(el)el.innerHTML='<i class="sync '+(online?'':'off')+'"></i>'+(online?(lastSync?ago(lastSync):'…'):'offline')}
 function render(){
   YG=get('yg',{v:'KG1'}).v;
   const app=document.getElementById('app'),nav=document.getElementById('nav');
@@ -688,18 +695,38 @@ function render(){
   const fi=document.getElementById('pdf');if(fi)fi.addEventListener('change',()=>{const dz=document.getElementById('drop'),t=document.getElementById('dropt');if(fi.files&&fi.files[0]){dz.classList.add('has');t.textContent=fi.files[0].name}});
 }
 function b64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=()=>rej(new Error('could not read that file'));r.readAsDataURL(file)})}
+function shrink(file){
+  return new Promise(res=>{
+    const url=URL.createObjectURL(file),img=new Image();
+    img.onload=()=>{const MAX=1800;let w=img.width,h=img.height;const sc=Math.min(1,MAX/Math.max(w,h));w=Math.round(w*sc);h=Math.round(h*sc);
+      const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url);res({b64:c.toDataURL('image/jpeg',.86).split(',')[1],type:'image/jpeg'})};
+    img.onerror=()=>{URL.revokeObjectURL(url);res(null)};
+    img.src=url;
+  });
+}
+let pastedImage=null;
 async function readSource(){
   const payload={yg:YG,childName:firstName(),existing:items().map(f=>({id:f.id,title:f.title,due:f.due||null}))};
   const u=((document.getElementById('nlurl')||{}).value||'').trim(),fi=document.getElementById('pdf'),file=fi&&fi.files&&fi.files[0],text=((document.getElementById('paste')||{}).value||'').trim();
-  if(file){if(file.size>4000000){flash='Over 4MB. For a newsletter, paste the link instead — the server fetches it.';render();return}
-    const b=await b64(file);if(/^image\//.test(file.type)){payload.image=b;payload.imageType=file.type}else payload.pdf=b;payload.filename=file.name}
+  if(file||pastedImage){
+    const f=file||pastedImage;
+    if(/^image\//.test(f.type)||!file){
+      const r=await shrink(f);
+      if(!r){flash='Could not read that image. Try a screenshot instead of a photo.';render();return}
+      payload.image=r.b64;payload.imageType=r.type;payload.filename=f.name||'pasted image';
+    }else{
+      if(f.size>4000000){flash='That PDF is over 4MB. For a newsletter, paste the link instead — the server fetches it.';render();return}
+      payload.pdf=await b64(f);payload.filename=f.name;
+    }
+  }
   else if(/^https?:\/\//.test(u))payload.url=u;else if(text)payload.text=text;else{flash='Give me a link, a file, or some text.';render();return}
   busy='1';flash='';render();
   try{const r=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await r.json();
     if(!r.ok){flash='Could not read it: '+(data.error||'unknown');busy='';render();return}
     const sid=newId('d');L['src:'+sid]={title:data.title,summary:data.summary,also:data.also||[],issued:data.issued||null,url:data.url||null,kind:(data.docKind||'Document')+' · '+nameOf(ME),at:Date.now(),who:ME};pending.add('src:'+sid);
     (data.proposals||[]).forEach(p=>{const k='st:'+newId('s');L[k]=Object.assign({},p,{srcId:sid,at:Date.now(),who:ME});pending.add(k)});
-    saveLocal();const n=(data.proposals||[]).length;flash=n?(n+' found for '+firstName()+'. Keep or skip below.'):'Read it — nothing new for '+firstName()+'.';openSrc=sid;busy='';render();queuePush();
+    saveLocal();pastedImage=null;const n=(data.proposals||[]).length;flash=n?(n+' found for '+firstName()+'. Keep or skip below.'):'Read it — nothing new for '+firstName()+'.';openSrc=sid;busy='';render();queuePush();
     setTimeout(()=>{const el=document.querySelector('.stg');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},80);
   }catch(e){flash='That did not go through. '+String(e.message||e);busy='';render()}
 }
@@ -708,13 +735,14 @@ function acceptStaged(sid){const s=L['st:'+sid];if(!s)return;
   write('st:'+sid,Object.assign({},s,{settled:true}))}
 
 document.addEventListener('click',async function(e){
-  const t=e.target.closest('[data-view],[data-tog],[data-yg],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-nix],[data-unnix],[data-read],[data-accept],[data-acceptall],[data-reject],[data-delsrc],[data-open],[data-f],[data-addlink],[data-help],[data-edit],[data-row],[data-kind],[data-day],[data-shift],[data-mshift],[data-mday],[data-addon]');
+  const t=e.target.closest('[data-view],[data-tog],[data-yg],[data-mkfam],[data-join],[data-be],[data-addme],[data-share],[data-switch],[data-save],[data-del],[data-nix],[data-unnix],[data-read],[data-accept],[data-acceptall],[data-reject],[data-delsrc],[data-open],[data-f],[data-addlink],[data-help],[data-edit],[data-row],[data-kind],[data-day],[data-shift],[data-mshift],[data-mday],[data-addon],[data-sync]');
   if(!t)return;const d=t.dataset;
   if(d.mkfam){FAM=newFam();disk.set('fam',FAM);L={};saveLocal();render();return}
   if(d.join){const el=document.getElementById('joinid'),raw=el?el.value:'';const m=raw.match(/[?&]f=([a-z0-9-]+)/i);const code=(m?m[1]:raw).trim().replace(/[^a-z0-9-]/gi,'').slice(0,40);if(!code)return;FAM=code;disk.set('fam',FAM);L=disk.get('runway:'+FAM)||{};render();pull();return}
   if(d.be){ME=d.be;disk.set('me',ME);render();pull();mirrorSeed();return}
   if(d.addme){const el=document.getElementById('myname'),nm=(el&&el.value||'').trim().slice(0,24);if(!nm){if(el)el.focus();return}ME=newMemberId();disk.set('me',ME);write('member:'+ME,{name:nm});mirrorSeed();return}
   if(d.switch){ME=null;disk.set('me',null);render();return}
+  if(d.sync){t.innerHTML='<i class="sync"></i>syncing';await push();await pull();render();return}
   if(d.share){try{await navigator.clipboard.writeText(d.share);t.textContent='copied'}catch(err){t.textContent=d.share}setTimeout(render,1400);return}
   if(d.addon){addDate=d.addon;view='add';render();window.scrollTo(0,0);return}
   if(d.mday){SEL=(SEL===d.mday?null:d.mday);render();return}
@@ -740,9 +768,15 @@ document.addEventListener('click',async function(e){
   if(d.acceptall){stagedFor(d.acceptall).forEach(s=>acceptStaged(s.sid));return}
   if(d.reject){const s=L['st:'+d.reject];if(!s)return;write('st:'+d.reject,Object.assign({},s,{settled:true}));return}
   if(d.f&&!d.view){filter=d.f;render();return}
-  if(d.view){view=d.view;flash='';openRow='';if(d.day)SEL=d.day===iso(today())?null:d.day;else if(d.view==='today')SEL=null;if(d.view==='add'&&!d.addon)addDate=SEL||'';render();window.scrollTo(0,0);return}
+  if(d.view){pull();view=d.view;flash='';openRow='';if(d.day)SEL=d.day===iso(today())?null:d.day;else if(d.view==='today')SEL=null;if(d.view==='add'&&!d.addon)addDate=SEL||'';render();window.scrollTo(0,0);return}
   if(d.tog){const s=stateOf(d.tog);const next=s.status==='open'?{status:'taken',by:ME}:s.status==='taken'?{status:'done',by:ME}:{status:'open',by:null};write('fact:'+d.tog,next);return}
   if(d.yg){write('yg',{v:d.yg});return}
+});
+document.addEventListener('paste',function(e){
+  if(view!=='papers')return;
+  const it=[...(e.clipboardData&&e.clipboardData.items||[])].find(x=>x.type.indexOf('image/')===0);
+  if(!it)return;const f=it.getAsFile();if(!f)return;
+  pastedImage=f;const t=document.getElementById('dropt');if(t)t.textContent='pasted image ready';const dz=document.getElementById('drop');if(dz)dz.classList.add('has');e.preventDefault();
 });
 document.addEventListener('visibilitychange',function(){if(!document.hidden){pull();push()}});
 window.addEventListener('online',function(){online=true;pull();push()});
