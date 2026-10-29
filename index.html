@@ -138,6 +138,7 @@ a{color:inherit}
 .dsheet .it i{width:4px;align-self:stretch;min-height:16px;border-radius:2px;flex-shrink:0;margin-top:2px;background:var(--event)}
 .dsheet .it.pay i{background:var(--pay)} .dsheet .it.wear i{background:var(--wear)} .dsheet .it.do i{background:var(--do)} .dsheet .it.off i{background:var(--off)} .dsheet .it.info i{background:var(--faint)}
 .dsheet .it .t{font-family:var(--mono);font-size:12px;color:var(--mute);margin-right:6px}
+.dsheet .it.done{color:var(--faint);text-decoration:line-through}
 .dsheet .it small{display:block;color:var(--mute);font-size:12.5px}
 .dsheet .empty{font-size:14px;color:var(--faint);padding:10px 0 4px}
 .dsheet .addb{margin-top:10px;width:100%;text-align:center;font-size:14px;font-weight:600;padding:11px;border-radius:12px;border:1px dashed var(--line2);color:var(--mute)}
@@ -205,7 +206,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='016';
+const BUILD='017';
 
 const mem={};
 const disk={get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return mem[k]??null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}};
@@ -450,7 +451,8 @@ const PORTALS=[
 
 
 let L=(FAM&&disk.get('runway:'+FAM))||{};
-let pending=new Set();
+let pending=new Set((FAM&&disk.get('pend:'+FAM))||[]);
+const savePending=()=>{if(FAM)disk.set('pend:'+FAM,[...pending])};
 let online=true, lastSync=0, view='today', busy='', flash='', filter='all', openSrc='', openHelp='', openRow='';
 let SEL=null, MONTH=null, addDate='';
 
@@ -464,18 +466,53 @@ const child=()=>Object.assign({},CHILD_DEFAULT,get('child',{}));
 const firstName=()=>String(child().name||'').trim().split(' ')[0]||'her';
 const campus=()=>YG==='KG1'?'Montgomerie':'Main campus';
 
-function write(k,v){L[k]=Object.assign({},v,{at:Date.now(),who:ME});saveLocal();pending.add(k);render();queuePush()}
+function write(k,v){L[k]=Object.assign({},v,{at:Date.now(),who:ME});saveLocal();pending.add(k);savePending();render();queuePush()}
 function mergeIn(remote){let t=false;for(const k in (remote||{})){const v=remote[k];if(!v||typeof v!=='object')continue;if(!L[k]||(Number(v.at)||0)>(Number(L[k].at)||0)){L[k]=v;t=true}}if(t)saveLocal();return t}
 let pushTimer=null;const queuePush=()=>{clearTimeout(pushTimer);pushTimer=setTimeout(push,600)};
 function mirrorSeed(){
+  if(!FAM)return;
   const items=SEED.filter(f=>f.due).map(f=>({id:f.id,title:f.title,due:f.due,until:f.until||null,time:f.time||null,endTime:f.endTime||null,note:val(f.note)||null,blocking:!!f.blocking,bring:f.bring||null}));
   const sig=JSON.stringify(items).length+':'+BUILD;
   if((get('seedcal',{})).sig===sig)return;
-  L['seedcal']={items:items,sig:sig,at:Date.now(),who:ME};saveLocal();pending.add('seedcal');queuePush();
+  L['seedcal']={items:items,sig:sig,at:Date.now(),who:ME};saveLocal();pending.add('seedcal');savePending();queuePush();
 }
-async function push(){if(!FAM||!pending.size)return;const body={};pending.forEach(k=>{if(L[k])body[k]=L[k]});
-  try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!r.ok)throw new Error('bad');const server=await r.json();pending.clear();online=true;lastSync=Date.now();if(mergeIn(server))render();else paintSync()}catch(e){online=false;paintSync()}}
-async function pull(){if(!FAM)return;try{const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{cache:'no-store'});if(!r.ok)throw new Error('bad');online=true;lastSync=Date.now();if(mergeIn(await r.json()))render();else paintSync()}catch(e){online=false;paintSync()}}
+let retryTimer=null, pushing=false;
+async function push(){
+  if(!FAM||!pending.size||pushing)return;
+  pushing=true;
+  const keys=[...pending], body={};keys.forEach(k=>{if(L[k])body[k]=L[k]});
+  try{
+    const r=await fetch('/api/state?f='+encodeURIComponent(FAM),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok)throw new Error('http '+r.status);
+    const server=await r.json();
+    keys.forEach(k=>pending.delete(k));savePending();
+    online=true;lastSync=Date.now();
+    mergeIn(server);const n=reconcile(server);render();
+    if(n)setTimeout(push,50);
+  }catch(e){
+    online=false;paintSync();
+    clearTimeout(retryTimer);retryTimer=setTimeout(()=>{if(!document.hidden)push()},6000);
+  }finally{pushing=false}
+}
+/* anything newer locally than on the server gets queued — covers lost pushes */
+function reconcile(server){
+  let n=0;
+  for(const k in L){const v=L[k],sv=server[k];if(!v||typeof v!=='object'||k==='seedcal')continue;
+    if(!sv||(Number(v.at)||0)>(Number(sv.at)||0)){pending.add(k);n++}}
+  if(n)savePending();
+  return n;
+}
+async function pull(){
+  if(!FAM)return;
+  try{
+    const r=await fetch('/api/state?f='+encodeURIComponent(FAM)+'&t='+Date.now(),{cache:'no-store'});
+    if(!r.ok)throw new Error('http '+r.status);
+    const server=await r.json();
+    online=true;lastSync=Date.now();
+    mergeIn(server);const n=reconcile(server);render();
+    if(n||pending.size)await push();
+  }catch(e){online=false;paintSync()}
+}
 
 const today=()=>{const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())};
 const D=s=>new Date(s+'T00:00:00');
@@ -599,7 +636,7 @@ function monthView(){
     '<div class="mhead"><div class="h1">'+MONL[m]+(y!==today().getFullYear()?' '+y:'')+'</div><div class="arrs"><button data-mshift="-1">‹</button><button data-mshift="1">›</button></div></div>'+
     '<div class="dow">'+['M','T','W','T','F','S','S'].map(x=>'<span>'+x+'</span>').join('')+'</div><div class="mgrid">'+cells.join('')+'</div>'+
     (s?'<div class="dsheet"><div class="dh"><b>'+DOWL[s.getDay()]+' '+s.getDate()+' '+MON[s.getMonth()]+'</b><span>'+(schoolDay(s)?'school day':isWeekend(s)?'weekend':'break')+'</span></div>'+
-      (sev.length?sev.map(f=>'<div class="it '+kindOf(f)+'"><i></i><span>'+(f.time?'<span class="t">'+t12(f.time)+'</span>':'')+esc(f.title)+(val(f.note)?'<small>'+esc(val(f.note))+'</small>':'')+'</span></div>').join(''):'<div class="empty">Nothing on this day.</div>')+(longs.length?'<div class="empty" style="font-size:12.5px">Also running: '+esc(longs.map(f=>f.title).join(', '))+'</div>':'')+
+      (sev.length?sev.map(f=>'<div class="it '+kindOf(f)+(stateOf(f.id).status==='done'?' done':'')+'"><i></i><span>'+(f.time?'<span class="t">'+t12(f.time)+'</span>':'')+esc(f.title)+(val(f.note)?'<small>'+esc(val(f.note))+'</small>':'')+'</span></div>').join(''):'<div class="empty">Nothing on this day.</div>')+(longs.length?'<div class="empty" style="font-size:12.5px">Also running: '+esc(longs.map(f=>f.title).join(', '))+'</div>':'')+
       '<button class="addb" data-addon="'+esc(iso(s))+'">+ add something on '+s.getDate()+' '+MON[s.getMonth()]+'</button>'+
       '<button class="fold" data-day="'+esc(iso(s))+'" data-view="today" style="margin-top:12px">open this day</button></div>'
      :'<p class="note pad" style="margin-top:16px">Tap a day to see it or add to it.</p>');
@@ -781,6 +818,6 @@ document.addEventListener('paste',function(e){
 document.addEventListener('visibilitychange',function(){if(!document.hidden){pull();push()}});
 window.addEventListener('online',function(){online=true;pull();push()});
 window.addEventListener('offline',function(){online=false;paintSync()});
-render();if(FAM&&ME){pull().then(mirrorSeed)}
-setInterval(function(){if(!document.hidden)pull()},90000);
+render();if(FAM&&ME){(async()=>{await push();await pull();mirrorSeed()})()}
+setInterval(function(){if(!document.hidden){pull();push()}},45000);
 </script>
