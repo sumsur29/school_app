@@ -8,6 +8,39 @@ const MODEL = process.env.RUNWAY_MODEL || 'claude-sonnet-5';
 const MAX_PROPOSALS = 40;
 const MAX_PDF_BYTES = 25 * 1024 * 1024;
 
+import { extractText, getDocumentProxy } from 'unpdf';
+
+/* Pull the pages that carry dates out of a newsletter PDF. Returns null if
+   the PDF has no usable text layer, so the caller can fall back to vision. */
+async function distill(pdfBase64) {
+  let pages;
+  try {
+    const pdf = await getDocumentProxy(new Uint8Array(Buffer.from(pdfBase64, 'base64')));
+    pages = (await extractText(pdf, { mergePages: false })).text.map(t => String(t || '').replace(/\s+/g, ' ').trim());
+  } catch (e) { return null; }
+  const total = pages.reduce((n, p) => n + p.length, 0);
+  if (total < 400) return null;
+  const score = p => {
+    let s = 0;
+    if (/SUNDAY\s+MONDAY\s+TUESDAY/i.test(p)) s += 50;
+    if (/\b(KG\s?1|KG1)\b/i.test(p)) s += 20;
+    if (/\b(deadline|payment|zenda|aed\s?\d|by (mon|tues|wednes|thurs|fri|satur|sun)day|wear|bring|no school|early (finish|dismissal)|half.?term|parent)/i.test(p)) s += 10;
+    s += Math.min(20, (p.match(/\b\d{1,2}(st|nd|rd|th)?\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/gi) || []).length * 2);
+    if (p.length < 80) s -= 30;
+    return s;
+  };
+  const ranked = pages.map((p, i) => ({ i, p, s: score(p) })).sort((a, b) => b.s - a.s);
+  const keep = new Set([0, 1, 2].filter(i => i < pages.length));
+  ranked.filter(x => x.s >= 10).slice(0, 7).forEach(x => keep.add(x.i));
+  let out = '', budget = 14000;
+  for (const i of [...keep].sort((a, b) => a - b)) {
+    const chunk = '\n\n[page ' + (i + 1) + ']\n' + pages[i].slice(0, 4000);
+    if (out.length + chunk.length > budget) break;
+    out += chunk;
+  }
+  return { text: out.trim(), pages: pages.length, used: [...keep].sort((a, b) => a - b).map(i => i + 1) };
+}
+
 const ALLOWED_HOSTS = ['innoventuresedu.static.amais.com', 'diadubai.com', 'www.diadubai.com',
   'innoventureseducation-my.sharepoint.com', 'innoventureseducation.sharepoint.com'];
 
@@ -58,7 +91,8 @@ Rules — read these carefully, they are the whole job:
 - If the newsletter calendar says one thing and the body text says another, trust the body text and set conflict true.
 - Prefer accuracy over volume. Twelve correct items beat thirty noisy ones.
 - Keep every string short. Titles under 7 words, notes under 20 words. Cap the proposals at 20. If the document is long, drop low-value items rather than run long. No prose outside the JSON.
-- "next Thursday", "tomorrow", "this Friday" are relative to today's date above. Resolve them to a real date in the academic year.`;
+- "next Thursday", "tomorrow", "this Friday" are relative to today's date above. Resolve them to a real date in the academic year.
+- Calendar pages arrive as a flat run of text: a month header, day names, then day numbers each followed by that day's entries until the next number. Read them in that order.`;
 }
 
 /* Pull whatever complete pieces exist out of a truncated JSON response. */
@@ -123,7 +157,11 @@ export default async function handler(req, res) {
 
     const known = Array.isArray(existing) ? existing.slice(0, 200) : [];
     const content = [];
-    if (pdf) content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: pdf } });
+    let distilled = null;
+    if (pdf) {
+      distilled = await distill(pdf);
+      if (!distilled) content.push({ type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: pdf } });
+    }
     if (image) {
       const mt = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(imageType) ? imageType : 'image/jpeg';
       content.push({ type: 'image', source: { type: 'base64', media_type: mt, data: image } });
@@ -131,8 +169,10 @@ export default async function handler(req, res) {
     content.push({
       type: 'text',
       text: 'Items already in the app (skip unless changed):\n' + JSON.stringify(known) + '\n\n' +
-        ((pdf || image) ? 'Read the attached document' + (sourceName ? ' (' + sourceName + ')' : '') + '.'
-             : 'Read this message:\n\n' + String(text).slice(0, 60000))
+        (distilled
+          ? 'Read these pages from ' + (sourceName || 'the newsletter') + ' (' + distilled.pages + ' pages; the ones with dates are included, flyers for other year groups are not):\n' + distilled.text
+          : (pdf || image) ? 'Read the attached document' + (sourceName ? ' (' + sourceName + ')' : '') + '.'
+          : 'Read this message:\n\n' + String(text).slice(0, 60000))
     });
 
     const ctrl = new AbortController();
@@ -202,6 +242,7 @@ export default async function handler(req, res) {
       also: (Array.isArray(out.also) ? out.also : []).slice(0, 6).map(s => String(s).slice(0, 160)),
       proposals: clean,
       truncated: salvaged || stopReason === 'max_tokens',
+      via: distilled ? 'text:' + distilled.used.join(',') : (pdf ? 'vision' : image ? 'image' : 'text'),
       source: sourceName || 'pasted text',
       url: url || null
     });

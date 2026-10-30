@@ -206,7 +206,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='019';
+const BUILD='020';
 
 const mem={};
 const disk={get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return mem[k]??null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}};
