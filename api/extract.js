@@ -57,7 +57,35 @@ Rules — read these carefully, they are the whole job:
 - Do not repeat anything already in the existing list with the same date unless the time or detail changed — then set match to its id.
 - If the newsletter calendar says one thing and the body text says another, trust the body text and set conflict true.
 - Prefer accuracy over volume. Twelve correct items beat thirty noisy ones.
+- Keep every string short. Titles under 7 words, notes under 20 words. The whole response must stay well under 8000 tokens — if the document is long, drop low-value items rather than run long.
 - "next Thursday", "tomorrow", "this Friday" are relative to today's date above. Resolve them to a real date in the academic year.`;
+}
+
+/* Pull whatever complete pieces exist out of a truncated JSON response. */
+function salvage(raw) {
+  const grab = key => {
+    const m = raw.match(new RegExp('"' + key + '"\\s*:\\s*"((?:[^"\\\\]|\\\\.)*)"'));
+    return m ? m[1].replace(/\\"/g, '"').replace(/\\n/g, ' ') : '';
+  };
+  const title = grab('title'), summary = grab('summary'), issued = grab('issued'), docKind = grab('docKind');
+  const also = [];
+  const am = raw.match(/"also"\s*:\s*\[([\s\S]*?)\]/);
+  if (am) for (const x of am[1].matchAll(/"((?:[^"\\]|\\.)*)"/g)) also.push(x[1]);
+  const proposals = [];
+  const pi = raw.indexOf('"proposals"');
+  if (pi >= 0) {
+    const body = raw.slice(raw.indexOf('[', pi) + 1);
+    let depth = 0, start = -1, inStr = false, escp = false;
+    for (let i = 0; i < body.length; i++) {
+      const c = body[i];
+      if (inStr) { if (escp) escp = false; else if (c === '\\') escp = true; else if (c === '"') inStr = false; continue; }
+      if (c === '"') { inStr = true; continue; }
+      if (c === '{') { if (depth === 0) start = i; depth++; }
+      else if (c === '}') { depth--; if (depth === 0 && start >= 0) { try { proposals.push(JSON.parse(body.slice(start, i + 1))); } catch (e) {} start = -1; } }
+    }
+  }
+  if (!title && !proposals.length) return null;
+  return { title, summary, issued: issued || null, docKind, also, proposals };
 }
 
 async function fetchPdf(url) {
@@ -110,7 +138,7 @@ export default async function handler(req, res) {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 6000, system: system(yg || 'KG1', childName, new Date(Date.now() + 4 * 3600e3).toISOString().slice(0, 10)), messages: [{ role: 'user', content }] })
+      body: JSON.stringify({ model: MODEL, max_tokens: 12000, system: system(yg || 'KG1', childName, new Date(Date.now() + 4 * 3600e3).toISOString().slice(0, 10)), messages: [{ role: 'user', content }] })
     });
     if (!r.ok) {
       const detail = await r.text();
@@ -120,12 +148,22 @@ export default async function handler(req, res) {
     const data = await r.json();
     const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n')
       .replace(/```json|```/g, '').trim();
-    let out;
+    const stopReason = data.stop_reason || '';
+    let out = null, salvaged = false;
     try { out = JSON.parse(raw); }
-    catch (e) {
+    catch (e1) {
       const m = raw.match(/\{[\s\S]*\}/);
-      if (!m) return res.status(422).json({ error: 'could not parse model output', raw: raw.slice(0, 400) });
-      out = JSON.parse(m[0]);
+      if (m) { try { out = JSON.parse(m[0]); } catch (e2) { out = null; } }
+    }
+    if (!out) {
+      out = salvage(raw);
+      salvaged = !!out;
+    }
+    if (!out) {
+      return res.status(422).json({
+        error: 'could not parse model output' + (stopReason === 'max_tokens' ? ' (response ran out of room)' : ''),
+        stop: stopReason, raw: raw.slice(0, 400)
+      });
     }
 
     const isDate = s => /^\d{4}-\d{2}-\d{2}$/.test(s || '');
@@ -159,6 +197,7 @@ export default async function handler(req, res) {
       summary: String(out.summary || '').slice(0, 600),
       also: (Array.isArray(out.also) ? out.also : []).slice(0, 6).map(s => String(s).slice(0, 160)),
       proposals: clean,
+      truncated: salvaged || stopReason === 'max_tokens',
       source: sourceName || 'pasted text',
       url: url || null
     });
