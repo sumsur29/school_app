@@ -57,7 +57,7 @@ Rules — read these carefully, they are the whole job:
 - Do not repeat anything already in the existing list with the same date unless the time or detail changed — then set match to its id.
 - If the newsletter calendar says one thing and the body text says another, trust the body text and set conflict true.
 - Prefer accuracy over volume. Twelve correct items beat thirty noisy ones.
-- Keep every string short. Titles under 7 words, notes under 20 words. The whole response must stay well under 8000 tokens — if the document is long, drop low-value items rather than run long.
+- Keep every string short. Titles under 7 words, notes under 20 words. Cap the proposals at 20. If the document is long, drop low-value items rather than run long. No prose outside the JSON.
 - "next Thursday", "tomorrow", "this Friday" are relative to today's date above. Resolve them to a real date in the academic year.`;
 }
 
@@ -135,11 +135,15 @@ export default async function handler(req, res) {
              : 'Read this message:\n\n' + String(text).slice(0, 60000))
     });
 
+    const ctrl = new AbortController();
+    const killer = setTimeout(() => ctrl.abort(), 50000);
     const r = await fetch('https://api.anthropic.com/v1/messages', {
+      signal: ctrl.signal,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: MODEL, max_tokens: 12000, system: system(yg || 'KG1', childName, new Date(Date.now() + 4 * 3600e3).toISOString().slice(0, 10)), messages: [{ role: 'user', content }] })
+      body: JSON.stringify({ model: MODEL, max_tokens: 5000, system: system(yg || 'KG1', childName, new Date(Date.now() + 4 * 3600e3).toISOString().slice(0, 10)), messages: [{ role: 'user', content }] })
     });
+    clearTimeout(killer);
     if (!r.ok) {
       const detail = await r.text();
       return res.status(502).json({ error: 'model call failed', status: r.status, detail: detail.slice(0, 400) });
@@ -202,6 +206,8 @@ export default async function handler(req, res) {
       url: url || null
     });
   } catch (e) {
-    return res.status(500).json({ error: String((e && e.message) || e) });
+    const msg = String((e && e.message) || e);
+    if (/abort/i.test(msg)) return res.status(504).json({ error: 'the read took too long — try pasting just the pages that matter, or a screenshot of the calendar page' });
+    return res.status(500).json({ error: msg });
   }
 }

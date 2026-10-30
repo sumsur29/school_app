@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/extract.js": { "maxDuration": 60 },
+    "api/state.js": { "maxDuration": 15 },
+    "api/calendar.js": { "maxDuration": 15 }
+  }
+}

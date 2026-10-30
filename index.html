@@ -206,7 +206,7 @@ a{color:inherit}
 <nav class="nav" id="nav"></nav>
 
 <script>
-const BUILD='018';
+const BUILD='019';
 
 const mem={};
 const disk={get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return mem[k]??null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){mem[k]=v}}};
@@ -765,7 +765,7 @@ async function readSource(){
     (data.proposals||[]).forEach(p=>{const k='st:'+newId('s');L[k]=Object.assign({},p,{srcId:sid,at:Date.now(),who:ME});pending.add(k)});
     saveLocal();pastedImage=null;const n=(data.proposals||[]).length;flash=(n?(n+' found for '+firstName()+'. Keep or skip below.'):'Read it — nothing new for '+firstName()+'.')+(data.truncated?' The document was long and the read was cut short near the end — worth a glance at the last pages yourself.':'');openSrc=sid;busy='';render();queuePush();
     setTimeout(()=>{const el=document.querySelector('.stg');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})},80);
-  }catch(e){flash='That did not go through. '+String(e.message||e);busy='';render()}
+  }catch(e){flash=(/load failed|network|fetch/i.test(String(e.message||e))?'The connection dropped before the read finished. Long newsletters can take up to a minute — try once more, and if it keeps happening send a screenshot of the calendar pages instead.':'That did not go through. '+String(e.message||e));busy='';render()}
 }
 function acceptStaged(sid){const s=L['st:'+sid];if(!s)return;
   write('cf:'+newId('c'),{title:s.title,due:s.due||null,until:s.until||null,time:s.time||null,endTime:s.endTime||null,note:s.note||null,kind:s.kind||null,bring:s.bring||null,blocking:!!s.blocking,src:s.srcId||'added'});
